@@ -15,11 +15,12 @@ import {
   SidebarInset,
   SidebarTrigger,
   SidebarFooter,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -98,6 +99,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link href="/admin/users">
                   <FontAwesomeIcon icon={faUsers} />
                   <span>Users</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarSeparator />
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Back to Site">
+                <Link href="/" target="_blank">
+                  <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  <span>Back to Site</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
