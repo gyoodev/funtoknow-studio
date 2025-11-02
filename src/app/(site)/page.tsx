@@ -1,14 +1,19 @@
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faRss, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import type { Project } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
-import { projects, blogPosts } from '@/lib/data';
+import { blogPosts } from '@/lib/data';
 import ProjectCard from '@/components/project-card';
 import BlogPostCard from '@/components/blog-post-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function HomePage() {
   const tags = [
@@ -22,6 +27,13 @@ export default function HomePage() {
   const floatingImage2 = PlaceHolderImages.find(p => p.id === 'hero-float-2');
   const floatingImage3 = PlaceHolderImages.find(p => p.id === 'hero-float-3');
   const floatingImage4 = PlaceHolderImages.find(p => p.id === 'hero-float-4');
+
+  const firestore = useFirestore();
+  const projectsQuery = useMemoFirebase(
+    () => (firestore ? query(collection(firestore, 'projects'), orderBy('createdAt', 'desc'), limit(3)) : null),
+    [firestore]
+  );
+  const { data: projects, isLoading: isLoadingProjects } = useCollection<Project>(projectsQuery);
 
 
   return (
@@ -104,13 +116,17 @@ export default function HomePage() {
               Projects
             </h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
-              A selection of our recently awarded projects.
+              A selection of our most recent projects.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {projects.slice(0, 3).map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+             {isLoadingProjects ? (
+              Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-80 w-full" />)
+            ) : (
+              projects?.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))
+            )}
           </div>
           <div className="mt-12 text-center">
             <Button asChild variant="outline">
