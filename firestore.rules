@@ -12,11 +12,12 @@
  * - /authors/{authorId}: Publicly readable author data.
  * - /sessions/{sessionId}: User session data, accessible only to the owner.
  * - /socialLinks/{socialLinkId}: Publicly readable social media links.
+ * - /settings/global: Admin-only global site settings.
  *
  * Key Security Decisions:
  * - Public read access is granted for projects, blog posts, authors and social links.
  * - Users can only read/write their own profile data and session data.
- * - Contact messages are only accessible to admins.
+ * - Contact messages and site settings are only accessible to admins.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
  * - Listing of contact messages and user profiles is disallowed to prevent unauthorized access.
  *
@@ -98,6 +99,16 @@ service cloud.firestore {
     }
 
     /**
+     * @description Restricts read and write access to global site settings to admins only.
+     * @path /settings/global
+     */
+    match /settings/global {
+      allow get, write: if isAdmin();
+      allow list, create, delete: if false;
+    }
+
+
+    /**
      * @description Checks if a user is currently authenticated.
      * @returns {boolean} True if the user is signed in, false otherwise.
      */
@@ -132,5 +143,3 @@ service cloud.firestore {
     }
   }
 }
-
-    

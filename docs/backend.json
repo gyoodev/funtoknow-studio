@@ -246,6 +246,38 @@
         "url",
         "order"
       ]
+    },
+    "SiteSettings": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SiteSettings",
+      "type": "object",
+      "description": "Global settings for the website.",
+      "properties": {
+        "siteName": {
+          "type": "string",
+          "description": "The name of the website."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description of the website for SEO."
+        },
+        "metaTags": {
+          "type": "string",
+          "description": "Comma-separated meta keywords for SEO."
+        },
+        "loginActive": {
+          "type": "boolean",
+          "description": "Whether user login is enabled."
+        },
+        "registerActive": {
+          "type": "boolean",
+          "description": "Whether user registration is enabled."
+        }
+      },
+      "required": [
+        "siteName",
+        "description"
+      ]
     }
   },
   "auth": {
@@ -367,9 +399,20 @@
             }
           ]
         }
+      },
+      {
+        "path": "/settings/global",
+        "definition": {
+          "entityName": "SiteSettings",
+          "schema": {
+            "$ref": "#/backend/entities/SiteSettings"
+          },
+          "description": "Stores global site settings. A single document with ID 'global' holds the configuration. Only readable and writable by admins.",
+          "params": []
+        }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles, sessions) are stored under `/users/{userId}` and `/sessions/{sessionId}` respectively.\n*   Admin-only data (contact messages) are stored in a dedicated `/contactMessages` collection, accessible only to authenticated admins.\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access is determined by a `role` field on the user document.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
+    "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles, sessions) are stored under `/users/{userId}` and `/sessions/{sessionId}` respectively.\n*   Admin-only data (contact messages, site settings) are stored in dedicated collections, accessible only to authenticated admins.\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access is determined by a `role` field on the user document.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
   }
 }
     

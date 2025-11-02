@@ -39,4 +39,11 @@ export interface SocialLink {
   order: number;
 }
 
+export interface SiteSettings {
+  siteName: string;
+  description: string;
+  metaTags?: string;
+  loginActive: boolean;
+  registerActive: boolean;
+}
     
