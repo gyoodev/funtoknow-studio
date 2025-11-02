@@ -32,17 +32,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (isLoading) {
-      return; // Wait until loading is complete
+      return; // Wait until loading is complete before doing anything.
     }
 
+    // After loading, if there's no user, redirect to login.
     if (!user) {
       router.replace('/admin/login');
-    } else if (userProfile?.role !== 'admin') {
-      router.replace('/');
+      return; // Stop further execution.
     }
+
+    // If there is a user but they are not an admin, redirect to the homepage.
+    if (userProfile?.role !== 'admin') {
+      router.replace('/');
+      return; // Stop further execution.
+    }
+
+    // If we reach here, the user is authenticated and is an admin.
+    // No redirect is needed.
+
   }, [isLoading, user, userProfile, router]);
 
 
+  // While loading, show a verifying access screen.
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -53,6 +64,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
   
+  // If not loading, and there's no user or the user is not an admin, show a redirecting screen.
+  // This state is brief, as the useEffect will trigger the redirect.
   if (!user || userProfile?.role !== 'admin') {
      return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -63,6 +76,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
+  // If we reach this point, the user is authenticated and an admin.
+  // We can safely render the admin layout.
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
 
   return (
