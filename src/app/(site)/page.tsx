@@ -40,7 +40,7 @@ export default function HomePage() {
               strategy, and design to create impactful brand experiences.
             </p>
             <Button asChild size="lg" className="mt-8">
-              <Link href="/contact">Let's Collaborate</Link>
+              <Link href="/projects">Check Projects</Link>
             </Button>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
