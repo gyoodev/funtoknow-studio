@@ -87,18 +87,36 @@ service cloud.firestore {
       allow list: if false;
     }
 
+    /**
+     * @description Checks if a user is currently authenticated.
+     * @returns {boolean} True if the user is signed in, false otherwise.
+     */
     function isSignedIn() {
       return request.auth != null;
     }
 
+    /**
+     * @description Checks if the currently authenticated user is the owner of a given resource.
+     * @param {string} userId - The user ID to check against the authenticated user's ID.
+     * @returns {boolean} True if the authenticated user's ID matches the provided userId, false otherwise.
+     */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    /**
+     * @description Retrieves the user document data for a given user ID.
+     * @param {string} userId - The ID of the user whose data is to be retrieved.
+     * @returns {object} The data from the user's document.
+     */
     function getUserData(userId) {
       return get(/databases/$(database)/documents/users/$(userId)).data;
     }
     
+    /**
+     * @description Checks if the currently authenticated user has an 'admin' role.
+     * @returns {boolean} True if the user is signed in and their role is 'admin', false otherwise.
+     */
     function isAdmin() {
       return isSignedIn() && getUserData(request.auth.uid).role == 'admin';
     }
