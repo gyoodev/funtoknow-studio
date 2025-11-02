@@ -31,12 +31,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    // Only run redirection logic once all loading is complete.
-    if (!isLoading) {
-      // If there is no user, or if the user is not an admin, redirect.
-      if (!user || userProfile?.role !== 'admin') {
-        router.replace('/');
-      }
+    if (isLoading) {
+      return; // Do nothing while loading
+    }
+    
+    // After loading, if there's no user or the user is not an admin, redirect.
+    if (!user || userProfile?.role !== 'admin') {
+      router.replace('/');
     }
   }, [isLoading, user, userProfile, router]);
 
