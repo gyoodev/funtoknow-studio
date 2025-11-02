@@ -8,6 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -27,9 +29,18 @@ export default function AdminUsersPage() {
           ...doc.data()
         } as UserProfile));
         setUsers(usersData);
-      } catch (e) {
-        console.error("Error fetching users: ", e);
-        setError("Failed to load users. Please check the console for more details.");
+      } catch (e: any) {
+        if (e.code === 'permission-denied') {
+          const permissionError = new FirestorePermissionError({
+            path: 'users',
+            operation: 'list',
+          });
+          errorEmitter.emit('permission-error', permissionError);
+          setError("You don't have permission to view users.");
+        } else {
+          console.error("Error fetching users: ", e);
+          setError("Failed to load users. Please check the console for more details.");
+        }
       } finally {
         setLoading(false);
       }

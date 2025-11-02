@@ -17,6 +17,8 @@ import { useToast } from '@/hooks/use-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faMagic, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const formSchema = z.object({
   gamingHabits: z.string().min(10, {
@@ -44,20 +46,25 @@ export function ProjectSuggester() {
   const handleSave = async (values: z.infer<typeof formSchema>) => {
     if (!user) return;
     setIsSaving(true);
-    try {
-      const userDocRef = doc(firestore, 'users', user.uid);
-      await updateDoc(userDocRef, { gamingHabits: values.gamingHabits });
-      toast({ title: 'Success', description: 'Your gaming habits have been saved.' });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: 'Error',
-        description: 'Failed to save your preferences.',
-        variant: 'destructive',
+    
+    const userDocRef = doc(firestore, 'users', user.uid);
+    const dataToUpdate = { gamingHabits: values.gamingHabits };
+    
+    updateDoc(userDocRef, dataToUpdate)
+      .then(() => {
+        toast({ title: 'Success', description: 'Your gaming habits have been saved.' });
+      })
+      .catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'update',
+          requestResourceData: dataToUpdate,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      })
+      .finally(() => {
+        setIsSaving(false);
       });
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   const handleGetSuggestions = async () => {

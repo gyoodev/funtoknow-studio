@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
+import { FirestorePermissionError } from '@/firebase/errors';
+import { errorEmitter } from '@/firebase/error-emitter';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -38,20 +40,32 @@ export async function submitContactForm(
       success: false,
     };
   }
+  
+  const contactData = {
+    ...validatedFields.data,
+    createdAt: serverTimestamp(),
+  };
 
   try {
     const { firestore } = initializeFirebase();
-    // Save the data to Firestore in a 'messages' collection
-    await addDoc(collection(firestore, 'messages'), {
-      ...validatedFields.data,
-      createdAt: serverTimestamp(),
-    });
+    const messagesCollection = collection(firestore, 'contactMessages');
+    await addDoc(messagesCollection, contactData);
 
     return {
       message: 'Thank you for your message! We will get back to you soon.',
       success: true,
     };
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'permission-denied') {
+        // This is a server action, so we can't rely on the client-side emitter.
+        // For now, we return a generic error. A more advanced implementation
+        // might log this securely on the server.
+         return {
+          message: 'You do not have permission to submit this form.',
+          success: false,
+        };
+    }
+
     console.error("Error writing message to Firestore: ", error);
     return {
       message: 'An internal error occurred. Please try again later.',
