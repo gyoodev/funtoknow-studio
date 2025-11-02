@@ -40,7 +40,7 @@ function SocialLinks() {
   }
 
   if (!socialLinks || socialLinks.length === 0) {
-    return null;
+    return <div className="h-9" />; // Placeholder for alignment
   }
 
   return (
@@ -59,13 +59,17 @@ function SocialLinks() {
 export default function Footer() {
   return (
     <footer className="border-t bg-card">
-      <div className="container py-8">
-        <div className="flex flex-col items-center justify-center gap-6">
-            <Logo />
-            <SocialLinks />
-            <p className="text-sm text-muted-foreground text-center">
+      <div className="container py-6">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-sm text-muted-foreground order-3 md:order-1">
               <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()} FunToKnow. All rights reserved.
             </p>
+            <div className="order-1 md:order-2">
+                <Logo />
+            </div>
+            <div className="order-2 md:order-3">
+                <SocialLinks />
+            </div>
         </div>
       </div>
     </footer>
