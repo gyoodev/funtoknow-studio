@@ -67,45 +67,44 @@ export default function Navbar() {
            {isUserLoading ? (
             <Skeleton className="h-8 w-8 rounded-full" />
           ) : user ? (
-            <>
-              {userProfile?.role === 'admin' && (
-                <Button variant="ghost" size="icon" asChild>
-                  <Link href="/admin" aria-label="Admin Panel">
-                    <FontAwesomeIcon icon={faUserShield} />
-                  </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.photoURL || ''} alt={userProfile?.displayName || ''} />
+                    <AvatarFallback>{userInitial}</AvatarFallback>
+                  </Avatar>
                 </Button>
-              )}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.photoURL || ''} alt={userProfile?.displayName || ''} />
-                      <AvatarFallback>{userInitial}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{userProfile?.displayName}</p>
-                      <p className="text-xs leading-none text-muted-foreground">{userProfile?.email}</p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{userProfile?.displayName}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{userProfile?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {userProfile?.role === 'admin' && (
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
-                      <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                    <Link href="/admin">
+                      <FontAwesomeIcon icon={faUserShield} className="mr-2 h-4 w-4" />
+                      <span>Admin Panel</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+                )}
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">
+                    <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button asChild className="rounded-full">
               <Link href="/auth/login">Login</Link>
