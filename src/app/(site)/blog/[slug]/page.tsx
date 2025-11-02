@@ -1,66 +1,119 @@
+'use client';
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-
-import { blogPosts } from '@/lib/data';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import type { BlogPost } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { format } from 'date-fns';
 
 type BlogPostPageProps = {
   params: { slug: string };
 };
 
-// This function allows Next.js to generate static pages for each blog post at build time.
-export async function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
+// A basic Markdown renderer. For a real app, a library like 'react-markdown' would be better.
 const SimpleMarkdownRenderer = ({ content }: { content: string }) => {
-  // A very basic parser to handle the structure of the mock data.
-  // It splits content by double newlines to create blocks.
-  const blocks = content.trim().split(/\n\s*\n/);
-
-  return (
-    <>
-      {blocks.map((block, index) => {
-        const trimmedBlock = block.trim();
-        if (trimmedBlock.startsWith('## ')) {
-          return <h2 key={index}>{trimmedBlock.substring(3)}</h2>;
-        }
-        if (trimmedBlock.startsWith('# ')) {
-          return <h1 key={index}>{trimmedBlock.substring(2)}</h1>;
-        }
-        if (trimmedBlock.startsWith('1. ')) {
-            return (
-                <ol key={index} className="list-decimal list-inside space-y-2">
-                    {trimmedBlock.split('\n').map((item, i) => (
-                        <li key={i}>{item.replace(/^\d+\.\s/, '')}</li>
-                    ))}
-                </ol>
-            )
-        }
-        if (trimmedBlock) {
-          return <p key={index}>{trimmedBlock}</p>;
-        }
-        return null;
-      })}
-    </>
-  );
-};
+    const blocks = content.trim().split(/\n\s*\n/);
+  
+    return (
+      <>
+        {blocks.map((block, index) => {
+          const trimmedBlock = block.trim();
+          if (trimmedBlock.startsWith('## ')) {
+            return <h2 key={index} className="text-2xl font-bold mt-8 mb-4">{trimmedBlock.substring(3)}</h2>;
+          }
+          if (trimmedBlock.startsWith('# ')) {
+            return <h1 key={index} className="text-3xl font-bold mt-10 mb-6">{trimmedBlock.substring(2)}</h1>;
+          }
+          if (trimmedBlock.match(/^\d+\.\s/)) {
+              return (
+                  <ol key={index} className="list-decimal list-inside space-y-2 my-4">
+                      {trimmedBlock.split('\n').map((item, i) => (
+                          <li key={i}>{item.replace(/^\d+\.\s/, '')}</li>
+                      ))}
+                  </ol>
+              )
+          }
+           if (trimmedBlock.startsWith('- ')) {
+              return (
+                  <ul key={index} className="list-disc list-inside space-y-2 my-4">
+                      {trimmedBlock.split('\n').map((item, i) => (
+                          <li key={i}>{item.replace(/^- \s/, '')}</li>
+                      ))}
+                  </ul>
+              )
+          }
+          if (trimmedBlock) {
+            return <p key={index} className="my-4 leading-relaxed">{trimmedBlock}</p>;
+          }
+          return null;
+        })}
+      </>
+    );
+  };
 
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const firestore = useFirestore();
+
+  useEffect(() => {
+    if (!firestore || !params.slug) return;
+
+    const fetchPost = async () => {
+      setIsLoading(true);
+      const postsRef = collection(firestore, 'blogPosts');
+      const q = query(postsRef, where('slug', '==', params.slug));
+      
+      try {
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          setPost(null);
+        } else {
+          const doc = querySnapshot.docs[0];
+          setPost({ id: doc.id, ...doc.data() } as BlogPost);
+        }
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [firestore, params.slug]);
+
+  if (isLoading) {
+    return (
+        <div className="container py-16 lg:py-24">
+            <div className="mx-auto max-w-3xl">
+                <Skeleton className="h-12 w-full mb-4" />
+                <Skeleton className="h-8 w-3/4 mb-8" />
+                <Skeleton className="w-full aspect-video rounded-lg mb-12" />
+                <div className="space-y-6">
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-5/6" />
+                </div>
+            </div>
+        </div>
+    );
+  }
 
   if (!post) {
     notFound();
   }
 
-  const authorName = post.author.split(',')[0];
+  const authorName = post.author?.split(',')[0] || 'Unknown';
   const authorInitial = authorName.charAt(0);
+  const publicationDate = post.publicationDate ? format(post.publicationDate.toDate(), 'MMMM d, yyyy') : post.date;
 
   return (
     <div className="container py-16 lg:py-24">
@@ -73,18 +126,18 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                         <AvatarImage src={`https://i.pravatar.cc/40?u=${post.author}`} alt={authorName} />
                         <AvatarFallback>{authorInitial}</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium">{post.author}</span>
+                    <span className="text-sm font-medium">{authorName}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <FontAwesomeIcon icon={faCalendar} className="h-4 w-4" />
-                    <span className="text-sm">{post.date}</span>
+                    <span className="text-sm">{publicationDate}</span>
                 </div>
             </div>
         </header>
         
         <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-lg border">
             <Image
-                src={post.imageUrl}
+                src={post.imageUrl || 'https://placehold.co/800x400'}
                 alt={post.title}
                 fill
                 className="object-cover"

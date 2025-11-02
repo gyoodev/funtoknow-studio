@@ -1,7 +1,19 @@
+'use client';
+
 import BlogPostCard from '@/components/blog-post-card';
-import { blogPosts } from '@/lib/data';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { BlogPost } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BlogPage() {
+  const firestore = useFirestore();
+  const blogPostsQuery = useMemoFirebase(
+    () => (firestore ? query(collection(firestore, 'blogPosts'), orderBy('publicationDate', 'desc')) : null),
+    [firestore]
+  );
+  const { data: blogPosts, isLoading } = useCollection<BlogPost>(blogPostsQuery);
+
   return (
     <div className="container py-16 lg:py-24">
       <div className="flex flex-col items-center text-center">
@@ -12,9 +24,13 @@ export default function BlogPage() {
       </div>
 
       <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {blogPosts.map((post) => (
-          <BlogPostCard key={post.id} post={post} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-[420px] w-full" />)
+        ) : (
+          blogPosts?.map((post) => (
+            <BlogPostCard key={post.id} post={post} />
+          ))
+        )}
       </div>
     </div>
   );

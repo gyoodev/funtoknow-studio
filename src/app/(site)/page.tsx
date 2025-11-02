@@ -6,10 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faRss, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import type { Project } from '@/lib/types';
+import type { Project, BlogPost } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
-import { blogPosts } from '@/lib/data';
 import ProjectCard from '@/components/project-card';
 import BlogPostCard from '@/components/blog-post-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -34,6 +33,12 @@ export default function HomePage() {
     [firestore]
   );
   const { data: projects, isLoading: isLoadingProjects } = useCollection<Project>(projectsQuery);
+
+  const blogPostsQuery = useMemoFirebase(
+    () => (firestore ? query(collection(firestore, 'blogPosts'), orderBy('publicationDate', 'desc'), limit(3)) : null),
+    [firestore]
+  );
+  const { data: blogPosts, isLoading: isLoadingBlogPosts } = useCollection<BlogPost>(blogPostsQuery);
 
 
   return (
@@ -150,9 +155,13 @@ export default function HomePage() {
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {blogPosts.slice(0, 3).map((post) => (
-              <BlogPostCard key={post.id} post={post} />
-            ))}
+             {isLoadingBlogPosts ? (
+                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-[420px] w-full" />)
+             ) : (
+                blogPosts?.map((post) => (
+                  <BlogPostCard key={post.id} post={post} />
+                ))
+             )}
           </div>
           <div className="mt-12 text-center">
             <Button asChild>

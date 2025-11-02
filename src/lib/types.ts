@@ -1,6 +1,3 @@
-
-
-
 export interface Project {
   id: string;
   slug: string;
@@ -18,14 +15,16 @@ export interface Project {
 
 export interface BlogPost {
   id: string;
-  slug: string;
   title: string;
-  excerpt: string;
-  content: string; // Markdown
+  slug: string;
+  content: string;
+  authorId: string;
   author: string;
-  date: string;
+  publicationDate: any; // Firestore timestamp
+  date: string; // Fallback for old data structure
   imageUrl: string;
   imageHint: string;
+  excerpt?: string;
 }
 
 export interface UserProfile {
@@ -54,6 +53,3 @@ export interface SiteSettings {
   showSystemNotification: boolean;
   systemNotification?: string;
 }
-
-    
-    
