@@ -37,7 +37,7 @@ const projectSchema = z.object({
     hint: z.string().min(1, 'Hint is required.'),
   })).optional(),
   links: z.array(z.object({
-    platform: z.enum(['github', 'playstore', 'appstore', 'website', 'steam', 'epicgames', 'itchio', 'gog']),
+    platform: z.enum(['github', 'playstore', 'appstore', 'website', 'steam', 'epicgames', 'itchio', 'gog', 'aptoide']),
     url: z.string().url('Must be a valid URL.'),
   })).optional(),
 });
@@ -305,6 +305,7 @@ export default function NewProjectPage() {
                                             <SelectItem value="epicgames">Epic Games</SelectItem>
                                             <SelectItem value="itchio">Itch.io</SelectItem>
                                             <SelectItem value="gog">GOG</SelectItem>
+                                            <SelectItem value="aptoide">Aptoide</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />

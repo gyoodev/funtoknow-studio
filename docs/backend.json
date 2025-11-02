@@ -84,7 +84,7 @@
             "properties": {
               "platform": {
                 "type": "string",
-                "enum": ["github", "playstore", "appstore", "website", "steam", "epicgames", "itchio", "gog"]
+                "enum": ["github", "playstore", "appstore", "website", "steam", "epicgames", "itchio", "gog", "aptoide"]
               },
               "url": {
                 "type": "string",

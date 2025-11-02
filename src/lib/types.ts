@@ -1,5 +1,6 @@
 
 
+
 export interface Project {
   id: string;
   slug: string;
@@ -11,7 +12,7 @@ export interface Project {
   videoEmbedUrl?: string;
   gallery?: { url: string; hint: string }[];
   readme?: string; // Markdown
-  links?: { platform: 'github' | 'playstore' | 'appstore' | 'website' | 'steam' | 'epicgames' | 'itchio' | 'gog'; url: string }[];
+  links?: { platform: 'github' | 'playstore' | 'appstore' | 'website' | 'steam' | 'epicgames' | 'itchio' | 'gog' | 'aptoide'; url: string }[];
   createdAt: any; // Firestore timestamp
 }
 
@@ -54,4 +55,5 @@ export interface SiteSettings {
   systemNotification?: string;
 }
 
+    
     
