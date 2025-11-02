@@ -31,32 +31,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    // This effect handles redirection once loading is complete.
     if (!isLoading) {
       if (!user) {
-        // If there's no user, redirect to login.
         router.replace('/login');
       } else if (userProfile?.role !== 'admin') {
-        // If the user is not an admin, redirect to the homepage.
         router.replace('/');
       }
     }
   }, [user, userProfile, isLoading, router]);
 
-  // While loading, or if the user is not an admin, show a loading screen.
-  // This prevents the admin content from ever rendering for non-admins.
   if (isLoading || !userProfile || userProfile.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center text-muted-foreground">
-          {/* You could add a spinner here */}
           <p>Verifying access...</p>
         </div>
       </div>
     );
   }
 
-  // If loading is complete and user is an admin, render the layout.
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
 
   return (
