@@ -18,42 +18,15 @@ import {
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faSpinner, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
-  const router = useRouter();
 
   const isLoading = isUserLoading || isProfileLoading;
-  
-  useEffect(() => {
-    // Wait until both user and profile loading are complete
-    if (!isLoading) {
-      // If there's no user OR the user is not an admin, redirect
-      if (!user || userProfile?.role !== 'admin') {
-        router.push('/admin/login');
-      }
-    }
-  }, [isLoading, user, userProfile, router]);
-  
-  // While loading, or if the user is not yet verified as an admin, show a loading screen.
-  // This prevents a brief flash of the dashboard content before redirection.
-  if (isLoading || !user || userProfile?.role !== 'admin') {
-     return (
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
-        <div className="text-center text-muted-foreground">
-          <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
-          <p>Verifying access...</p>
-        </div>
-      </div>
-    );
-  }
-
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
 
   return (
@@ -119,7 +92,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          {isProfileLoading ? (
+          {isLoading ? (
             <div className="flex items-center gap-3 p-2">
               <Skeleton className="h-8 w-8 rounded-full" />
               <div className="flex flex-col gap-1 overflow-hidden whitespace-nowrap">
