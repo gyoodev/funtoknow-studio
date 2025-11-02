@@ -108,7 +108,7 @@ export default function Navbar() {
               <Button asChild variant="ghost" className="hidden sm:inline-flex">
                 <Link href="/login">Login</Link>
               </Button>
-              <Button asChild size="lg" className="rounded-full">
+              <Button asChild className="rounded-full">
                 <Link href="/contact">Contact</Link>
               </Button>
             </>
