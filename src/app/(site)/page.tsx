@@ -39,8 +39,11 @@ export default function HomePage() {
               From concept to execution, we bring together innovation,
               strategy, and design to create impactful brand experiences.
             </p>
-            <Button asChild size="lg" className="mt-8">
-              <Link href="/projects">Check Projects</Link>
+            <Button asChild size="lg" className="mt-8 group">
+              <Link href="/projects">
+                Projects
+                <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
+              </Link>
             </Button>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
