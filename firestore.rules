@@ -11,9 +11,10 @@
  * - /users/{userId}: User profile data, accessible only to the user and admins.
  * - /authors/{authorId}: Publicly readable author data.
  * - /sessions/{sessionId}: User session data, accessible only to the owner.
+ * - /socialLinks/{socialLinkId}: Publicly readable social media links.
  *
  * Key Security Decisions:
- * - Public read access is granted for projects, blog posts and authors.
+ * - Public read access is granted for projects, blog posts, authors and social links.
  * - Users can only read/write their own profile data and session data.
  * - Contact messages are only accessible to admins.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
@@ -86,6 +87,15 @@ service cloud.firestore {
       allow create, update: if request.resource.data.userId == request.auth.uid;
       allow list: if false;
     }
+    
+    /**
+     * @description Allows anyone to read social media links, but restricts write access to admins.
+     * @path /socialLinks/{socialLinkId}
+     */
+    match /socialLinks/{socialLinkId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
 
     /**
      * @description Checks if a user is currently authenticated.
@@ -122,3 +132,5 @@ service cloud.firestore {
     }
   }
 }
+
+    

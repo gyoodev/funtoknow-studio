@@ -20,7 +20,7 @@ import {
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -109,6 +109,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Settings">
+                <Link href="/admin/settings">
+                  <FontAwesomeIcon icon={faCog} />
+                  <span>Settings</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarSeparator />
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Back to Site">
@@ -137,3 +145,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </SidebarProvider>
   );
 }
+
+    

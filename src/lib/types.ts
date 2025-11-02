@@ -31,3 +31,12 @@ export interface UserProfile {
   gamingHabits?: string;
   photoURL?: string;
 }
+
+export interface SocialLink {
+  id: string;
+  platform: 'github' | 'twitter' | 'linkedin' | 'facebook' | 'instagram' | 'youtube';
+  url: string;
+  order: number;
+}
+
+    
