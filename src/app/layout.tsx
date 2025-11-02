@@ -3,6 +3,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'FunToKnow Platform',
@@ -30,6 +31,7 @@ export default function RootLayout({
           {children}
           <Toaster />
         </FirebaseClientProvider>
+        <Analytics />
       </body>
     </html>
   );
