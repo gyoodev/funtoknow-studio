@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTimes } from "@fortawesome/free-solid-svg-icons"
 
 import { cn } from "@/lib/utils"
+import { Progress } from "./progress"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -44,14 +45,40 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+    VariantProps<typeof toastVariants> & { duration: number }
+>(({ className, variant, duration, ...props }, ref) => {
+
+  const [progress, setProgress] = React.useState(100);
+
+  React.useEffect(() => {
+    if (duration > 0) {
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          const newProgress = prev - (100 / (duration / 100));
+          if (newProgress <= 0) {
+            clearInterval(interval);
+            return 0;
+          }
+          return newProgress;
+        });
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [duration]);
+
+
   return (
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
+      duration={duration}
       {...props}
-    />
+    >
+      {props.children}
+      {duration > 0 && (
+         <Progress value={progress} className="absolute bottom-0 left-0 h-1 w-full rounded-b-md" />
+      )}
+    </ToastPrimitives.Root>
   )
 })
 Toast.displayName = ToastPrimitives.Root.displayName
