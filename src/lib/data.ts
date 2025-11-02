@@ -10,7 +10,7 @@ export const projects: Project[] = [
     location: 'Toronto, Canada',
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-1.svg',
     imageHint: 'abstract waves',
-    logo: 'Xbox',
+    logo: 'Gamepad2',
     logoBg: 'bg-purple-600',
   },
   {
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     location: 'Hyderabad, India',
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-5.svg',
     imageHint: 'abstract stripes',
-    logo: 'Amazon',
+    logo: 'Gamepad2',
     logoBg: 'bg-yellow-400',
   },
   {

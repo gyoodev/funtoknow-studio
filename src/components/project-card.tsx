@@ -2,18 +2,17 @@ import Image from 'next/image';
 import type { Project } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Xbox, Apple, Codepen, Play, Amazon, Music } from 'lucide-react';
+import { Gamepad2, Apple, Codepen, Play, Music } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 const iconMap: { [key: string]: React.ElementType } = {
-  Xbox,
+  Gamepad2,
   Apple,
   Codepen,
   Play,
-  Amazon,
   Music,
 };
 
