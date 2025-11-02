@@ -82,7 +82,7 @@ service cloud.firestore {
      * @path /sessions/{sessionId}
      */
     match /sessions/{sessionId} {
-      allow get, delete: if isOwner(sessionId);
+      allow get, delete: if request.auth.uid == sessionId;
       allow create, update: if request.resource.data.userId == request.auth.uid;
       allow list: if false;
     }
