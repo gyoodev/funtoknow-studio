@@ -4,7 +4,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPanelLeft } from "@fortawesome/free-solid-svg-icons"
+import { faBars } from "@fortawesome/free-solid-svg-icons"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -279,7 +279,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <FontAwesomeIcon icon={faPanelLeft} />
+      <FontAwesomeIcon icon={faBars} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
