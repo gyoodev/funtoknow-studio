@@ -38,18 +38,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // After loading, if there's no user, redirect to login.
     if (!user) {
       router.replace('/admin/login');
-      return; // Stop further execution.
+      return;
     }
 
-    // If there is a user but they are not an admin, redirect to the homepage.
+    // After loading, if there is a user but they are not an admin, redirect to the homepage.
     if (userProfile?.role !== 'admin') {
       router.replace('/');
-      return; // Stop further execution.
     }
-
-    // If we reach here, the user is authenticated and is an admin.
-    // No redirect is needed.
-
   }, [isLoading, user, userProfile, router]);
 
 
