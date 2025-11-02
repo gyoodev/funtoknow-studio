@@ -1,0 +1,288 @@
+{
+  "entities": {
+    "Project": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Project",
+      "type": "object",
+      "description": "Represents a game project showcased on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the project."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the project."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the project."
+        },
+        "mediaUrl": {
+          "type": "string",
+          "description": "URL of the project's media (image, video)."
+        },
+        "projectUrl": {
+          "type": "string",
+          "description": "URL to the project's website or download page."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "mediaUrl",
+        "projectUrl"
+      ]
+    },
+    "BlogPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BlogPost",
+      "type": "object",
+      "description": "Represents a blog post published on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the blog post."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the blog post."
+        },
+        "slug": {
+          "type": "string",
+          "description": "Slug for the blog post URL."
+        },
+        "content": {
+          "type": "string",
+          "description": "Markdown content of the blog post."
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Reference to Author. (Relationship: Author 1:N BlogPost)"
+        },
+        "publicationDate": {
+          "type": "string",
+          "description": "Date and time when the blog post was published.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "slug",
+        "content",
+        "authorId",
+        "publicationDate"
+      ]
+    },
+    "ContactMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContactMessage",
+      "type": "object",
+      "description": "Represents a message submitted through the contact form.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the contact message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the person sending the message."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the person sending the message.",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "Content of the message."
+        },
+        "sentDate": {
+          "type": "string",
+          "description": "Date and time when the message was sent.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "message",
+        "sentDate"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "profileImageUrl": {
+          "type": "string",
+          "description": "URL of the user's profile image."
+        },
+        "gamingHabits": {
+          "type": "string",
+          "description": "A record of the users gaming habits"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email",
+        "gamingHabits"
+      ]
+    },
+    "Author": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Author",
+      "type": "object",
+      "description": "Represents an author of blog posts.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the author."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the author."
+        },
+        "bio": {
+          "type": "string",
+          "description": "Short biography of the author."
+        },
+        "profileImageUrl": {
+          "type": "string",
+          "description": "URL of the author's profile image."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "bio"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/projects/{projectId}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores game project data. Accessible for reading by all users. Create, update, and delete operations are restricted to admins.",
+          "params": [
+            {
+              "name": "projectId",
+              "description": "Unique identifier for the project."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/blogPosts/{blogPostId}",
+        "definition": {
+          "entityName": "BlogPost",
+          "schema": {
+            "$ref": "#/backend/entities/BlogPost"
+          },
+          "description": "Stores blog post data. Accessible for reading by all users. Create, update, and delete operations are restricted to admins.",
+          "params": [
+            {
+              "name": "blogPostId",
+              "description": "Unique identifier for the blog post."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/contactMessages/{contactMessageId}",
+        "definition": {
+          "entityName": "ContactMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ContactMessage"
+          },
+          "description": "Stores contact form submissions. Accessible only to admins for reading, creation, and deletion.",
+          "params": [
+            {
+              "name": "contactMessageId",
+              "description": "Unique identifier for the contact message."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile data.  Accessible for reading and writing by the user with the matching userId. Admins have read access.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/authors/{authorId}",
+        "definition": {
+          "entityName": "Author",
+          "schema": {
+            "$ref": "#/backend/entities/Author"
+          },
+          "description": "Stores author data for blog posts. Accessible for reading by all users. Create, update, and delete operations are restricted to admins.",
+          "params": [
+            {
+              "name": "authorId",
+              "description": "Unique identifier for the author."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "admin_role",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Marks a user as an administrator. Existence of a document with the user's ID in this collection grants admin privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the admin user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles) are stored under `/users/{userId}`.\n*   Admin-only data (contact messages) are stored in a dedicated `/contactMessages` collection, accessible only to authenticated admins (determined via a separate `/roles_admin/{uid}` document).\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access to `/contactMessages` is controlled by checking for the existence of a document in `/roles_admin/{uid}`.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
+  }
+}
