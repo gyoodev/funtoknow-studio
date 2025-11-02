@@ -45,5 +45,9 @@ export interface SiteSettings {
   metaTags?: string;
   loginActive: boolean;
   registerActive: boolean;
+  underDevelopment: boolean;
+  showSystemNotification: boolean;
+  systemNotification?: string;
 }
+
     

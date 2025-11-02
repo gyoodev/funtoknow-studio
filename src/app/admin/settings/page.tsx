@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faTrash, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faTrash, faPlus, faSave, faTriangleExclamation, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@/hooks/use-toast';
 import { faGithub, faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -50,6 +50,9 @@ const siteSettingsFormSchema = z.object({
   metaTags: z.string().optional(),
   loginActive: z.boolean(),
   registerActive: z.boolean(),
+  underDevelopment: z.boolean(),
+  showSystemNotification: z.boolean(),
+  systemNotification: z.string().optional(),
 });
 
 function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
@@ -65,6 +68,9 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
       metaTags: settings?.metaTags || '',
       loginActive: settings?.loginActive ?? true,
       registerActive: settings?.registerActive ?? true,
+      underDevelopment: settings?.underDevelopment ?? false,
+      showSystemNotification: settings?.showSystemNotification ?? false,
+      systemNotification: settings?.systemNotification || '',
     },
   });
 
@@ -184,6 +190,125 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
   )
 }
 
+function BannersForm({ settings }: { settings: SiteSettings | null }) {
+  const firestore = useFirestore();
+  const { toast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const form = useForm<z.infer<typeof siteSettingsFormSchema>>({
+    resolver: zodResolver(siteSettingsFormSchema),
+    values: {
+      siteName: settings?.siteName || '',
+      description: settings?.description || '',
+      metaTags: settings?.metaTags || '',
+      loginActive: settings?.loginActive ?? true,
+      registerActive: settings?.registerActive ?? true,
+      underDevelopment: settings?.underDevelopment ?? false,
+      showSystemNotification: settings?.showSystemNotification ?? false,
+      systemNotification: settings?.systemNotification || '',
+    },
+  });
+
+  const showSystemNotification = form.watch('showSystemNotification');
+
+  async function onSubmit(values: z.infer<typeof siteSettingsFormSchema>) {
+    if (!firestore) return;
+    setIsSaving(true);
+    const settingsRef = doc(firestore, 'settings', 'global');
+    // We only want to save the banner-related settings from this form
+    const dataToSave = {
+      underDevelopment: values.underDevelopment,
+      showSystemNotification: values.showSystemNotification,
+      systemNotification: values.systemNotification,
+    }
+    setDoc(settingsRef, dataToSave, { merge: true })
+      .then(() => {
+        toast({ title: 'Success', description: 'Banner settings updated.' });
+      })
+      .catch((e) => {
+        const permissionError = new FirestorePermissionError({
+          path: settingsRef.path,
+          operation: 'update',
+          requestResourceData: values,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+            control={form.control}
+            name="underDevelopment"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">"Under Development" Banner</FormLabel>
+                  <p className="text-sm text-muted-foreground">Display a sitewide development warning.</p>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+        />
+
+        <FormField
+            control={form.control}
+            name="showSystemNotification"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">System Notification Banner</FormLabel>
+                  <p className="text-sm text-muted-foreground">Display a custom sitewide message.</p>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+        />
+        
+        {showSystemNotification && (
+          <FormField
+            control={form.control}
+            name="systemNotification"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notification Message</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="E.g., Scheduled maintenance this Sunday at 2 AM EST." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+
+        <Button type="submit" disabled={isSaving}>
+          {isSaving ? (
+            <FontAwesomeIcon icon={faSpinner} className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <FontAwesomeIcon icon={faSave} className="mr-2 h-4 w-4" />
+          )}
+          Save Banner Settings
+        </Button>
+      </form>
+    </Form>
+  )
+}
+
 
 export default function AdminSettingsPage() {
   const firestore = useFirestore();
@@ -274,6 +399,25 @@ export default function AdminSettingsPage() {
           )}
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Banners & Notifications</CardTitle>
+          <CardDescription>Configure sitewide banners and notifications.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoadingSettings ? (
+            <div className="space-y-6">
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-10 w-48" />
+            </div>
+          ) : (
+            <BannersForm settings={siteSettings} />
+          )}
+        </CardContent>
+      </Card>
+
 
       <Card>
         <CardHeader>

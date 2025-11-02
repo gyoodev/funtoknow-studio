@@ -272,6 +272,18 @@
         "registerActive": {
           "type": "boolean",
           "description": "Whether user registration is enabled."
+        },
+        "underDevelopment": {
+          "type": "boolean",
+          "description": "Whether to show a sitewide 'under development' banner."
+        },
+        "showSystemNotification": {
+          "type": "boolean",
+          "description": "Whether to show a sitewide system notification banner."
+        },
+        "systemNotification": {
+          "type": "string",
+          "description": "The text content for the system notification banner."
         }
       },
       "required": [
