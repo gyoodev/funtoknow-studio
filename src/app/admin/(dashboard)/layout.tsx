@@ -2,36 +2,34 @@
 
 import { useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarInset,
-  SidebarTrigger,
-  SidebarFooter,
-  SidebarSeparator,
-} from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faTachometerAlt, faUserShield, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/firebase';
-import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+
+const navLinks = [
+    { href: '/admin/dashboard', label: 'Dashboard', icon: faTachometerAlt },
+    { href: '/admin/projects', label: 'Projects', icon: faGamepad },
+    { href: '/admin/blog', label: 'Blog', icon: faNewspaper },
+    { href: '/admin/users', label: 'Users', icon: faUsers },
+    { href: '/admin/settings', label: 'Settings', icon: faCog },
+];
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const auth = useAuth();
   const router = useRouter();
-
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -42,143 +40,95 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
 
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="offcanvas">
-        <SidebarHeader>
-          <div className="flex h-16 items-center justify-between p-2">
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center">
             <Logo />
-            <SidebarTrigger />
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Dashboard">
-                <Link href="/admin/dashboard">
-                  <FontAwesomeIcon icon={faTachometerAlt} />
-                  <span>Dashboard</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Projects">
-                <Link href="/admin/projects">
-                  <FontAwesomeIcon icon={faGamepad} />
-                  <span>Projects</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Blog">
-                <Link href="/admin/blog">
-                  <FontAwesomeIcon icon={faNewspaper} />
-                  <span>Blog</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Users">
-                <Link href="/admin/users">
-                  <FontAwesomeIcon icon={faUsers} />
-                  <span>Users</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Settings">
-                <Link href="/admin/settings">
-                  <FontAwesomeIcon icon={faCog} />
-                  <span>Settings</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarSeparator />
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Back to Site">
-                <Link href="/" target="_blank">
-                  <FontAwesomeIcon icon={faExternalLinkAlt} />
-                  <span>Back to Site</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-          {isLoading ? (
-            <div className="flex items-center gap-3 p-2">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <div className="flex flex-col gap-1 overflow-hidden whitespace-nowrap">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-3 w-32" />
-              </div>
-            </div>
-          ) : userProfile ? (
-            <div className="flex items-center gap-3 p-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={userProfile.photoURL ?? undefined} />
-                <AvatarFallback>{userInitial}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col overflow-hidden whitespace-nowrap">
-                <span className="truncate text-sm font-semibold">{userProfile.displayName}</span>
-                <span className="truncate text-xs text-sidebar-foreground/70">{userProfile.email}</span>
-              </div>
-            </div>
-          ) : null}
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-x-4 border-b bg-background px-4 sm:px-6">
-          <SidebarTrigger className="md:hidden" />
-          <div className="flex-1">
-            {/* You could add breadcrumbs or a title here if you want */}
-          </div>
-          <div className="flex items-center gap-2">
-            {isLoading ? (
-              <Skeleton className="h-8 w-8 rounded-full" />
-            ) : user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.photoURL || ''} alt={userProfile?.displayName || ''} />
-                      <AvatarFallback>{userInitial}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{userProfile?.displayName}</p>
-                      <p className="text-xs leading-none text-muted-foreground">{userProfile?.email}</p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {userProfile?.role === 'admin' && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin/dashboard">
-                        <FontAwesomeIcon icon={faUserShield} className="mr-2 h-4 w-4" />
-                        <span>Admin Panel</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">
-                      <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+            <nav className="ml-10 hidden items-center space-x-6 text-sm font-medium md:flex">
+                {navLinks.map(({ href, label }) => (
+                    <Link
+                    key={href}
+                    href={href}
+                    className={cn(
+                        'transition-colors hover:text-primary',
+                        pathname === href ? 'text-primary' : 'text-muted-foreground'
+                    )}
+                    >
+                    {label}
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : null}
-          </div>
-        </header>
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+                ))}
+            </nav>
+            <div className="ml-auto flex items-center gap-2">
+                {isLoading ? (
+                <Skeleton className="h-8 w-8 rounded-full" />
+                ) : user ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                        <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.photoURL || ''} alt={userProfile?.displayName || ''} />
+                        <AvatarFallback>{userInitial}</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{userProfile?.displayName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{userProfile?.email}</p>
+                        </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                        <Link href="/">
+                        <FontAwesomeIcon icon={faUserShield} className="mr-2 h-4 w-4" />
+                        <span>View Site</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/profile">
+                        <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                    </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                ) : null}
+            </div>
+            <button
+                className="ml-2 md:hidden"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle menu"
+            >
+                {isOpen ? <FontAwesomeIcon icon={faTimes} className="h-6 w-6" /> : <FontAwesomeIcon icon={faBars} className="h-6 w-6" />}
+            </button>
+        </div>
+         {isOpen && (
+            <div className="md:hidden">
+            <div className="container flex flex-col items-start space-y-4 py-4">
+                {navLinks.map(({ href, label }) => (
+                <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                    'w-full rounded-md p-2 text-left text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                    pathname === href && 'bg-accent text-accent-foreground'
+                    )}
+                >
+                    {label}
+                </Link>
+                ))}
+            </div>
+            </div>
+        )}
+      </header>
+      <main className="flex-1">{children}</main>
+    </div>
   );
 }
