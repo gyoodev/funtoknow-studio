@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from '@/components/logo';
 import { Button } from '../ui/button';
 
@@ -11,7 +12,7 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-2 md:items-start">
             <Logo />
             <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} FunToKnow. All rights reserved.
+              All rights reserved <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()}. Developed by <a href="https://gkdev.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GKDEV</a>
             </p>
           </div>
           <div className="flex items-center gap-2">
