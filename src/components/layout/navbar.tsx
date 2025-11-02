@@ -20,6 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/hooks/use-user-profile';
+import { Skeleton } from '../ui/skeleton';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -33,8 +34,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
-  const { user } = useUser();
-  const { userProfile } = useUserProfile(user?.uid);
+  const { user, isUserLoading } = useUser();
+  const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
 
 
   const handleSignOut = async () => {
@@ -63,7 +64,9 @@ export default function Navbar() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          {user ? (
+           {isUserLoading ? (
+            <Skeleton className="h-8 w-8 rounded-full" />
+          ) : user ? (
             <>
               {userProfile?.role === 'admin' && (
                 <Button variant="ghost" size="icon" asChild>
