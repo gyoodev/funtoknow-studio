@@ -114,7 +114,7 @@ export default function HomePage() {
           </div>
           <div className="mt-12 text-center">
             <Button asChild variant="outline">
-              <Link href="/projects">View All Awards</Link>
+              <Link href="/projects">View All Projects</Link>
             </Button>
           </div>
         </div>
