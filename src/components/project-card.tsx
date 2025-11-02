@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faPlay, faMusic } from '@fortawesome/free-solid-svg-icons';
-import { faApple, faCodepen } from '@fortawesome/free-brands-svg-icons';
+import { faApple, faCodepen, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import React from 'react';
 
 interface ProjectCardProps {
@@ -17,6 +17,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Codepen: (props: any) => <FontAwesomeIcon icon={faCodepen} {...props} />,
   Play: (props: any) => <FontAwesomeIcon icon={faPlay} {...props} />,
   Music: (props: any) => <FontAwesomeIcon icon={faMusic} {...props} />,
+  Tiktok: (props: any) => <FontAwesomeIcon icon={faTiktok} {...props} />,
 };
 
 

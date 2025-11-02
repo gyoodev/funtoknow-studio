@@ -58,7 +58,7 @@ export const projects: Project[] = [
     location: 'Hyderabad, India',
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-5.svg',
     imageHint: 'abstract stripes',
-    logo: 'Gamepad2',
+    logo: 'Codepen',
     logoBg: 'bg-yellow-400',
   },
   {
@@ -70,7 +70,7 @@ export const projects: Project[] = [
     location: 'Mumbai, India',
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-6.svg',
     imageHint: 'abstract confetti',
-    logo: 'Music',
+    logo: 'Tiktok',
     logoBg: 'bg-red-500',
   },
 ];
