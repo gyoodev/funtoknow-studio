@@ -104,14 +104,9 @@ export default function Navbar() {
               </DropdownMenu>
             </>
           ) : (
-            <>
-              <Button asChild variant="ghost" className="hidden sm:inline-flex">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild className="rounded-full">
-                <Link href="/contact">Contact</Link>
-              </Button>
-            </>
+            <Button asChild className="rounded-full">
+              <Link href="/contact">Contact</Link>
+            </Button>
           )}
         </div>
         <button
