@@ -8,38 +8,75 @@ import { Button } from '@/components/ui/button';
 import { projects, blogPosts } from '@/lib/data';
 import ProjectCard from '@/components/project-card';
 import BlogPostCard from '@/components/blog-post-card';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function HomePage() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image');
+
+  const tags = [
+    'Product', 'Design System', 'Branding', 'Landing Page', 
+    'Mobile App UI', 'Web Design', 'Prototyping'
+  ];
 
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[400px] w-full">
-        {heroImage && (
+      <section className="relative overflow-hidden py-24 lg:py-32">
+        <div className="container relative z-10">
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+              Design Impactful<br />Experiences for Brands.
+            </h1>
+            <p className="mt-6 max-w-xl mx-auto text-lg text-muted-foreground">
+              From concept to execution, we bring together innovation, strategy, and design to create impactful brand experiences.
+            </p>
+            <Button asChild size="lg" className="mt-8">
+              <Link href="/contact">
+                Let's Collaborate
+              </Link>
+            </Button>
+          </div>
+          <div className="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
+            {tags.map((tag) => (
+              <span key={tag} className="rounded-full border bg-card px-4 py-1.5 text-sm text-muted-foreground">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+        
+        {/* Floating Images */}
+        <div className="absolute inset-0 z-0">
+            <Image
+                src="https://picsum.photos/seed/img1/500/300"
+                alt="Laptop with analytics dashboard"
+                width={500}
+                height={300}
+                className="absolute -left-24 top-1/4 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-15deg] opacity-70"
+                data-ai-hint="laptop analytics"
+            />
+            <Image
+                src="https://picsum.photos/seed/img2/500/300"
+                alt="Tablet showing a website design"
+                width={500}
+                height={300}
+                className="absolute -right-24 top-1/3 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[15deg] opacity-70"
+                data-ai-hint="tablet website"
+            />
              <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={heroImage.imageHint}
-                priority
-             />
-        )}
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
-          <h1 className="text-4xl font-bold tracking-tighter md:text-6xl font-headline">
-            Where Creativity Meets Code
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-primary-foreground/80">
-            Discover innovative game projects, read insightful developer blogs, and join a community of creators.
-          </p>
-          <Button asChild size="lg" className="mt-8 bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link href="/projects">
-              Explore Projects <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+                src="https://picsum.photos/seed/img3/300/500"
+                alt="Mobile phone with an app interface"
+                width={300}
+                height={500}
+                className="absolute bottom-[-10%] left-1/4 -translate-x-1/2 w-32 md:w-40 lg:w-[200px] rounded-2xl shadow-2xl rotate-[10deg] opacity-70"
+                data-ai-hint="mobile app"
+            />
+             <Image
+                src="https://picsum.photos/seed/img4/500/300"
+                alt="Laptop with code on screen"
+                width={500}
+                height={300}
+                className="absolute bottom-[-15%] right-1/4 translate-x-1/2 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-5deg] opacity-70"
+                data-ai-hint="laptop code"
+            />
         </div>
       </section>
 
