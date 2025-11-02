@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -9,10 +10,10 @@ import type { Project } from '@/lib/types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faWindows, faApple, faLinux, faAndroid, faGooglePlay, faAppStore, faSteam, faItchIo, faEpicGames, faGg,
+  faWindows, faApple, faLinux, faAndroid, faGooglePlay, faAppStore, faSteam, faItchIo,
   faGithub
 } from '@fortawesome/free-brands-svg-icons';
-import { faDesktop, faLink, faTag, faCode, faList, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { faDesktop, faLink, faTag, faCode, faList, faCubes, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 
 import { Badge } from '@/components/ui/badge';
@@ -41,9 +42,9 @@ const linkIconMap: Record<Project['links'][number]['platform'], IconDefinition> 
   appstore: faAppStore,
   website: faLink,
   steam: faSteam,
-  epicgames: faEpicGames,
-itchio: faItchIo,
-  gog: faGg,
+  epicgames: faGamepad,
+  itchio: faItchIo,
+  gog: faGamepad,
   aptoide: faGooglePlay,
 };
 
