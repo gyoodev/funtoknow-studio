@@ -6,10 +6,9 @@ import { useAuth, useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ProjectSuggester } from '@/components/ai/project-suggester';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -104,15 +103,6 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
           </div>
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-8 w-48 mb-2" />
-              <Skeleton className="h-5 w-full" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-24 w-full" />
-            </CardContent>
-          </Card>
         </div>
       </div>
     );
@@ -185,18 +175,6 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Project Suggester</CardTitle>
-            <CardDescription>
-              Tell us about your gaming habits, and our AI will suggest some project ideas you might like to build!
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ProjectSuggester />
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
