@@ -1,57 +1,51 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlogPost } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { cn } from '@/lib/utils';
+
 
 interface BlogPostCardProps {
   post: BlogPost;
+  className?: string;
 }
 
-export default function BlogPostCard({ post }: BlogPostCardProps) {
+export default function BlogPostCard({ post, className }: BlogPostCardProps) {
   const authorInitial = post.author.charAt(0);
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-       <CardHeader className="p-0">
-        <Link href={`/blog/${post.slug}`} className="block">
-            <div className="relative h-48 w-full">
-            <Image
-                src={post.imageUrl}
-                alt={post.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                data-ai-hint={post.imageHint}
-            />
-            </div>
-        </Link>
-       </CardHeader>
-      <CardContent className="flex-grow p-6">
-        <CardTitle className="font-headline text-xl">
+    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1", className)}>
+      <Link href={`/blog/${post.slug}`} className="block">
+        <div className="relative aspect-[4/3] w-full">
+          <Image
+              src={post.imageUrl}
+              alt={post.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              data-ai-hint={post.imageHint}
+          />
+        </div>
+      </Link>
+      <CardContent className="p-4 md:p-6">
+         <h3 className="font-headline text-lg font-semibold leading-snug">
            <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
             {post.title}
           </Link>
-        </CardTitle>
-        <CardDescription className="mt-2">{post.excerpt}</CardDescription>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between p-6 pt-0">
-        <div className="flex items-center gap-3">
-          <Avatar>
+        </h3>
+
+        <div className="mt-4 flex items-center gap-3">
+          <Avatar className="h-8 w-8">
             <AvatarImage src={`https://i.pravatar.cc/40?u=${post.author}`} />
             <AvatarFallback>{authorInitial}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium">{post.author}</p>
-            <p className="text-xs text-muted-foreground">{post.date}</p>
+            <p className="text-sm font-medium leading-none">{post.author.split(',')[0]}</p>
+            <p className="text-xs text-muted-foreground mt-1">{post.date}</p>
           </div>
         </div>
-         <Link href={`/blog/${post.slug}`} className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-            Read More <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
-        </Link>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
