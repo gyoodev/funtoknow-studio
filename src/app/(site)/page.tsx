@@ -12,13 +12,10 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function HomePage() {
   const tags = [
-    'Product',
-    'Design System',
-    'Branding',
-    'Landing Page',
-    'Mobile App UI',
-    'Web Design',
-    'Prototyping',
+    'Mobile Game Development',
+    'Desktop Game Development',
+    'Mobile App Development',
+    'Desktop App Development',
   ];
 
   const floatingImage1 = PlaceHolderImages.find(p => p.id === 'hero-float-1');
