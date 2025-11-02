@@ -3,7 +3,7 @@
 import { useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -30,21 +30,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const isLoading = isUserLoading || isProfileLoading;
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        router.replace('/admin/login');
-      } else if (userProfile?.role !== 'admin') {
-        router.replace('/');
-      }
-    }
-  }, [user, userProfile, isLoading, router]);
-
-  if (isLoading || !userProfile || userProfile.role !== 'admin') {
+  if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center text-muted-foreground">
           <p>Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    router.replace('/admin/login');
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="text-center text-muted-foreground">
+          <p>Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (userProfile?.role !== 'admin') {
+    router.replace('/');
+     return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="text-center text-muted-foreground">
+          <p>Access Denied. Redirecting...</p>
         </div>
       </div>
     );
