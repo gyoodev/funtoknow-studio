@@ -18,14 +18,25 @@ import {
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faTachometerAlt, faUserShield, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/firebase';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
+  const auth = useAuth();
+  const router = useRouter();
+
+
+  const handleSignOut = async () => {
+    await auth.signOut();
+    router.push('/admin/login');
+  };
 
   const isLoading = isUserLoading || isProfileLoading;
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
@@ -34,7 +45,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     <SidebarProvider>
       <Sidebar collapsible="offcanvas">
         <SidebarHeader>
-          <div className="flex h-12 items-center justify-between p-2">
+          <div className="flex h-16 items-center justify-between p-2">
             <Logo />
             <SidebarTrigger />
           </div>
@@ -116,9 +127,55 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-12 items-center gap-2 border-b bg-background p-2 md:hidden">
-          <SidebarTrigger />
-          <h2 className="text-lg font-semibold">Admin Panel</h2>
+        <header className="sticky top-0 z-40 flex h-16 items-center gap-x-4 border-b bg-background px-4 sm:px-6">
+          <SidebarTrigger className="md:hidden" />
+          <div className="flex-1">
+            {/* You could add breadcrumbs or a title here if you want */}
+          </div>
+          <div className="flex items-center gap-2">
+            {isLoading ? (
+              <Skeleton className="h-8 w-8 rounded-full" />
+            ) : user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.photoURL || ''} alt={userProfile?.displayName || ''} />
+                      <AvatarFallback>{userInitial}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{userProfile?.displayName}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{userProfile?.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {userProfile?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/dashboard">
+                        <FontAwesomeIcon icon={faUserShield} className="mr-2 h-4 w-4" />
+                        <span>Admin Panel</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">
+                      <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
+          </div>
         </header>
         {children}
       </SidebarInset>
