@@ -1,61 +1,56 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { Github, ExternalLink } from 'lucide-react';
 import type { Project } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { Xbox, Apple, Codepen, Play, Amazon, Music } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
 }
 
+const iconMap: { [key: string]: React.ElementType } = {
+  Xbox,
+  Apple,
+  Codepen,
+  Play,
+  Amazon,
+  Music,
+};
+
+
 export default function ProjectCard({ project }: ProjectCardProps) {
+    const LogoComponent = iconMap[project.logo];
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      <CardHeader className="p-0">
-        <div className="relative h-48 w-full">
-          <Image
-            src={project.imageUrl}
-            alt={project.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            data-ai-hint={project.imageHint}
-          />
+    <Card className="group relative flex h-80 flex-col justify-between overflow-hidden bg-card text-card-foreground shadow-lg transition-all duration-300 hover:-translate-y-2">
+        <div className="absolute inset-0 z-0">
+            <Image
+                src={project.imageUrl}
+                alt={project.title}
+                fill
+                className="object-cover object-bottom transition-transform duration-500 group-hover:scale-105"
+                data-ai-hint={project.imageHint}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
         </div>
-      </CardHeader>
-      <CardContent className="flex-grow p-6">
-        <CardTitle className="font-headline text-xl">
-          <Link href={`/projects/${project.id}`} className="hover:text-primary transition-colors">
-            {project.title}
-          </Link>
-        </CardTitle>
-        <CardDescription className="mt-2">{project.description}</CardDescription>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.technologies.map((tech) => (
-            <Badge key={tech} variant="secondary">{tech}</Badge>
-          ))}
+        
+        <div className="relative z-10 flex h-full flex-col justify-between p-6 text-white">
+            <header className="flex items-start justify-between">
+                <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", project.logoBg)}>
+                    {LogoComponent && <LogoComponent className="h-6 w-6 text-white" />}
+                </div>
+                <span className="text-xs text-white/70">{project.date}</span>
+            </header>
+
+            <div className="space-y-2">
+                <p className="text-sm text-white/80">{project.awardType}</p>
+                <h3 className="text-xl font-bold">{project.title}</h3>
+            </div>
+
+            <footer>
+                <p className="text-sm text-white/70">{project.location}</p>
+            </footer>
         </div>
-      </CardContent>
-      <CardFooter className="p-6 pt-0">
-        <div className="flex w-full items-center justify-end gap-2">
-          {project.links.github && (
-            <Button variant="ghost" size="sm" asChild>
-              <a href={project.links.github} target="_blank" rel="noopener noreferrer">
-                <Github className="mr-2 h-4 w-4" /> GitHub
-              </a>
-            </Button>
-          )}
-          {project.links.live && (
-            <Button variant="default" size="sm" asChild>
-              <a href={project.links.live} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" /> Live Demo
-              </a>
-            </Button>
-          )}
-        </div>
-      </CardFooter>
     </Card>
   );
 }

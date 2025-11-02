@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Rss, Gamepad } from 'lucide-react';
+import { ArrowRight, Rss, Trophy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { projects, blogPosts } from '@/lib/data';
@@ -45,10 +45,10 @@ export default function HomePage() {
       <section className="py-16 lg:py-24">
         <div className="container">
           <div className="flex flex-col items-center text-center">
-             <Gamepad className="h-12 w-12 text-primary" />
-            <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">Featured Projects</h2>
+             <Trophy className="h-12 w-12 text-primary" />
+            <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">Recent Awards</h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
-              A curated selection of innovative games from our community.
+              A selection of our recently awarded projects.
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -58,7 +58,7 @@ export default function HomePage() {
           </div>
           <div className="mt-12 text-center">
             <Button asChild variant="outline">
-              <Link href="/projects">View All Projects</Link>
+              <Link href="/projects">View All Awards</Link>
             </Button>
           </div>
         </div>

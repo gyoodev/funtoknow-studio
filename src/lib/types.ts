@@ -1,15 +1,14 @@
 export interface Project {
   id: string;
   title: string;
-  description:string;
-  longDescription: string;
-  technologies: string[];
+  award: string;
+  awardType: string;
+  date: string;
+  location: string;
   imageUrl: string;
   imageHint: string;
-  links: {
-    github?: string;
-    live?: string;
-  };
+  logo: string;
+  logoBg: string;
 }
 
 export interface BlogPost {
