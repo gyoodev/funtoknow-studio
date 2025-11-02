@@ -1,40 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+// This file is no longer needed as the dashboard has been moved.
+// To prevent issues, it's best to have a minimal component here or handle redirection if needed.
+import { redirect } from 'next/navigation';
 
-export default function AdminDashboardPage() {
-  return (
-    <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-      <p className="text-muted-foreground">Welcome to the control center.</p>
-
-      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Projects</CardTitle>
-            <CardDescription>Manage game projects.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Here you can create, edit, and delete project entries.</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Blog</CardTitle>
-            <CardDescription>Manage blog posts.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Write new posts, update existing ones, and manage comments.</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Users</CardTitle>
-            <CardDescription>Manage user accounts.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>View user roles and manage permissions.</p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+export default function AdminRootPage() {
+  // Redirect to the main admin dashboard page inside the group.
+  redirect('/admin/dashboard');
 }
