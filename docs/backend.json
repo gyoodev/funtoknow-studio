@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Project": {
@@ -10,29 +11,104 @@
           "type": "string",
           "description": "Unique identifier for the project."
         },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly slug for the project page."
+        },
         "title": {
           "type": "string",
           "description": "Title of the project."
         },
         "description": {
           "type": "string",
-          "description": "Detailed description of the project."
+          "description": "A short, one-paragraph description of the project."
         },
-        "mediaUrl": {
+        "version": {
           "type": "string",
-          "description": "URL of the project's media (image, video)."
+          "description": "The current version of the project (e.g., 1.0.0)."
         },
-        "projectUrl": {
+        "type": {
           "type": "string",
-          "description": "URL to the project's website or download page."
+          "description": "The type of project.",
+          "enum": [
+            "game",
+            "app",
+            "library"
+          ]
+        },
+        "os": {
+          "type": "array",
+          "description": "A list of supported operating systems.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "windows",
+              "mac",
+              "linux",
+              "android",
+              "ios",
+              "web"
+            ]
+          }
+        },
+        "videoEmbedUrl": {
+          "type": "string",
+          "description": "URL of a video embed (e.g., YouTube)."
+        },
+        "gallery": {
+          "type": "array",
+          "description": "A gallery of images for the project.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": ["url", "hint"]
+          }
+        },
+        "readme": {
+          "type": "string",
+          "description": "The full README content for the project in Markdown format."
+        },
+        "links": {
+          "type": "array",
+          "description": "A list of external links related to the project.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "platform": {
+                "type": "string",
+                "enum": ["github", "playstore", "appstore", "website"]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": ["platform", "url"]
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The date the project was created.",
+          "format": "date-time"
         }
       },
       "required": [
         "id",
+        "slug",
         "title",
         "description",
-        "mediaUrl",
-        "projectUrl"
+        "version",
+        "type",
+        "os",
+        "createdAt"
       ]
     },
     "BlogPost": {
@@ -427,4 +503,3 @@
     "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles, sessions) are stored under `/users/{userId}` and `/sessions/{sessionId}` respectively.\n*   Admin-only data (contact messages, site settings) are stored in dedicated collections, accessible only to authenticated admins.\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access is determined by a `role` field on the user document.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
   }
 }
-    

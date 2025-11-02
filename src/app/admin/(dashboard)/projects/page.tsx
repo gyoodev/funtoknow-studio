@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -12,11 +13,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { format } from 'date-fns';
 
 function DeleteProjectButton({ projectId, onDeleted }: { projectId: string; onDeleted: () => void }) {
   const firestore = useFirestore();
@@ -67,7 +69,7 @@ export default function AdminProjectsPage() {
   const { toast } = useToast();
 
   const projectsQuery = useMemoFirebase(
-    () => (firestore ? query(collection(firestore, 'projects'), orderBy('date', 'desc')) : null),
+    () => (firestore ? query(collection(firestore, 'projects'), orderBy('createdAt', 'desc')) : null),
     [firestore]
   );
   const { data: projects, isLoading, error } = useCollection<Project>(projectsQuery);
@@ -105,8 +107,9 @@ export default function AdminProjectsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
-                  <TableHead className="hidden md:table-cell">Award</TableHead>
-                  <TableHead className="hidden lg:table-cell">Date</TableHead>
+                  <TableHead className="hidden md:table-cell">Slug</TableHead>
+                  <TableHead className="hidden lg:table-cell">Version</TableHead>
+                  <TableHead className="hidden lg:table-cell">Created</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -116,13 +119,14 @@ export default function AdminProjectsPage() {
                     <TableRow key={i}>
                       <TableCell><Skeleton className="h-5 w-48" /></TableCell>
                       <TableCell className="hidden md:table-cell"><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell className="hidden lg:table-cell"><Skeleton className="h-5 w-16" /></TableCell>
                       <TableCell className="hidden lg:table-cell"><Skeleton className="h-5 w-32" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-8 w-20 ml-auto" /></TableCell>
                     </TableRow>
                   ))
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center h-24 text-destructive">
+                    <TableCell colSpan={5} className="text-center h-24 text-destructive">
                       Error loading projects: {error.message}
                     </TableCell>
                   </TableRow>
@@ -130,10 +134,13 @@ export default function AdminProjectsPage() {
                   projects.map(project => (
                     <TableRow key={project.id}>
                       <TableCell className="font-medium">{project.title}</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <Badge variant="secondary">{project.award}</Badge>
+                      <TableCell className="hidden md:table-cell text-sm text-muted-foreground font-mono">{project.slug}</TableCell>
+                       <TableCell className="hidden lg:table-cell">
+                        <Badge variant="secondary">{project.version}</Badge>
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{project.date}</TableCell>
+                      <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                        {project.createdAt ? format(project.createdAt.toDate(), 'PP') : 'N/A'}
+                      </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" asChild>
                           <Link href={`/admin/projects/edit/${project.id}`}>
@@ -146,7 +153,7 @@ export default function AdminProjectsPage() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center h-24">No projects yet.</TableCell>
+                    <TableCell colSpan={5} className="text-center h-24">No projects yet.</TableCell>
                   </TableRow>
                 )}
               </TableBody>

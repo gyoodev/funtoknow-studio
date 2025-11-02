@@ -1,13 +1,17 @@
+
 export interface Project {
   id: string;
+  slug: string;
   title: string;
-  award: string;
-  date: string;
-  location: string;
-  imageUrl: string;
-  imageHint: string;
-  logo: string;
-  logoBg: string;
+  description: string;
+  version: string;
+  type: 'game' | 'app' | 'library';
+  os: ('windows' | 'mac' | 'linux' | 'android' | 'ios' | 'web')[];
+  videoEmbedUrl?: string;
+  gallery?: { url: string; hint: string }[];
+  readme?: string; // Markdown
+  links?: { platform: 'github' | 'playstore' | 'appstore' | 'website'; url: string }[];
+  createdAt: any; // Firestore timestamp
 }
 
 export interface BlogPost {
@@ -48,5 +52,3 @@ export interface SiteSettings {
   showSystemNotification: boolean;
   systemNotification?: string;
 }
-
-    
