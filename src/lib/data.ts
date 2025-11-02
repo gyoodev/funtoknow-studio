@@ -11,7 +11,7 @@ export const projects: Project[] = [
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-1.svg',
     imageHint: 'abstract waves',
     logo: 'Gamepad2',
-    logoBg: 'bg-purple-600',
+    logoBg: 'bg-orange-500',
   },
   {
     id: '2',
@@ -23,7 +23,7 @@ export const projects: Project[] = [
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-2.svg',
     imageHint: 'abstract grid',
     logo: 'Apple',
-    logoBg: 'bg-blue-500',
+    logoBg: 'bg-sky-500',
   },
   {
     id: '3',
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-4.svg',
     imageHint: 'abstract dots',
     logo: 'Play',
-    logoBg: 'bg-green-500',
+    logoBg: 'bg-emerald-500',
   },
   {
     id: '5',
@@ -71,7 +71,7 @@ export const projects: Project[] = [
     imageUrl: 'https://storage.googleapis.com/aifirebase.appspot.com/assets/project-card-6.svg',
     imageHint: 'abstract confetti',
     logo: 'Tiktok',
-    logoBg: 'bg-red-500',
+    logoBg: 'bg-rose-500',
   },
 ];
 
