@@ -37,7 +37,7 @@ const projectSchema = z.object({
     hint: z.string().min(1, 'Hint is required.'),
   })).optional(),
   links: z.array(z.object({
-    platform: z.enum(['github', 'playstore', 'appstore', 'website']),
+    platform: z.enum(['github', 'playstore', 'appstore', 'website', 'steam', 'epicgames', 'itchio', 'gog']),
     url: z.string().url('Must be a valid URL.'),
   })).optional(),
 });
@@ -295,12 +295,16 @@ export default function NewProjectPage() {
                                 <FormItem className="w-48">
                                     <FormLabel>Platform</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                        <FormControl><SelectTrigger><SelectValue placeholder="Select Platform"/></SelectTrigger></FormControl>
                                         <SelectContent>
                                             <SelectItem value="github">GitHub</SelectItem>
                                             <SelectItem value="playstore">Play Store</SelectItem>
                                             <SelectItem value="appstore">App Store</SelectItem>
                                             <SelectItem value="website">Website</SelectItem>
+                                            <SelectItem value="steam">Steam</SelectItem>
+                                            <SelectItem value="epicgames">Epic Games</SelectItem>
+                                            <SelectItem value="itchio">Itch.io</SelectItem>
+                                            <SelectItem value="gog">GOG</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -354,3 +358,5 @@ export default function NewProjectPage() {
     </div>
   );
 }
+
+    
