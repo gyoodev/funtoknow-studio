@@ -64,7 +64,8 @@ service cloud.firestore {
       allow get: if isOwner(userId) || isAdmin();
       allow create: if isOwner(userId);
       allow update: if isOwner(userId);
-      allow list, delete: if false;
+      allow list: if isAdmin();
+      allow delete: if false;
     }
 
     /**
@@ -81,7 +82,8 @@ service cloud.firestore {
      * @path /sessions/{sessionId}
      */
     match /sessions/{sessionId} {
-      allow get, create, update, delete: if request.resource.data.userId == request.auth.uid;
+      allow get, delete: if isOwner(sessionId);
+      allow create, update: if request.resource.data.userId == request.auth.uid;
       allow list: if false;
     }
 
@@ -102,5 +104,3 @@ service cloud.firestore {
     }
   }
 }
-
-    
