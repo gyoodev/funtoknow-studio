@@ -31,11 +31,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
+    // Wait until loading is complete before making any decisions
     if (isLoading) {
-      return; // Do nothing while loading
+      return;
     }
     
-    // After loading, if there's no user or the user is not an admin, redirect.
+    // After loading, if there is no user or the user is not an admin, redirect to admin login
     if (!user || userProfile?.role !== 'admin') {
       router.replace('/admin/login');
     }
@@ -43,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
   // While loading, or if the user is not yet confirmed as an admin, show a loading/verifying screen.
-  // This prevents the dashboard from flashing before the redirect can happen.
+  // This prevents the dashboard from flashing before a potential redirect can happen.
   if (isLoading || !user || userProfile?.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">

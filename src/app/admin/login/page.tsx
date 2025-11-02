@@ -64,6 +64,7 @@ export default function AdminLoginPage() {
         });
         router.push('/admin');
       } else {
+        // If user is not an admin, sign them out immediately.
         await auth.signOut();
         throw new Error('You are not authorized to access this panel.');
       }
