@@ -3,7 +3,7 @@
 import { useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -20,32 +20,27 @@ import {
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    if (isClient && !isLoading) {
+    // Only check for authentication after the initial loading is complete
+    if (!isLoading) {
       if (!user || userProfile?.role !== 'admin') {
         router.replace('/admin/login');
       }
     }
-  }, [isClient, isLoading, user, userProfile, router]);
+  }, [isLoading, user, userProfile, router]);
 
 
-  if (!isClient || isLoading || !user || userProfile?.role !== 'admin') {
+  if (isLoading || !user || userProfile?.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center">
