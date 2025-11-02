@@ -61,17 +61,17 @@ export default function Footer() {
     <footer className="border-t bg-card">
       <div className="container py-8">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          <div className="flex flex-col items-center gap-2 md:items-start">
-            <Logo />
-            <p className="text-sm text-muted-foreground">
-              All rights reserved <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()}. Developed by <a href="https://gkdev.org" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GKDEV</a>
+            <p className="text-sm text-muted-foreground order-3 md:order-1 text-center md:text-left">
+              <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()} FunToKnow. All rights reserved.
             </p>
-          </div>
-          <SocialLinks />
+            <div className="order-1 md:order-2">
+                <Logo />
+            </div>
+            <div className="order-2 md:order-3">
+                <SocialLinks />
+            </div>
         </div>
       </div>
     </footer>
   );
 }
-
-    
