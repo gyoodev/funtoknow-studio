@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             </header>
 
             <div className="space-y-2">
-                <p className="text-sm text-white/80">{project.awardType}</p>
+                <p className="text-sm text-white/80">{project.award}</p>
                 <h3 className="text-xl font-bold">{project.title}</h3>
             </div>
 

@@ -2,7 +2,6 @@ export interface Project {
   id: string;
   title: string;
   award: string;
-  awardType: string;
   date: string;
   location: string;
   imageUrl: string;

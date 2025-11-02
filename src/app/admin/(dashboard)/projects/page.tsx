@@ -105,7 +105,7 @@ export default function AdminProjectsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
-                  <TableHead className="hidden md:table-cell">Award Type</TableHead>
+                  <TableHead className="hidden md:table-cell">Award</TableHead>
                   <TableHead className="hidden lg:table-cell">Date</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -131,7 +131,7 @@ export default function AdminProjectsPage() {
                     <TableRow key={project.id}>
                       <TableCell className="font-medium">{project.title}</TableCell>
                       <TableCell className="hidden md:table-cell">
-                        <Badge variant="secondary">{project.awardType}</Badge>
+                        <Badge variant="secondary">{project.award}</Badge>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{project.date}</TableCell>
                       <TableCell className="text-right">

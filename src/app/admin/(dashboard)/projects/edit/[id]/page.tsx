@@ -26,7 +26,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 const projectSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
-  awardType: z.string().min(1, 'Award type is required.'),
+  award: z.string().min(1, 'Award is required.'),
   date: z.string().min(1, 'Date is required.'),
   location: z.string().min(1, 'Location is required.'),
   imageUrl: z.string().url('Must be a valid URL.'),
@@ -56,7 +56,7 @@ export default function EditProjectPage() {
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      title: '', awardType: '', date: '', location: '', imageUrl: '', imageHint: '', logo: '', logoBg: ''
+      title: '', award: '', date: '', location: '', imageUrl: '', imageHint: '', logo: '', logoBg: ''
     },
   });
 
@@ -155,9 +155,9 @@ export default function EditProjectPage() {
                             <FormMessage />
                         </FormItem>
                     )} />
-                    <FormField control={form.control} name="awardType" render={({ field }) => (
+                    <FormField control={form.control} name="award" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Award Type</FormLabel>
+                            <FormLabel>Award</FormLabel>
                             <FormControl><Input {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
