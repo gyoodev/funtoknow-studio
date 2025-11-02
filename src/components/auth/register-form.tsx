@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { useAuth, useFirestore } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +35,8 @@ export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const auth = useAuth();
+  const firestore = useFirestore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,7 +58,7 @@ export function RegisterForm() {
       await updateProfile(user, { displayName: values.name });
 
       // Create user profile in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(firestore, 'users', user.uid), {
         displayName: values.name,
         email: values.email,
         role: 'user',

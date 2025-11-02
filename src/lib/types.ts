@@ -30,4 +30,5 @@ export interface UserProfile {
   displayName: string;
   role: 'admin' | 'user';
   gamingHabits?: string;
+  photoURL?: string;
 }

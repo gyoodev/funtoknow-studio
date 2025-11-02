@@ -2,7 +2,8 @@
 
 import { z } from 'zod';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getFirestore } from 'firebase/firestore';
+import { initializeFirebase } from '@/firebase';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -39,8 +40,9 @@ export async function submitContactForm(
   }
 
   try {
+    const { firestore } = initializeFirebase();
     // Save the data to Firestore in a 'messages' collection
-    await addDoc(collection(db, 'messages'), {
+    await addDoc(collection(firestore, 'messages'), {
       ...validatedFields.data,
       createdAt: serverTimestamp(),
     });

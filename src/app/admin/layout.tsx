@@ -1,6 +1,7 @@
 'use client';
 
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
+import { useUserProfile } from '@/hooks/use-user-profile';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import {
@@ -21,23 +22,26 @@ import { Gamepad, Newspaper, Users, Home } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { userProfile, loading } = useAuth();
+  const { user, isUserLoading } = useUser();
+  const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const router = useRouter();
+
+  const loading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
     if (!loading) {
-      if (!userProfile) {
+      if (!user) {
         // Not logged in, redirect to login
         router.push('/login');
-      } else if (userProfile.role !== 'admin') {
+      } else if (userProfile?.role !== 'admin') {
         // Logged in but not an admin, redirect to home
         router.push('/');
       }
     }
-  }, [userProfile, loading, router]);
+  }, [user, userProfile, loading, router]);
 
   // While loading or if not an admin, show a loading screen or nothing
-  if (loading || !userProfile || userProfile.role !== 'admin') {
+  if (loading || !user || userProfile?.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="text-center">Loading Admin Panel...</div>

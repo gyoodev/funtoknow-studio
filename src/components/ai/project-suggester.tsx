@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { doc, updateDoc } from 'firebase/firestore';
 
-import { db } from '@/lib/firebase';
-import { useAuth } from '@/hooks/use-auth';
+import { useFirestore, useUser } from '@/firebase';
+import { useUserProfile } from '@/hooks/use-user-profile';
 import { getPersonalizedProjectSuggestions } from '@/ai/flows/personalized-project-suggestions';
 
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,9 @@ const formSchema = z.object({
 });
 
 export function ProjectSuggester() {
-  const { user, userProfile } = useAuth();
+  const { user } = useUser();
+  const { userProfile } = useUserProfile(user?.uid);
+  const firestore = useFirestore();
   const { toast } = useToast();
 
   const [isSaving, setIsSaving] = useState(false);
@@ -42,7 +44,7 @@ export function ProjectSuggester() {
     if (!user) return;
     setIsSaving(true);
     try {
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(firestore, 'users', user.uid);
       await updateDoc(userDocRef, { gamingHabits: values.gamingHabits });
       toast({ title: 'Success', description: 'Your gaming habits have been saved.' });
     } catch (error) {

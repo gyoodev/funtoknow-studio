@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useFirestore } from '@/firebase';
 import type { UserProfile } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,11 +13,13 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const firestore = useFirestore();
 
   useEffect(() => {
+    if (!firestore) return;
     const fetchUsers = async () => {
       try {
-        const usersCollection = collection(db, 'users');
+        const usersCollection = collection(firestore, 'users');
         const q = query(usersCollection, orderBy('displayName'));
         const querySnapshot = await getDocs(q);
         const usersData = querySnapshot.docs.map(doc => ({
@@ -34,7 +36,7 @@ export default function AdminUsersPage() {
     };
 
     fetchUsers();
-  }, []);
+  }, [firestore]);
 
   return (
     <div className="p-4 md:p-8">

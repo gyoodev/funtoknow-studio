@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
-import { auth } from '@/lib/firebase';
+import { useAuth, useUser } from '@/firebase';
 
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks/use-auth';
+import { useUserProfile } from '@/hooks/use-user-profile';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -31,7 +31,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, userProfile } = useAuth();
+  const auth = useAuth();
+  const { user } = useUser();
+  const { userProfile } = useUserProfile(user?.uid);
+
 
   const handleSignOut = async () => {
     await auth.signOut();

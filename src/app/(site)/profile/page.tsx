@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
+import { useUserProfile } from '@/hooks/use-user-profile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProjectSuggester } from '@/components/ai/project-suggester';
@@ -10,8 +11,11 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
-  const { user, userProfile, loading } = useAuth();
+  const { user, isUserLoading } = useUser();
+  const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const router = useRouter();
+
+  const loading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
     if (!loading && !user) {
