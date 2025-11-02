@@ -105,7 +105,7 @@ export default function Navbar() {
             </>
           ) : (
             <Button asChild className="rounded-full">
-              <Link href="/contact">Contact</Link>
+              <Link href="/auth/login">Login</Link>
             </Button>
           )}
         </div>

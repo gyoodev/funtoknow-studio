@@ -23,8 +23,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Logo } from '@/components/logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -81,21 +79,9 @@ export default function AdminLoginPage() {
     }
   }
 
-  const bgImage = PlaceHolderImages.find(p => p.id === 'auth-background');
-
   return (
-     <div className="relative flex min-h-screen flex-col items-center justify-center">
-      {bgImage && (
-        <Image
-          src={bgImage.imageUrl}
-          alt={bgImage.description}
-          fill
-          className="object-cover"
-          data-ai-hint={bgImage.imageHint}
-        />
-      )}
-      <div className="absolute inset-0 bg-primary/80" />
-      <div className="relative z-10 w-full max-w-md">
+    <div className="relative flex min-h-screen flex-col items-center justify-center">
+      <div className="w-full max-w-md">
         <Card className="m-4">
           <CardHeader className="items-center text-center">
             <Logo />
