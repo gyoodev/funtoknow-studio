@@ -50,6 +50,15 @@ export default function AdminLoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    if (!auth || !firestore) {
+      toast({
+        title: 'Login Failed',
+        description: 'Firebase services are not available. Please try again later.',
+        variant: 'destructive',
+      });
+      setIsLoading(false);
+      return;
+    }
     try {
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
@@ -62,7 +71,7 @@ export default function AdminLoginPage() {
           title: 'Login Successful',
           description: 'Welcome to the admin dashboard.',
         });
-        router.push('/admin');
+        router.push('/admin/dashboard');
       } else {
         await auth.signOut();
         throw new Error('You do not have permission to access the admin panel.');
