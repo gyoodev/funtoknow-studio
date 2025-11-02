@@ -18,15 +18,53 @@ import {
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
+  const router = useRouter();
+
+  const isLoading = isUserLoading || isProfileLoading;
+  
+  useEffect(() => {
+    if (!isLoading) {
+      if (!user || userProfile?.role !== 'admin') {
+        router.push('/admin/login');
+      }
+    }
+  }, [isLoading, user, userProfile, router]);
   
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
+
+  if (isLoading) {
+     return (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
+        <div className="text-center text-muted-foreground">
+          <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
+          <p>Verifying access...</p>
+          <p className="text-sm">Please wait while we check your credentials.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || userProfile?.role !== 'admin') {
+    // This will be briefly rendered before the useEffect triggers the redirect.
+    // You can also return null or a minimal loader here.
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
+        <div className="text-center text-muted-foreground">
+          <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
+          <p>Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
