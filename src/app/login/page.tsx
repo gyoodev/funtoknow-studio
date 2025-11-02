@@ -23,9 +23,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md">
         <Card className="m-4">
           <CardHeader className="items-center text-center">
-            <Link href="/" aria-label="Home">
-              <Logo />
-            </Link>
+            <Logo />
             <CardTitle className="text-2xl">Welcome Back!</CardTitle>
             <CardDescription>Enter your credentials to access your account.</CardDescription>
           </CardHeader>

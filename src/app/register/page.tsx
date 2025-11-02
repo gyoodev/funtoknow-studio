@@ -23,9 +23,7 @@ export default function RegisterPage() {
       <div className="relative z-10 w-full max-w-md">
         <Card className="m-4">
           <CardHeader className="items-center text-center">
-            <Link href="/" aria-label="Home">
-              <Logo />
-            </Link>
+            <Logo />
             <CardTitle className="text-2xl">Create an Account</CardTitle>
             <CardDescription>Join our community to showcase your projects and connect with creators.</CardDescription>
           </CardHeader>
