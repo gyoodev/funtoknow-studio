@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faNewspaper, faUsers, faExternalLinkAlt, faCog, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -31,7 +32,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
   return (
     <SidebarProvider>
-      <Sidebar>
+      <Sidebar collapsible="offcanvas">
         <SidebarHeader>
           <div className="flex h-12 items-center justify-between p-2">
             <Logo />
@@ -114,7 +115,13 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           ) : null}
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <header className="flex h-12 items-center gap-2 border-b bg-background p-2 md:hidden">
+          <SidebarTrigger />
+          <h2 className="text-lg font-semibold">Admin Panel</h2>
+        </header>
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }
