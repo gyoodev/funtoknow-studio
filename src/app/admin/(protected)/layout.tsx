@@ -31,8 +31,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
+    // Don't do anything while loading
     if (isLoading) {
-      return; // Wait until loading is complete before doing anything.
+      return;
     }
 
     // After loading, if there's no user, redirect to login.
