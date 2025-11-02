@@ -23,10 +23,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { SimpleMarkdownRenderer } from '@/components/markdown-renderer';
 
-type ProjectPageProps = {
-  params: { slug: string };
-};
-
 const osIconMap: Record<Project['os'][number], IconDefinition> = {
   windows: faWindows,
   mac: faApple,
@@ -49,11 +45,12 @@ const linkIconMap: Record<Project['links'][number]['platform'], IconDefinition> 
 };
 
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const firestore = useFirestore();
-  const { slug } = params;
+  const params = useParams();
+  const slug = params.slug as string;
 
   useEffect(() => {
     if (!firestore || !slug) return;
