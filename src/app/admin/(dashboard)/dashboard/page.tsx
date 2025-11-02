@@ -47,6 +47,29 @@ export default function AdminDashboardPage() {
     <div className="p-4 md:p-8">
       <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
       <p className="text-muted-foreground">Welcome to the control center for the FunToKnow Platform.</p>
+      
+      <div className="mt-8 grid gap-8">
+        <Card>
+            <CardHeader className="flex flex-row items-center gap-4">
+                <FontAwesomeIcon icon={faInfoCircle} className="h-8 w-8 text-primary" />
+                <div>
+                    <CardTitle>Welcome to the FunToKnow Admin Panel</CardTitle>
+                    <CardDescription>
+                        This panel was developed by GKDEV to provide a centralized interface for managing your application.
+                    </CardDescription>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <p className="mb-4">From here, you can manage all the core aspects of your site. Use the navigation above to access the main functions:</p>
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                    <li><strong>Projects:</strong> Add, edit, or remove the game projects displayed on your site.</li>
+                    <li><strong>Blog:</strong> Create and manage all of your developer blog posts.</li>
+                    <li><strong>Users:</strong> View registered users and manage their roles and permissions.</li>
+                    <li><strong>Settings:</strong> Configure global site settings, social media links, and banners.</li>
+                </ul>
+            </CardContent>
+        </Card>
+      </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <StatCard 
@@ -70,29 +93,6 @@ export default function AdminDashboardPage() {
             href="/admin/users"
             isLoading={isLoading}
         />
-      </div>
-
-      <div className="mt-8 grid gap-8">
-        <Card>
-            <CardHeader className="flex flex-row items-center gap-4">
-                <FontAwesomeIcon icon={faInfoCircle} className="h-8 w-8 text-primary" />
-                <div>
-                    <CardTitle>Welcome to the FunToKnow Admin Panel</CardTitle>
-                    <CardDescription>
-                        This panel was developed by GKDEV to provide a centralized interface for managing your application.
-                    </CardDescription>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <p className="mb-4">From here, you can manage all the core aspects of your site. Use the navigation above to access the main functions:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                    <li><strong>Projects:</strong> Add, edit, or remove the game projects displayed on your site.</li>
-                    <li><strong>Blog:</strong> Create and manage all of your developer blog posts.</li>
-                    <li><strong>Users:</strong> View registered users and manage their roles and permissions.</li>
-                    <li><strong>Settings:</strong> Configure global site settings, social media links, and banners.</li>
-                </ul>
-            </CardContent>
-        </Card>
       </div>
     </div>
   );
