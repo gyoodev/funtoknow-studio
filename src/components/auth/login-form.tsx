@@ -4,9 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence, browserLocalPersistence } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuth } from '@/firebase';
+import { useAuth, useFirestore } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import {
@@ -39,6 +40,7 @@ export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
+  const firestore = useFirestore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,10 +54,23 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      // Set persistence based on the "Remember me" checkbox
-      await setPersistence(auth, values.rememberMe ? browserLocalPersistence : browserSessionPersistence);
+      const persistence = values.rememberMe ? browserLocalPersistence : browserSessionPersistence;
+      await setPersistence(auth, persistence);
       
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+
+      // Create session document
+      const sessionDuration = values.rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+      const expiresAt = new Date(Date.now() + sessionDuration);
+      
+      const sessionRef = doc(firestore, 'sessions', user.uid);
+      await setDoc(sessionRef, {
+        userId: user.uid,
+        createdAt: serverTimestamp(),
+        expiresAt: expiresAt,
+      });
+
       toast({
         title: 'Login Successful',
         description: "Welcome back!",
@@ -97,7 +112,7 @@ export function LoginForm() {
               <FormLabel>Password</FormLabel>
               <div className="relative">
                 <FormControl>
-                  <Input type={showPassword ? 'text' : 'password'} {...field} />
+                  <Input type={showPassword ? 'text' : 'password'} placeholder="••••••" {...field} />
                 </FormControl>
                 <button
                   type="button"
@@ -147,3 +162,5 @@ export function LoginForm() {
     </Form>
   );
 }
+
+    

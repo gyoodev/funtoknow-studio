@@ -10,17 +10,17 @@
  * - /contactMessages/{contactMessageId}: Admin-only contact messages.
  * - /users/{userId}: User profile data, accessible only to the user and admins.
  * - /authors/{authorId}: Publicly readable author data.
- * - /roles_admin/{userId}: Collection to store admin user IDs.
+ * - /sessions/{sessionId}: User session data, accessible only to the owner.
  *
  * Key Security Decisions:
  * - Public read access is granted for projects, blog posts and authors.
- * - Users can only read/write their own profile data.
+ * - Users can only read/write their own profile data and session data.
  * - Contact messages are only accessible to admins.
- * - Admin status is determined by the existence of a document in the /roles_admin/{userId} collection.
- * - Listing of contact messages is disallowed to prevent unauthorized access.
+ * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
+ * - Listing of contact messages and user profiles is disallowed to prevent unauthorized access.
  *
  * Denormalization for Authorization:
- * - Admin privileges are checked by verifying the existence of a document under `/roles_admin/{userId}` to avoid complex role-based queries.
+ * - The `role` field is stored directly on the user document, avoiding the need for a separate roles collection.
  *
  * Structural Segregation:
  * - Private user data and public content are stored in separate collections to simplify access control and improve query performance.
@@ -32,116 +32,57 @@ service cloud.firestore {
     /**
      * @description Allows anyone to read project data, but restricts create, update, and delete operations to admins.
      * @path /projects/{projectId}
-     * @allow (get, list): if true
-     * @allow (create): if isAdmin()
-     * @deny (create): if !isAdmin()
-     * @allow (update): if isAdmin()
-     * @deny (update): if !isAdmin()
-     * @allow (delete): if isAdmin()
-     * @deny (delete): if !isAdmin()
-     * @principle Allows public read access to projects, but restricts modifications to admins.
      */
     match /projects/{projectId} {
       allow get, list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin() && resource != null;
-      allow delete: if isAdmin() && resource != null;
+      allow write: if isAdmin();
     }
 
     /**
      * @description Allows anyone to read blog post data, but restricts create, update, and delete operations to admins.
      * @path /blogPosts/{blogPostId}
-     * @allow (get, list): if true
-     * @allow (create): if isAdmin()
-     * @deny (create): if !isAdmin()
-     * @allow (update): if isAdmin()
-     * @deny (update): if !isAdmin()
-     * @allow (delete): if isAdmin()
-     * @deny (delete): if !isAdmin()
-     * @principle Allows public read access to blog posts, but restricts modifications to admins.
      */
     match /blogPosts/{blogPostId} {
       allow get, list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin() && resource != null;
-      allow delete: if isAdmin() && resource != null;
+      allow write: if isAdmin();
     }
 
     /**
-     * @description Restricts access to contact messages to admins only.
+     * @description Restricts access to contact messages to admins only. List is disallowed.
      * @path /contactMessages/{contactMessageId}
-     * @allow (get): if isAdmin()
-     * @deny (get): if !isAdmin()
-     * @allow (list): if false;
-     * @deny (list): always
-     * @allow (create): if isAdmin()
-     * @deny (create): if !isAdmin()
-     * @allow (update): if isAdmin()
-     * @deny (update): if !isAdmin()
-     * @allow (delete): if isAdmin()
-     * @deny (delete): if !isAdmin()
-     * @principle Restricts access to contact messages to admins.
      */
     match /contactMessages/{contactMessageId} {
-      allow get: if isAdmin();
+      allow get, create, update, delete: if isAdmin();
       allow list: if false;
-      allow create: if isAdmin();
-      allow update: if isAdmin() && resource != null;
-      allow delete: if isAdmin() && resource != null;
     }
 
     /**
-     * @description Allows users to read and write their own profile data, and allows admins to read user data.
+     * @description Allows users to read and write their own profile data, and allows admins to read user data. List is disallowed.
      * @path /users/{userId}
-     * @allow (get): if isOwner(userId) || isAdmin()
-     * @deny (get): if !isOwner(userId) && !isAdmin()
-     * @allow (list): if false;
-     * @deny (list): always
-     * @allow (create): if isOwner(userId)
-     * @deny (create): if !isOwner(userId)
-     * @allow (update): if isOwner(userId)
-     * @deny (update): if !isOwner(userId)
-     * @allow (delete): if false;
-     * @deny (delete): always
-     * @principle Enforces user ownership for profile data and allows admin read access.
      */
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
-      allow list: if false;
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isOwner(userId) && resource.data.id == request.resource.data.id;
-      allow delete: if false;
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow list, delete: if false;
     }
 
     /**
      * @description Allows anyone to read author data, but restricts create, update, and delete operations to admins.
      * @path /authors/{authorId}
-     * @allow (get, list): if true
-     * @allow (create): if isAdmin()
-     * @deny (create): if !isAdmin()
-     * @allow (update): if isAdmin()
-     * @deny (update): if !isAdmin()
-     * @allow (delete): if isAdmin()
-     * @deny (delete): if !isAdmin()
-     * @principle Allows public read access to authors, but restricts modifications to admins.
      */
     match /authors/{authorId} {
       allow get, list: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin() && resource != null;
-      allow delete: if isAdmin() && resource != null;
+      allow write: if isAdmin();
     }
-
-     /**
-      * @description Determines admin privileges based on the existence of a document with the user's ID in this collection.
-      * @path /roles_admin/{userId}
-      */
-    match /roles_admin/{userId} {
-        allow get: if isAdmin();
-        allow list: if false;
-        allow create: if false;
-        allow update: if false;
-        allow delete: if false;
+    
+    /**
+     * @description Allows users to manage their own session data.
+     * @path /sessions/{sessionId}
+     */
+    match /sessions/{sessionId} {
+      allow get, create, update, delete: if request.resource.data.userId == request.auth.uid;
+      allow list: if false;
     }
 
     function isSignedIn() {
@@ -152,8 +93,14 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+    
     function isAdmin() {
-      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      return isSignedIn() && getUserData(request.auth.uid).role == 'admin';
     }
   }
 }
+
+    

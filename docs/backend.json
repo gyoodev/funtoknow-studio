@@ -139,13 +139,22 @@
         "gamingHabits": {
           "type": "string",
           "description": "A record of the users gaming habits"
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user.",
+          "enum": [
+            "user",
+            "admin"
+          ]
         }
       },
       "required": [
         "id",
         "username",
         "email",
-        "gamingHabits"
+        "gamingHabits",
+        "role"
       ]
     },
     "Author": {
@@ -175,6 +184,33 @@
         "id",
         "name",
         "bio"
+      ]
+    },
+    "Session": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Session",
+      "type": "object",
+      "description": "Represents a user session.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user this session belongs to."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The date and time when the session was created.",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "description": "The date and time when the session expires.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "userId",
+        "createdAt",
+        "expiresAt"
       ]
     }
   },
@@ -267,22 +303,24 @@
         }
       },
       {
-        "path": "/roles_admin/{userId}",
+        "path": "/sessions/{sessionId}",
         "definition": {
-          "entityName": "admin_role",
+          "entityName": "Session",
           "schema": {
-            "$ref": "#/backend/entities/User"
+            "$ref": "#/backend/entities/Session"
           },
-          "description": "Marks a user as an administrator. Existence of a document with the user's ID in this collection grants admin privileges.",
+          "description": "Stores user session data. Only the user who owns the session can create, read, or delete it.",
           "params": [
             {
-              "name": "userId",
-              "description": "Unique identifier for the admin user."
+              "name": "sessionId",
+              "description": "Unique identifier for the session."
             }
           ]
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles) are stored under `/users/{userId}`.\n*   Admin-only data (contact messages) are stored in a dedicated `/contactMessages` collection, accessible only to authenticated admins (determined via a separate `/roles_admin/{uid}` document).\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access to `/contactMessages` is controlled by checking for the existence of a document in `/roles_admin/{uid}`.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
+    "reasoning": "The Firestore data structure is designed to support the 'FunToKnow Platform' application, focusing on project showcasing, blog publication, contact form submissions, user authentication, and an admin panel for content management. The structure prioritizes security, scalability, and ease of debugging through authorization independence and structural segregation.\n\n**Authorization Independence:**\n\n*   No hierarchical authorization dependencies (`get()` calls) are required in the security rules.\n\n**Structural Segregation:**\n\n*   Data with different access requirements (e.g., public projects, private user data, admin-only contact messages) are stored in separate collections to simplify security rules.\n\n**Access Modeling:**\n\n*   User-owned data (user profiles, sessions) are stored under `/users/{userId}` and `/sessions/{sessionId}` respectively.\n*   Admin-only data (contact messages) are stored in a dedicated `/contactMessages` collection, accessible only to authenticated admins.\n*   Publicly accessible data (projects, blog posts) are stored in the `/projects` and `/blogPosts` collections, respectively.\n\n**QAPs Support:**\n\n*   Secure `list` operations are enabled through structural segregation. Rules can easily allow listing all documents in `/projects` or `/blogPosts` without exposing private data.\n*   Admin access is determined by a `role` field on the user document.\n\n**Invariants:**\n\n*   Ownership of user data is enforced by the path structure `/users/{userId}`.\n*   Timestamps are implicitly supported within the `BlogPost` and `ContactMessage` entities (publicationDate, sentDate)."
   }
 }
+
+    
