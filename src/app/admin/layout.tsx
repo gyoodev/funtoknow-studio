@@ -31,13 +31,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    // Only run this check after the initial loading is complete.
-    if (!isLoading) {
-      // If there's no authenticated user OR if the user's role is not 'admin',
-      // redirect to the admin login page.
-      if (!user || userProfile?.role !== 'admin') {
-        router.replace('/admin/login');
-      }
+    // If loading is finished and we determine the user is not an admin, redirect.
+    if (!isLoading && (!user || userProfile?.role !== 'admin')) {
+      router.replace('/admin/login');
     }
   }, [isLoading, user, userProfile, router]);
 
@@ -48,7 +44,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center text-muted-foreground">
-          <p>Verifying access...</p>
+          {/* This content will be shown only for a brief moment during the initial check and redirect. */}
+          <p>Loading...</p>
         </div>
       </div>
     );
