@@ -3,7 +3,7 @@
 import { useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -23,33 +23,53 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
+function AdminLoadingScreen() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-background">
+      <div className="text-center">
+          <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
+          <h1 className="text-xl font-semibold text-foreground">Verifying access...</h1>
+          <p className="text-muted-foreground">Please wait while we check your credentials.</p>
+      </div>
+    </div>
+  );
+}
+
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    // Only check for authentication after the initial loading is complete
-    if (!isLoading) {
+    // This effect runs only on the client, after the component has mounted.
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // This effect handles redirection logic, but only on the client side
+    // and only after the initial loading of user/profile is complete.
+    if (isClient && !isLoading) {
       if (!user || userProfile?.role !== 'admin') {
         router.replace('/admin/login');
       }
     }
-  }, [isLoading, user, userProfile, router]);
+  }, [isClient, isLoading, user, userProfile, router]);
 
 
-  if (isLoading || !user || userProfile?.role !== 'admin') {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <div className="text-center">
-            <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
-            <h1 className="text-xl font-semibold text-foreground">Verifying access...</h1>
-            <p className="text-muted-foreground">Please wait while we check your credentials.</p>
-        </div>
-      </div>
-    );
+  // On the server, and on the initial client render, always show the loading screen.
+  // This guarantees no hydration mismatch.
+  if (!isClient || isLoading) {
+    return <AdminLoadingScreen />;
+  }
+
+  // Once loading is complete and we are on the client, if the user is not an admin,
+  // render the loading screen while the redirection happens.
+  if (!user || userProfile?.role !== 'admin') {
+     return <AdminLoadingScreen />;
   }
   
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
