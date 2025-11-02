@@ -111,7 +111,7 @@ export default function Navbar() {
                 <Link href="/login">Login</Link>
               </Button>
               <Button asChild>
-                <Link href="/register">Register</Link>
+                <Link href="/contact">Contact</Link>
               </Button>
             </>
           )}
