@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faNewspaper, faUsers, faHome, faExternalLinkAlt, faCog } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -31,28 +32,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    // If loading is finished and we determine the user is not an admin, redirect.
-    if (!isLoading && (!user || userProfile?.role !== 'admin')) {
-      router.replace('/admin/login');
+    if (!isLoading) {
+      if (!user || userProfile?.role !== 'admin') {
+        router.replace('/admin/login');
+      }
     }
   }, [isLoading, user, userProfile, router]);
 
 
-  // While loading, or if the user is not yet confirmed as an admin, show a loading/verifying screen.
-  // This prevents the dashboard from flashing before a potential redirect can happen.
   if (isLoading || !user || userProfile?.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
-        <div className="text-center text-muted-foreground">
-          {/* This content will be shown only for a brief moment during the initial check and redirect. */}
-          <p>Loading...</p>
+        <div className="text-center">
+            <FontAwesomeIcon icon={faSpinner} spin className="mb-4 h-8 w-8 text-primary" />
+            <h1 className="text-xl font-semibold text-foreground">Verifying access...</h1>
+            <p className="text-muted-foreground">Please wait while we check your credentials.</p>
         </div>
       </div>
     );
   }
   
-  // If we reach this point, the user is authenticated and confirmed as an admin.
-  // We can safely render the admin layout.
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
 
   return (

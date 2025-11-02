@@ -64,9 +64,8 @@ export default function AdminLoginPage() {
         });
         router.push('/admin');
       } else {
-        // If user is not an admin, sign them out immediately.
         await auth.signOut();
-        throw new Error('You are not authorized to access this panel.');
+        throw new Error('You do not have permission to access the admin panel.');
       }
     } catch (error: any) {
       console.error('Admin login error:', error);
@@ -81,7 +80,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="w-full max-w-md">
         <Card className="m-4">
           <CardHeader className="items-center text-center">
