@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Gamepad, Newspaper, Users, Home } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGamepad, faNewspaper, faUsers, faHome } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -66,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Dashboard">
                 <Link href="/admin">
-                  <Home />
+                  <FontAwesomeIcon icon={faHome} />
                   <span>Dashboard</span>
                 </Link>
               </SidebarMenuButton>
@@ -74,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Projects">
                 <Link href="/admin/projects">
-                  <Gamepad />
+                  <FontAwesomeIcon icon={faGamepad} />
                   <span>Projects</span>
                 </Link>
               </SidebarMenuButton>
@@ -82,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Blog">
                 <Link href="/admin/blog">
-                  <Newspaper />
+                  <FontAwesomeIcon icon={faNewspaper} />
                   <span>Blog</span>
                 </Link>
               </SidebarMenuButton>
@@ -90,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Users">
                 <Link href="/admin/users">
-                  <Users />
+                  <FontAwesomeIcon icon={faUsers} />
                   <span>Users</span>
                 </Link>
               </SidebarMenuButton>

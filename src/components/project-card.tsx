@@ -2,18 +2,21 @@ import Image from 'next/image';
 import type { Project } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Gamepad2, Apple, Codepen, Play, Music } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGamepad, faPlay, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faApple, faCodepen } from '@fortawesome/free-brands-svg-icons';
+import React from 'react';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 const iconMap: { [key: string]: React.ElementType } = {
-  Gamepad2,
-  Apple,
-  Codepen,
-  Play,
-  Music,
+  Gamepad2: (props: any) => <FontAwesomeIcon icon={faGamepad} {...props} />,
+  Apple: (props: any) => <FontAwesomeIcon icon={faApple} {...props} />,
+  Codepen: (props: any) => <FontAwesomeIcon icon={faCodepen} {...props} />,
+  Play: (props: any) => <FontAwesomeIcon icon={faPlay} {...props} />,
+  Music: (props: any) => <FontAwesomeIcon icon={faMusic} {...props} />,
 };
 
 

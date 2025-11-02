@@ -1,4 +1,5 @@
-import { Github, Twitter, Linkedin } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Logo } from '@/components/logo';
 import { Button } from '../ui/button';
 
@@ -16,17 +17,17 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" asChild>
               <a href="#" aria-label="GitHub">
-                <Github className="h-5 w-5" />
+                <FontAwesomeIcon icon={faGithub} className="h-5 w-5" />
               </a>
             </Button>
             <Button variant="ghost" size="icon" asChild>
               <a href="#" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
+                <FontAwesomeIcon icon={faTwitter} className="h-5 w-5" />
               </a>
             </Button>
             <Button variant="ghost" size="icon" asChild>
               <a href="#" aria-label="LinkedIn">
-                <Linkedin className="h-5 w-5" />
+                <FontAwesomeIcon icon={faLinkedin} className="h-5 w-5" />
               </a>
             </Button>
           </div>

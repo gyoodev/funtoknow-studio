@@ -3,7 +3,8 @@ import Link from 'next/link';
 import type { BlogPost } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowRight } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -48,7 +49,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
           </div>
         </div>
          <Link href={`/blog/${post.slug}`} className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-            Read More <ArrowRight className="h-4 w-4" />
+            Read More <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
         </Link>
       </CardFooter>
     </Card>

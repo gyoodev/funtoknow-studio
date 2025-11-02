@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Calendar } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 import { blogPosts } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -75,7 +76,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                     <span className="text-sm font-medium">{post.author}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
+                    <FontAwesomeIcon icon={faCalendar} className="h-4 w-4" />
                     <span className="text-sm">{post.date}</span>
                 </div>
             </div>

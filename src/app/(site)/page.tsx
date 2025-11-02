@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Rss, Trophy } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faRss, faTrophy } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '@/components/ui/button';
 import { projects, blogPosts } from '@/lib/data';
@@ -35,7 +36,7 @@ export default function HomePage() {
           </p>
           <Button asChild size="lg" className="mt-8 bg-accent hover:bg-accent/90 text-accent-foreground">
             <Link href="/projects">
-              Explore Projects <ArrowRight className="ml-2 h-5 w-5" />
+              Explore Projects <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-5 w-5" />
             </Link>
           </Button>
         </div>
@@ -45,7 +46,7 @@ export default function HomePage() {
       <section className="py-16 lg:py-24">
         <div className="container">
           <div className="flex flex-col items-center text-center">
-             <Trophy className="h-12 w-12 text-primary" />
+             <FontAwesomeIcon icon={faTrophy} className="h-12 w-12 text-primary" />
             <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">Recent Awards</h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
               A selection of our recently awarded projects.
@@ -68,7 +69,7 @@ export default function HomePage() {
       <section className="bg-card py-16 lg:py-24">
         <div className="container">
           <div className="flex flex-col items-center text-center">
-            <Rss className="h-12 w-12 text-primary" />
+            <FontAwesomeIcon icon={faRss} className="h-12 w-12 text-primary" />
             <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">From the Blog</h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
               Insights, tutorials, and stories from the development front lines.

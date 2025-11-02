@@ -14,7 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, Wand2 } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faMagic, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 const formSchema = z.object({
@@ -105,14 +106,14 @@ export function ProjectSuggester() {
           />
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button type="submit" disabled={isSaving || isSuggesting}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSaving && <FontAwesomeIcon icon={faSpinner} className="mr-2 h-4 w-4 animate-spin" />}
               Save Preferences
             </Button>
             <Button type="button" onClick={handleGetSuggestions} disabled={isSaving || isSuggesting} variant="secondary">
               {isSuggesting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <FontAwesomeIcon icon={faSpinner} className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Sparkles className="mr-2 h-4 w-4" />
+                <FontAwesomeIcon icon={faMagic} className="mr-2 h-4 w-4" />
               )}
               Get AI Suggestions
             </Button>
@@ -122,7 +123,7 @@ export function ProjectSuggester() {
 
       {isSuggesting && (
         <div className="text-center text-muted-foreground">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin" />
+          <FontAwesomeIcon icon={faSpinner} className="mx-auto h-8 w-8 animate-spin" />
           <p>Our AI is thinking...</p>
         </div>
       )}
@@ -131,7 +132,7 @@ export function ProjectSuggester() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wand2 className="h-6 w-6 text-primary" />
+              <FontAwesomeIcon icon={faWandMagicSparkles} className="h-6 w-6 text-primary" />
               Here are some project ideas for you!
             </CardTitle>
           </CardHeader>

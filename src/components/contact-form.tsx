@@ -10,7 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Terminal } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTerminal } from '@fortawesome/free-solid-svg-icons';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -43,7 +44,7 @@ export function ContactForm() {
     <form ref={formRef} action={formAction} className="space-y-6">
       {!state.success && state.message && state.errors && (
          <Alert variant="destructive">
-            <Terminal className="h-4 w-4" />
+            <FontAwesomeIcon icon={faTerminal} className="h-4 w-4" />
             <AlertTitle>Heads up!</AlertTitle>
             <AlertDescription>
                 {state.message}

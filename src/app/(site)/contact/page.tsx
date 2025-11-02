@@ -1,4 +1,5 @@
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { ContactForm } from '@/components/contact-form';
 
 export default function ContactPage() {
@@ -16,7 +17,7 @@ export default function ContactPage() {
             <h2 className="text-2xl font-bold">Contact Information</h2>
             <div className="flex items-start gap-4">
                 <div className="mt-1 flex-shrink-0">
-                    <Mail className="h-6 w-6 text-primary" />
+                    <FontAwesomeIcon icon={faEnvelope} className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold">Email</h3>
@@ -26,7 +27,7 @@ export default function ContactPage() {
             </div>
             <div className="flex items-start gap-4">
                 <div className="mt-1 flex-shrink-0">
-                    <Phone className="h-6 w-6 text-primary" />
+                    <FontAwesomeIcon icon={faPhone} className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold">Phone</h3>
@@ -36,7 +37,7 @@ export default function ContactPage() {
             </div>
             <div className="flex items-start gap-4">
                 <div className="mt-1 flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-primary" />
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold">Office</h3>
