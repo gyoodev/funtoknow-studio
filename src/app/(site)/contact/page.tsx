@@ -1,0 +1,55 @@
+import { Mail, Phone, MapPin } from 'lucide-react';
+import { ContactForm } from '@/components/contact-form';
+
+export default function ContactPage() {
+  return (
+    <div className="container py-16 lg:py-24">
+       <div className="flex flex-col items-center text-center">
+        <h1 className="text-4xl font-bold tracking-tighter md:text-5xl">Get in Touch</h1>
+        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+          Have a question, a project idea, or just want to say hello? We'd love to hear from you.
+        </p>
+      </div>
+
+      <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
+        <div className="space-y-8">
+            <h2 className="text-2xl font-bold">Contact Information</h2>
+            <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0">
+                    <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold">Email</h3>
+                    <p className="text-muted-foreground">General Inquiries</p>
+                    <a href="mailto:hello@funtoknow.com" className="text-primary hover:underline">hello@funtoknow.com</a>
+                </div>
+            </div>
+            <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0">
+                    <Phone className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold">Phone</h3>
+                    <p className="text-muted-foreground">Mon-Fri, 9am-5pm</p>
+                    <a href="tel:+1234567890" className="text-primary hover:underline">+1 (234) 567-890</a>
+                </div>
+            </div>
+            <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0">
+                    <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold">Office</h3>
+                    <p className="text-muted-foreground">123 Creative Lane, Dev City, 54321</p>
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <h2 className="text-2xl font-bold mb-8">Send Us a Message</h2>
+            <ContactForm />
+        </div>
+      </div>
+    </div>
+  );
+}

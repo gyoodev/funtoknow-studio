@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "project-1",
+      "description": "A vibrant and colorful fantasy world.",
+      "imageUrl": "https://images.unsplash.com/photo-1758506127212-a180b2392347?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMGdhbWV8ZW58MHx8fHwxNzYyMDY0MDMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy game"
+    },
+    {
+      "id": "project-2",
+      "description": "A dark and moody sci-fi cityscape.",
+      "imageUrl": "https://images.unsplash.com/photo-1619960535086-2274fdb86c8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzY2ktZmklMjBjaXR5fGVufDB8fHx8MTc2MjAyMjEyOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sci-fi city"
+    },
+    {
+      "id": "project-3",
+      "description": "A retro-style pixel art adventure.",
+      "imageUrl": "https://images.unsplash.com/photo-1564585447193-cd9a0cf42a36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwaXhlbCUyMGFydHxlbnwwfHx8fDE3NjIwMjAzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pixel art"
+    },
+    {
+      "id": "project-4",
+      "description": "A serene and peaceful natural landscape.",
+      "imageUrl": "https://images.unsplash.com/photo-1663908374302-be83da139831?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxuYXR1cmFsJTIwbGFuZHNjYXBlfGVufDB8fHx8MTc2MjA2NTU1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "natural landscape"
+    },
+    {
+      "id": "blog-1",
+      "description": "A person writing code on a laptop.",
+      "imageUrl": "https://images.unsplash.com/photo-1667984436026-99b165e3672b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb2RpbmclMjBwcm9ncmFtbWluZ3xlbnwwfHx8fDE3NjE5ODA1MDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coding programming"
+    },
+    {
+      "id": "blog-2",
+      "description": "A game controller sitting on a desk.",
+      "imageUrl": "https://images.unsplash.com/photo-1616341317041-cf93b2389ef5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxnYW1pbmclMjBjb250cm9sbGVyfGVufDB8fHx8MTc2MjAyNzA5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming controller"
+    },
+    {
+      "id": "blog-3",
+      "description": "Concept art for a new character.",
+      "imageUrl": "https://images.unsplash.com/photo-1718379041938-a2eb8264005e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb25jZXB0JTIwYXJ0fGVufDB8fHx8MTc2MTk4MTkzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "concept art"
+    },
+    {
+      "id": "hero-image",
+      "description": "A digital art collage representing creativity in gaming.",
+      "imageUrl": "https://images.unsplash.com/photo-1641391503184-a2131018701b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkaWdpdGFsJTIwYXJ0fGVufDB8fHx8MTc2MjAxMDc1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital art"
+    },
+    {
+      "id": "auth-background",
+      "description": "Abstract violet and purple background",
+      "imageUrl": "https://images.unsplash.com/photo-1613327986042-63d4425a1a5d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhYnN0cmFjdCUyMHB1cnBsZXxlbnwwfHx8fDE3NjIwMTMzODF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract purple"
+    }
+  ]
 }
