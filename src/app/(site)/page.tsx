@@ -29,7 +29,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-24 lg:py-32">
         <div className="container relative z-10">
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl rounded-lg bg-background/50 p-4 text-center backdrop-blur-sm md:bg-transparent md:p-0 md:backdrop-blur-none">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
               Design Impactful
               <br />
