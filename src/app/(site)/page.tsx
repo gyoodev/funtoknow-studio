@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -47,7 +48,7 @@ export default function HomePage() {
         <div className="container">
           <div className="flex flex-col items-center text-center">
              <FontAwesomeIcon icon={faTrophy} className="h-12 w-12 text-primary" />
-            <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">Recent Awards</h2>
+            <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">Projects</h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
               A selection of our recently awarded projects.
             </p>
