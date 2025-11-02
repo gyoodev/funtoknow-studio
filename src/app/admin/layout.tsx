@@ -3,7 +3,7 @@
 import { useUser } from '@/firebase';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -28,19 +28,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const isLoading = isUserLoading || isProfileLoading;
 
   useEffect(() => {
-    if (!isLoading) {
+    if (isClient && !isLoading) {
       if (!user || userProfile?.role !== 'admin') {
         router.replace('/admin/login');
       }
     }
-  }, [isLoading, user, userProfile, router]);
+  }, [isClient, isLoading, user, userProfile, router]);
 
 
-  if (isLoading || !user || userProfile?.role !== 'admin') {
+  if (!isClient || isLoading || !user || userProfile?.role !== 'admin') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center">
