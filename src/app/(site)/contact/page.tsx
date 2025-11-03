@@ -7,6 +7,12 @@ import { getSiteSettings } from '@/firebase/server-init';
 export default async function ContactPage() {
   const settings = await getSiteSettings();
 
+  const hasContactInfo = settings && (
+    (settings.showContactEmail && settings.contactEmail) ||
+    (settings.showContactPhone && settings.contactPhone) ||
+    (settings.showContactAddress && settings.contactAddress)
+  );
+
   return (
     <div className="container py-16 lg:py-24">
        <div className="flex flex-col items-center text-center">
@@ -19,6 +25,11 @@ export default async function ContactPage() {
       <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
         <div className="space-y-8">
             <h2 className="text-2xl font-bold">Contact Information</h2>
+            
+            {!hasContactInfo && (
+              <p className="text-muted-foreground">Contact details are not available at the moment. Please use the form to send us a message.</p>
+            )}
+
             {settings?.showContactEmail && settings.contactEmail && (
               <div className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
