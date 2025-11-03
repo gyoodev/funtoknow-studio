@@ -54,14 +54,13 @@ service cloud.firestore {
     }
 
     /**
-     * @description Restricts access to contact messages to admins only.
+     * @description Restricts access to contact messages to admins only for read/update/delete.
+     * Allows any user to create a message, as it is handled by a secure server action.
      * @path /contactMessages/{contactMessageId}
      */
     match /contactMessages/{contactMessageId} {
-      // Server actions (Admin SDK) bypass these rules for creation.
-      // Admins can read, update, delete, and list all messages.
       allow get, update, delete, list: if isAdmin();
-      allow create: if true; // Allow anyone to create, server action validates
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message', 'sentDate']);
     }
 
     /**
