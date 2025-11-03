@@ -70,15 +70,16 @@ export function SocialShare({ title }: SocialShareProps) {
             variant="outline"
             size="icon"
             asChild
+            aria-label={`Share on ${social.name}`}
           >
-            <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`Share on ${social.name}`}>
+            <a href={social.url} target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={social.icon} />
             </a>
           </Button>
         ))}
       </div>
       <div className="flex items-center gap-2">
-        <Input value={currentUrl} readOnly className="text-sm" />
+        <Input value={currentUrl} readOnly className="text-sm" aria-label="Article URL" />
         <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy link">
           <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} className={isCopied ? "text-green-500" : ""} />
         </Button>

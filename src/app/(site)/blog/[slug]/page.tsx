@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound, useParams } from 'next/navigation';
@@ -5,7 +6,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { useFirestore } from '@/firebase';
+import { useFirestore, getDb } from '@/firebase';
 import type { BlogPost } from '@/lib/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -15,13 +16,34 @@ import { format } from 'date-fns';
 import { Reactions } from '@/components/reactions';
 import { SocialShare } from '@/components/social-share';
 import { SimpleMarkdownRenderer } from '@/components/markdown-renderer';
-
-type BlogPostPageProps = {
-  // params: { slug: string }; // No longer needed
-};
+import { getSiteSettings } from '@/firebase/server-init';
+import type { Metadata } from 'next';
 
 
-export default function BlogPostPage({}: BlogPostPageProps) {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const db = getDb();
+  const postsRef = db.collection('blogPosts');
+  const q = postsRef.where('slug', '==', params.slug);
+  const querySnapshot = await q.get();
+
+  if (querySnapshot.empty) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  const post = querySnapshot.docs[0].data() as BlogPost;
+  const siteSettings = await getSiteSettings();
+  const siteName = siteSettings?.siteName || 'FunToKnow Platform';
+
+  return {
+    title: `${post.title} | ${siteName}`,
+    description: post.excerpt || post.content.substring(0, 155),
+  };
+}
+
+
+export default function BlogPostPage() {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const firestore = useFirestore();

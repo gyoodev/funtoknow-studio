@@ -4,8 +4,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { collection, query, where, getDocs, DocumentData } from 'firebase/firestore';
-import { useFirestore } from '@/firebase';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { useFirestore, getDb } from '@/firebase';
 import type { Project } from '@/lib/types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,6 +22,32 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { SimpleMarkdownRenderer } from '@/components/markdown-renderer';
+import { getSiteSettings } from '@/firebase/server-init';
+import type { Metadata } from 'next';
+
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const db = getDb();
+  const projectsRef = db.collection('projects');
+  const q = projectsRef.where('slug', '==', params.slug);
+  const querySnapshot = await q.get();
+
+  if (querySnapshot.empty) {
+    return {
+      title: 'Project Not Found',
+    };
+  }
+
+  const project = querySnapshot.docs[0].data() as Project;
+  const siteSettings = await getSiteSettings();
+  const siteName = siteSettings?.siteName || 'FunToKnow Platform';
+
+  return {
+    title: `${project.title} | ${siteName}`,
+    description: project.description,
+  };
+}
+
 
 const osIconMap: Record<Project['os'][number], IconDefinition> = {
   windows: faWindows,

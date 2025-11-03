@@ -116,13 +116,14 @@ export function Reactions({ postId, initialCounts }: ReactionsProps) {
           <Button
             key={reaction}
             variant="outline"
+            aria-label={`React with ${reaction}`}
             className={cn('transition-all', {
               'bg-accent text-accent-foreground ring-2 ring-primary': userReaction === reaction,
             })}
             onClick={() => handleReaction(reaction)}
             disabled={!!isProcessing}
           >
-            <span className="text-xl mr-2">{reactionEmojis[reaction]}</span>
+            <span className="text-xl mr-2" aria-hidden="true">{reactionEmojis[reaction]}</span>
             <span>{counts[reaction] || 0}</span>
           </Button>
         );

@@ -2,10 +2,7 @@
 
 import { z } from 'zod';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
-import { FirestorePermissionError } from '@/firebase/errors';
-import { errorEmitter } from '@/firebase/error-emitter';
+import { getDb } from '@/firebase/server-init';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -43,13 +40,13 @@ export async function submitContactForm(
   
   const contactData = {
     ...validatedFields.data,
-    createdAt: serverTimestamp(),
+    sentDate: serverTimestamp(),
   };
 
   try {
-    const { firestore } = initializeFirebase();
-    const messagesCollection = collection(firestore, 'contactMessages');
-    await addDoc(messagesCollection, contactData);
+    const db = getDb();
+    const messagesCollection = db.collection('contactMessages');
+    await messagesCollection.add(contactData);
 
     return {
       message: 'Thank you for your message! We will get back to you soon.',
