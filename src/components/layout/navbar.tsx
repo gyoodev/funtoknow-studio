@@ -134,17 +134,7 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
-             <Link
-                href="/contact"
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  'w-full rounded-md p-2 text-left text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                  pathname === '/contact' && 'bg-accent text-accent-foreground'
-                )}
-              >
-                Contact
-              </Link>
-             {userProfile?.role === 'admin' && (
+            {userProfile?.role === 'admin' && (
               <Link
                 href="/admin"
                 onClick={() => setIsOpen(false)}
@@ -156,6 +146,16 @@ export default function Navbar() {
                 Admin
               </Link>
             )}
+            <Link
+              href="/contact"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'w-full rounded-md p-2 text-left text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                pathname === '/contact' && 'bg-accent text-accent-foreground'
+              )}
+            >
+              Contact
+            </Link>
           </div>
         </div>
       )}
