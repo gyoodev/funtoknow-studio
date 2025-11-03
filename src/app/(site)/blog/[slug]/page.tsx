@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 
 type BlogPostPageProps = {
-  params: { slug: string };
+  // params: { slug: string }; // No longer needed
 };
 
 // A basic Markdown renderer. For a real app, a library like 'react-markdown' would be better.
@@ -59,18 +59,20 @@ const SimpleMarkdownRenderer = ({ content }: { content: string }) => {
   };
 
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default function BlogPostPage({}: BlogPostPageProps) {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const firestore = useFirestore();
+  const params = useParams();
+  const slug = params.slug as string;
 
   useEffect(() => {
-    if (!firestore || !params.slug) return;
+    if (!firestore || !slug) return;
 
     const fetchPost = async () => {
       setIsLoading(true);
       const postsRef = collection(firestore, 'blogPosts');
-      const q = query(postsRef, where('slug', '==', params.slug));
+      const q = query(postsRef, where('slug', '==', slug));
       
       try {
         const querySnapshot = await getDocs(q);
@@ -88,7 +90,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     };
 
     fetchPost();
-  }, [firestore, params.slug]);
+  }, [firestore, slug]);
 
   if (isLoading) {
     return (
