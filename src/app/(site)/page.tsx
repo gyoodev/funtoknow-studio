@@ -154,9 +154,9 @@ export default function HomePage() {
               lines.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 mx-auto max-w-3xl space-y-8">
              {isLoadingBlogPosts ? (
-                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-[420px] w-full" />)
+                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48 w-full" />)
              ) : (
                 blogPosts?.map((post) => (
                   <BlogPostCard key={post.id} post={post} />
