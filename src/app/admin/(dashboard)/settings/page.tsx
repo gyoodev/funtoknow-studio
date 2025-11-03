@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -104,11 +105,11 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
             name="siteName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Site Name</FormLabel>
+                <FormLabel>Site Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Your Awesome Site" {...field} />
                 </FormControl>
-                <FormMessage />
+                 <FormMessage />
               </FormItem>
             )}
           />
@@ -117,11 +118,11 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
             name="metaTags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Meta Tags (comma-separated)</FormLabel>
+                <FormLabel>Meta Keywords (comma-separated)</FormLabel>
                 <FormControl>
                   <Input placeholder="gaming, dev, blog" {...field} />
                 </FormControl>
-                <FormMessage />
+                 <FormMessage />
               </FormItem>
             )}
           />
@@ -131,11 +132,11 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Site Description</FormLabel>
+                <FormLabel>Site Meta Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="A short description for SEO..." {...field} />
+                  <Textarea placeholder="A short description for search engines..." {...field} />
                 </FormControl>
-                <FormMessage />
+                 <FormMessage />
               </FormItem>
             )}
           />
@@ -380,8 +381,8 @@ export default function AdminSettingsPage() {
 
       <Card>
          <CardHeader>
-          <CardTitle>General Settings</CardTitle>
-          <CardDescription>Manage general site information and features.</CardDescription>
+          <CardTitle>General & SEO Settings</CardTitle>
+          <CardDescription>Manage your site's title, description, and keywords for better SEO, and control site-wide features.</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoadingSettings ? (
