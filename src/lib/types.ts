@@ -22,7 +22,15 @@ export interface BlogPost {
   content: string;
   authorId: string;
   author: string;
-axport interface ContactMessage {
+  publicationDate: any; // Firestore timestamp
+  date: string;
+  excerpt: string;
+  imageUrl: string;
+  imageHint: string;
+  reactions?: Record<string, number>;
+}
+
+export interface ContactMessage {
   id: string;
   name: string;
   email: string;
@@ -55,4 +63,10 @@ export interface SiteSettings {
   underDevelopment: boolean;
   showSystemNotification: boolean;
   systemNotification?: string;
+  contactEmail?: string;
+  showContactEmail?: boolean;
+  contactPhone?: string;
+  showContactPhone?: boolean;
+  contactAddress?: string;
+  showContactAddress?: boolean;
 }

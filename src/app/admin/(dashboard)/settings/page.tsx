@@ -54,6 +54,12 @@ const siteSettingsFormSchema = z.object({
   underDevelopment: z.boolean(),
   showSystemNotification: z.boolean(),
   systemNotification: z.string().optional(),
+  contactEmail: z.string().email().optional().or(z.literal('')),
+  showContactEmail: z.boolean(),
+  contactPhone: z.string().optional(),
+  showContactPhone: z.boolean(),
+  contactAddress: z.string().optional(),
+  showContactAddress: z.boolean(),
 });
 
 function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
@@ -72,6 +78,12 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
       underDevelopment: settings?.underDevelopment ?? false,
       showSystemNotification: settings?.showSystemNotification ?? false,
       systemNotification: settings?.systemNotification || '',
+      contactEmail: settings?.contactEmail || '',
+      showContactEmail: settings?.showContactEmail ?? true,
+      contactPhone: settings?.contactPhone || '',
+      showContactPhone: settings?.showContactPhone ?? true,
+      contactAddress: settings?.contactAddress || '',
+      showContactAddress: settings?.showContactAddress ?? true,
     },
   });
 
@@ -79,7 +91,14 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
     if (!firestore) return;
     setIsSaving(true);
     const settingsRef = doc(firestore, 'settings', 'global');
-    setDoc(settingsRef, values, { merge: true })
+    const dataToSave = {
+        siteName: values.siteName,
+        description: values.description,
+        metaTags: values.metaTags,
+        loginActive: values.loginActive,
+        registerActive: values.registerActive,
+    };
+    setDoc(settingsRef, dataToSave, { merge: true })
       .then(() => {
         toast({ title: 'Success', description: 'Site settings updated.' });
       })
@@ -207,6 +226,12 @@ function BannersForm({ settings }: { settings: SiteSettings | null }) {
       underDevelopment: settings?.underDevelopment ?? false,
       showSystemNotification: settings?.showSystemNotification ?? false,
       systemNotification: settings?.systemNotification || '',
+      contactEmail: settings?.contactEmail || '',
+      showContactEmail: settings?.showContactEmail ?? true,
+      contactPhone: settings?.contactPhone || '',
+      showContactPhone: settings?.showContactPhone ?? true,
+      contactAddress: settings?.contactAddress || '',
+      showContactAddress: settings?.showContactAddress ?? true,
     },
   });
 
@@ -216,7 +241,6 @@ function BannersForm({ settings }: { settings: SiteSettings | null }) {
     if (!firestore) return;
     setIsSaving(true);
     const settingsRef = doc(firestore, 'settings', 'global');
-    // We only want to save the banner-related settings from this form
     const dataToSave = {
       underDevelopment: values.underDevelopment,
       showSystemNotification: values.showSystemNotification,
@@ -309,6 +333,144 @@ function BannersForm({ settings }: { settings: SiteSettings | null }) {
     </Form>
   )
 }
+
+function ContactSettingsForm({ settings }: { settings: SiteSettings | null }) {
+    const firestore = useFirestore();
+    const { toast } = useToast();
+    const [isSaving, setIsSaving] = useState(false);
+  
+    const form = useForm<z.infer<typeof siteSettingsFormSchema>>({
+      resolver: zodResolver(siteSettingsFormSchema),
+      values: {
+        siteName: settings?.siteName || '',
+        description: settings?.description || '',
+        metaTags: settings?.metaTags || '',
+        loginActive: settings?.loginActive ?? true,
+        registerActive: settings?.registerActive ?? true,
+        underDevelopment: settings?.underDevelopment ?? false,
+        showSystemNotification: settings?.showSystemNotification ?? false,
+        systemNotification: settings?.systemNotification || '',
+        contactEmail: settings?.contactEmail || '',
+        showContactEmail: settings?.showContactEmail ?? true,
+        contactPhone: settings?.contactPhone || '',
+        showContactPhone: settings?.showContactPhone ?? true,
+        contactAddress: settings?.contactAddress || '',
+        showContactAddress: settings?.showContactAddress ?? true,
+      },
+    });
+  
+    async function onSubmit(values: z.infer<typeof siteSettingsFormSchema>) {
+      if (!firestore) return;
+      setIsSaving(true);
+      const settingsRef = doc(firestore, 'settings', 'global');
+      const dataToSave = {
+        contactEmail: values.contactEmail,
+        showContactEmail: values.showContactEmail,
+        contactPhone: values.contactPhone,
+        showContactPhone: values.showContactPhone,
+        contactAddress: values.contactAddress,
+        showContactAddress: values.showContactAddress,
+      };
+      setDoc(settingsRef, dataToSave, { merge: true })
+        .then(() => {
+          toast({ title: 'Success', description: 'Contact settings updated.' });
+        })
+        .catch((e) => {
+          const permissionError = new FirestorePermissionError({
+            path: settingsRef.path,
+            operation: 'update',
+            requestResourceData: values,
+          });
+          errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+          setIsSaving(false);
+        });
+    }
+  
+    return (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4 rounded-lg border p-4">
+                <FormField
+                    control={form.control}
+                    name="showContactEmail"
+                    render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between">
+                        <FormLabel>Show Email</FormLabel>
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="contactEmail"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl><Input placeholder="hello@example.com" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+            </div>
+
+            <div className="space-y-4 rounded-lg border p-4">
+                <FormField
+                    control={form.control}
+                    name="showContactPhone"
+                    render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between">
+                        <FormLabel>Show Phone</FormLabel>
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="contactPhone"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Phone Number</FormLabel>
+                        <FormControl><Input placeholder="+1 (234) 567-890" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+            </div>
+
+            <div className="space-y-4 rounded-lg border p-4">
+                <FormField
+                    control={form.control}
+                    name="showContactAddress"
+                    render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between">
+                        <FormLabel>Show Address</FormLabel>
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="contactAddress"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl><Input placeholder="123 Creative Lane, Dev City, 54321" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+            </div>
+          
+          <Button type="submit" disabled={isSaving}>
+            {isSaving ? <FontAwesomeIcon icon={faSpinner} className="mr-2 h-4 w-4 animate-spin" /> : <FontAwesomeIcon icon={faSave} className="mr-2 h-4 w-4" />}
+            Save Contact Settings
+          </Button>
+        </form>
+      </Form>
+    )
+  }
 
 
 export default function AdminSettingsPage() {
@@ -419,6 +581,24 @@ export default function AdminSettingsPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+            <CardTitle>Contact Information</CardTitle>
+            <CardDescription>Manage the contact details displayed on your site.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            {isLoadingSettings ? (
+                <div className="space-y-6">
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-10 w-48" />
+                </div>
+            ) : (
+                <ContactSettingsForm settings={siteSettings} />
+            )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
