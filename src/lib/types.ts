@@ -1,4 +1,5 @@
 
+
 export interface Project {
   id: string;
   slug: string;
@@ -21,7 +22,7 @@ export interface BlogPost {
   content: string;
   authorId: string;
   author: string;
-  publicationDate: any; // Firestore timestamp
+  publicationDate: any; // Can be a Firestore timestamp or an ISO string
   date: string; // Fallback for old data structure
   imageUrl: string;
   imageHint: string;
