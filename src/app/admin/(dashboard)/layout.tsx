@@ -5,7 +5,7 @@ import { useUserProfile } from '@/hooks/use-user-profile';
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
