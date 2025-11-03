@@ -5,7 +5,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faLink, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Input } from './ui/input';
 
 interface SocialShareProps {
   title: string;
@@ -42,6 +43,7 @@ export function SocialShare({ title }: SocialShareProps) {
   ];
 
   const handleCopy = () => {
+    if (!currentUrl) return;
     navigator.clipboard.writeText(currentUrl).then(() => {
       setIsCopied(true);
       toast({
@@ -60,22 +62,27 @@ export function SocialShare({ title }: SocialShareProps) {
   };
   
   return (
-    <div className="flex items-center justify-center gap-2">
-      {socialLinks.map((social) => (
-        <Button
-          key={social.name}
-          variant="outline"
-          size="icon"
-          asChild
-        >
-          <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`Share on ${social.name}`}>
-            <FontAwesomeIcon icon={social.icon} />
-          </a>
+    <div className="space-y-4">
+      <div className="flex items-center justify-center gap-2">
+        {socialLinks.map((social) => (
+          <Button
+            key={social.name}
+            variant="outline"
+            size="icon"
+            asChild
+          >
+            <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`Share on ${social.name}`}>
+              <FontAwesomeIcon icon={social.icon} />
+            </a>
+          </Button>
+        ))}
+      </div>
+      <div className="flex items-center gap-2">
+        <Input value={currentUrl} readOnly className="text-sm" />
+        <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy link">
+          <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} className={isCopied ? "text-green-500" : ""} />
         </Button>
-      ))}
-      <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy link">
-        <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} className={isCopied ? "text-green-500" : ""} />
-      </Button>
+      </div>
     </div>
   );
 }
