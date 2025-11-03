@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '@/components/ui/dropdown-menu';
@@ -31,13 +31,38 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  const isLoading = isUserLoading || isProfileLoading;
+
+  useEffect(() => {
+    if (isLoading) return; // Wait until user data is loaded
+
+    // If no user is logged in, redirect to the admin login page
+    if (!user) {
+      router.push('/admin/login');
+      return;
+    }
+
+    // If the user is logged in but is not an admin, redirect to the homepage
+    if (userProfile && userProfile.role !== 'admin') {
+      router.push('/');
+    }
+  }, [user, userProfile, isLoading, router]);
+
   const handleSignOut = async () => {
     await auth.signOut();
     router.push('/admin/login');
   };
 
-  const isLoading = isUserLoading || isProfileLoading;
   const userInitial = userProfile?.displayName?.charAt(0)?.toUpperCase() || '?';
+
+  // While loading or if redirection is happening, show a loading state or nothing
+  if (isLoading || !user || (userProfile && userProfile.role !== 'admin')) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <FontAwesomeIcon icon={faSpinner} className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
