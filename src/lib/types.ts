@@ -25,6 +25,13 @@ export interface BlogPost {
   imageUrl: string;
   imageHint: string;
   excerpt?: string;
+  reactions: {
+    love: number;
+    like: number;
+    applause: number;
+    funny: number;
+    sad: number;
+  };
 }
 
 export interface UserProfile {

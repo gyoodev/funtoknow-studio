@@ -7,6 +7,7 @@
  * Data Structure:
  * - /projects/{projectId}: Publicly readable projects.
  * - /blogPosts/{blogPostId}: Publicly readable blog posts.
+ *   - /blogPosts/{blogPostId}/reactions/{userId}: User-specific reactions to a blog post.
  * - /contactMessages/{contactMessageId}: Admin-only contact messages.
  * - /users/{userId}: User profile data, accessible only to the user and admins.
  * - /authors/{authorId}: Publicly readable author data.
@@ -17,15 +18,10 @@
  * Key Security Decisions:
  * - Public read access is granted for projects, blog posts, authors, social links and global settings.
  * - Users can only read/write their own profile data and session data.
+ * - Authenticated users can write to the reactions subcollection for a blog post.
  * - Contact messages and site settings are only writable by admins.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
  * - Listing of contact messages and user profiles is disallowed to prevent unauthorized access.
- *
- * Denormalization for Authorization:
- * - The `role` field is stored directly on the user document, avoiding the need for a separate roles collection.
- *
- * Structural Segregation:
- * - Private user data and public content are stored in separate collections to simplify access control and improve query performance.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -47,6 +43,14 @@ service cloud.firestore {
     match /blogPosts/{blogPostId} {
       allow get, list: if true;
       allow write: if isAdmin();
+
+      /**
+       * @description Allows authenticated users to create, update, or delete their own reaction.
+       * @path /blogPosts/{blogPostId}/reactions/{userId}
+       */
+      match /reactions/{userId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
     /**

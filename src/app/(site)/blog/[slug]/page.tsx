@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { useFirestore, useMemoFirebase } from '@/firebase';
+import { useFirestore } from '@/firebase';
 import type { BlogPost } from '@/lib/types';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
+import { Reactions } from '@/components/reactions';
 
 type BlogPostPageProps = {
   // params: { slug: string }; // No longer needed
@@ -116,6 +117,8 @@ export default function BlogPostPage({}: BlogPostPageProps) {
   const authorName = post.author?.split(',')[0] || 'Unknown';
   const authorInitial = authorName.charAt(0);
   const publicationDate = post.publicationDate ? format(post.publicationDate.toDate(), 'MMMM d, yyyy') : post.date;
+  const initialReactions = post.reactions || { love: 0, like: 0, applause: 0, funny: 0, sad: 0 };
+
 
   return (
     <div className="container py-16 lg:py-24">
@@ -151,6 +154,14 @@ export default function BlogPostPage({}: BlogPostPageProps) {
         <article className="prose">
             <SimpleMarkdownRenderer content={post.content} />
         </article>
+
+        <Separator className="my-12" />
+        
+        <div className="space-y-6 text-center">
+            <h3 className="text-lg font-semibold">What did you think of this article?</h3>
+            <Reactions postId={post.id} initialCounts={initialReactions} />
+        </div>
+
 
         <Separator className="my-12" />
 
