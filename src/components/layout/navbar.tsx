@@ -83,6 +83,12 @@ export default function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">
+                    <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
                 {userProfile?.role === 'admin' && (
                   <DropdownMenuItem asChild>
                     <Link href="/admin">
@@ -91,12 +97,6 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">
-                    <FontAwesomeIcon icon={faTachometerAlt} className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 h-4 w-4" />
@@ -135,7 +135,7 @@ export default function Navbar() {
               </Link>
             ))}
             {userProfile?.role === 'admin' && (
-              <Link
+               <Link
                 href="/admin"
                 onClick={() => setIsOpen(false)}
                 className={cn(
