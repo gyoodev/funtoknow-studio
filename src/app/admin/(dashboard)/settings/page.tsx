@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faTrash, faPlus, faSave, faTriangleExclamation, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faTrash, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@/hooks/use-toast';
 import { faGithub, faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -25,7 +25,6 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 
 const socialPlatforms = ['github', 'twitter', 'linkedin', 'facebook', 'instagram', 'youtube'] as const;
 
@@ -54,7 +53,7 @@ const siteSettingsFormSchema = z.object({
   underDevelopment: z.boolean(),
   showSystemNotification: z.boolean(),
   systemNotification: z.string().optional(),
-  contactEmail: z.string().email().optional().or(z.literal('')),
+  contactEmail: z.string().email({ message: "Please enter a valid email." }).optional().or(z.literal('')),
   showContactEmail: z.boolean(),
   contactPhone: z.string().optional(),
   showContactPhone: z.boolean(),
@@ -106,9 +105,10 @@ function GeneralSettingsForm({ settings }: { settings: SiteSettings | null }) {
         const permissionError = new FirestorePermissionError({
           path: settingsRef.path,
           operation: 'update',
-          requestResourceData: values,
+          requestResourceData: dataToSave,
         });
         errorEmitter.emit('permission-error', permissionError);
+        toast({ title: 'Error', description: 'Failed to update settings.', variant: 'destructive' });
       })
       .finally(() => {
         setIsSaving(false);
@@ -254,9 +254,10 @@ function BannersForm({ settings }: { settings: SiteSettings | null }) {
         const permissionError = new FirestorePermissionError({
           path: settingsRef.path,
           operation: 'update',
-          requestResourceData: values,
+          requestResourceData: dataToSave,
         });
         errorEmitter.emit('permission-error', permissionError);
+        toast({ title: 'Error', description: 'Failed to update settings.', variant: 'destructive' });
       })
       .finally(() => {
         setIsSaving(false);
@@ -379,9 +380,10 @@ function ContactSettingsForm({ settings }: { settings: SiteSettings | null }) {
           const permissionError = new FirestorePermissionError({
             path: settingsRef.path,
             operation: 'update',
-            requestResourceData: values,
+            requestResourceData: dataToSave,
           });
           errorEmitter.emit('permission-error', permissionError);
+          toast({ title: 'Error', description: 'Failed to update settings.', variant: 'destructive' });
         })
         .finally(() => {
           setIsSaving(false);
@@ -497,12 +499,17 @@ export default function AdminSettingsPage() {
   const handleDelete = async (id: string) => {
     if (!firestore) return;
     const docRef = doc(firestore, 'socialLinks', id);
-    deleteDoc(docRef).catch((e) => {
+    deleteDoc(docRef)
+    .then(() => {
+        toast({ title: "Success", description: "Social link removed." });
+    })
+    .catch((e) => {
       const permissionError = new FirestorePermissionError({
         path: docRef.path,
         operation: 'delete',
       });
       errorEmitter.emit('permission-error', permissionError);
+       toast({ title: 'Error', description: 'Failed to remove social link.', variant: 'destructive' });
     })
   };
   
@@ -528,6 +535,7 @@ export default function AdminSettingsPage() {
           requestResourceData: newLink,
         });
         errorEmitter.emit('permission-error', permissionError);
+        toast({ title: 'Error', description: 'Failed to add social link.', variant: 'destructive' });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -661,7 +669,7 @@ export default function AdminSettingsPage() {
                   name="platform"
                   render={({ field }) => (
                     <FormItem className="w-full sm:w-48">
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select platform" />
