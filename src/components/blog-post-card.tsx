@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { BlogPost } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
@@ -41,7 +41,6 @@ export default function BlogPostCard({ post, className }: BlogPostCardProps) {
 
           <div className="mt-4 flex items-center gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={`https://i.pravatar.cc/40?u=${post.author}`} />
               <AvatarFallback>{authorInitial}</AvatarFallback>
             </Avatar>
             <div>

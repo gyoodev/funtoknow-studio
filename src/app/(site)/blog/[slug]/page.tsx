@@ -123,7 +123,6 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
                 <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={`https://i.pravatar.cc/40?u=${post.author}`} alt={authorName} />
                         <AvatarFallback>{authorInitial}</AvatarFallback>
                     </Avatar>
                     <span className="text-sm font-medium">{authorName}</span>
