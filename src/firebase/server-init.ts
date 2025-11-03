@@ -20,6 +20,8 @@ function initializeFirebaseAdmin() {
       });
     } else {
       // For local development without service account key
+      // This will cause errors if you try to access auth-protected resources, but allows the app to start
+      console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found. Initializing with default credentials. Firestore access may be limited.");
       initializeApp({
         projectId: firebaseConfig.projectId,
       });
@@ -53,9 +55,15 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     }
 
     return settingsDoc.data() as SiteSettings;
-  } catch (error) {
+  } catch (error: any) {
+    // During local development, if service account isn't set, this will fail.
+    // We catch it gracefully to allow the app to build without crashing.
+    if (error.code === '2 UNKNOWN' || error.message.includes('Could not refresh access token')) {
+        console.warn('Could not fetch site settings. This is expected during local development if a service account key is not provided. Using default metadata.');
+        return null;
+    }
     console.error('Error fetching site settings:', error);
-    // In case of error (e.g., permissions), return null to allow fallback values
+    // In case of other errors (e.g., permissions), return null to allow fallback values
     return null;
   }
 }
