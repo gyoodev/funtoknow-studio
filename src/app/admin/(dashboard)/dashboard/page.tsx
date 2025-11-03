@@ -7,8 +7,9 @@ import type { Project, BlogPost, UserProfile } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faGamepad, faNewspaper, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faGamepad, faNewspaper, faUsers, faInbox } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import type { ContactMessage } from '@/lib/types';
 
 function StatCard({ title, value, icon, href, isLoading }: { title: string, value: number, icon: any, href: string, isLoading: boolean }) {
   return (
@@ -36,12 +37,15 @@ export default function AdminDashboardPage() {
   const projectsQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'projects')) : null, [firestore]);
   const blogPostsQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'blogPosts')) : null, [firestore]);
   const usersQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'users')) : null, [firestore]);
+  const messagesQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'contactMessages')) : null, [firestore]);
+
 
   const { data: projects, isLoading: isLoadingProjects } = useCollection<Project>(projectsQuery);
   const { data: blogPosts, isLoading: isLoadingBlogPosts } = useCollection<BlogPost>(blogPostsQuery);
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
+  const { data: messages, isLoading: isLoadingMessages } = useCollection<ContactMessage>(messagesQuery);
 
-  const isLoading = isLoadingProjects || isLoadingBlogPosts || isLoadingUsers;
+  const isLoading = isLoadingProjects || isLoadingBlogPosts || isLoadingUsers || isLoadingMessages;
 
   return (
     <div className="p-4 md:p-8">
@@ -71,7 +75,7 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard 
             title="Total Projects"
             value={projects?.length || 0}
@@ -91,6 +95,13 @@ export default function AdminDashboardPage() {
             value={users?.length || 0}
             icon={faUsers}
             href="/admin/users"
+            isLoading={isLoading}
+        />
+        <StatCard
+            title="Contact Messages"
+            value={messages?.length || 0}
+            icon={faInbox}
+            href="/admin/messages"
             isLoading={isLoading}
         />
       </div>

@@ -22,18 +22,12 @@ export interface BlogPost {
   content: string;
   authorId: string;
   author: string;
-  publicationDate: any; // Can be a Firestore timestamp or an ISO string
-  date: string; // Fallback for old data structure
-  imageUrl: string;
-  imageHint: string;
-  excerpt?: string;
-  reactions: {
-    love: number;
-    like: number;
-    applause: number;
-    funny: number;
-    sad: number;
-  };
+axport interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  sentDate: any; // Firestore timestamp
 }
 
 export interface UserProfile {

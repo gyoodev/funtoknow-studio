@@ -5,7 +5,7 @@ import { useUserProfile } from '@/hooks/use-user-profile';
 import { Logo } from '@/components/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faNewspaper, faUsers, faCog, faTachometerAlt, faUserShield, faSignOutAlt, faBars, faTimes, faSpinner, faInbox } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -19,6 +19,7 @@ const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: faTachometerAlt },
     { href: '/admin/projects', label: 'Projects', icon: faGamepad },
     { href: '/admin/blog', label: 'Blog', icon: faNewspaper },
+    { href: '/admin/messages', label: 'Messages', icon: faInbox },
     { href: '/admin/users', label: 'Users', icon: faUsers },
     { href: '/admin/settings', label: 'Settings', icon: faCog },
 ];
@@ -76,7 +77,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
                     href={href}
                     className={cn(
                         'transition-colors hover:text-primary',
-                        pathname === href ? 'text-primary' : 'text-muted-foreground'
+                        pathname.startsWith(href) && href !== '/admin/dashboard' || pathname === href ? 'text-primary' : 'text-muted-foreground'
                     )}
                     >
                     {label}

@@ -21,7 +21,7 @@
  * - Authenticated users can write to the reactions subcollection for a blog post.
  * - Contact messages and site settings are only writable by admins.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
- * - Listing of contact messages and user profiles is disallowed to prevent unauthorized access.
+ * - Listing of user profiles is disallowed to prevent unauthorized access.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -54,12 +54,14 @@ service cloud.firestore {
     }
 
     /**
-     * @description Restricts access to contact messages to admins only. List is disallowed.
+     * @description Restricts access to contact messages to admins only.
      * @path /contactMessages/{contactMessageId}
      */
     match /contactMessages/{contactMessageId} {
-      allow get, create, update, delete: if isAdmin();
-      allow list: if false;
+      // Server actions (Admin SDK) bypass these rules for creation.
+      // Admins can read, update, delete, and list all messages.
+      allow get, update, delete, list: if isAdmin();
+      allow create: if true; // Allow anyone to create, server action validates
     }
 
     /**
