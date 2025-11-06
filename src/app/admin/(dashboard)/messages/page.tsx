@@ -36,6 +36,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 function ViewMessageDialog({ message }: { message: ContactMessage }) {
   return (
@@ -54,6 +55,10 @@ function ViewMessageDialog({ message }: { message: ContactMessage }) {
             <span className="text-muted-foreground">{message.sentDate ? format(message.sentDate.toDate(), 'PPP p') : 'N/A'}</span>
           </DialogDescription>
         </DialogHeader>
+         <div className="flex items-center gap-2">
+            <span className="font-semibold text-sm">Topic:</span>
+            <Badge variant="secondary" className="capitalize">{message.topic}</Badge>
+        </div>
         <div className="py-4 whitespace-pre-wrap text-sm">{message.message}</div>
         <DialogFooter>
             <Button asChild>
@@ -128,6 +133,18 @@ export default function AdminMessagesPage() {
     });
   };
 
+  const getTopicVariant = (topic: ContactMessage['topic']) => {
+    switch (topic) {
+      case 'project':
+        return 'default';
+      case 'bug':
+        return 'destructive';
+      case 'general':
+      default:
+        return 'secondary';
+    }
+  };
+
   return (
     <div className="p-4 md:p-8">
       <div className="flex items-center justify-between">
@@ -150,7 +167,7 @@ export default function AdminMessagesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead className="hidden md:table-cell">Email</TableHead>
+                  <TableHead className="hidden md:table-cell">Topic</TableHead>
                   <TableHead>Message</TableHead>
                   <TableHead className="hidden lg:table-cell">Date Sent</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -161,7 +178,7 @@ export default function AdminMessagesPage() {
                   Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
                       <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                      <TableCell className="hidden md:table-cell"><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell className="hidden md:table-cell"><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
                       <TableCell><Skeleton className="h-5 w-48" /></TableCell>
                       <TableCell className="hidden lg:table-cell"><Skeleton className="h-5 w-32" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-8 w-20 ml-auto" /></TableCell>
@@ -177,7 +194,9 @@ export default function AdminMessagesPage() {
                   messages.map((message) => (
                     <TableRow key={message.id}>
                       <TableCell className="font-medium">{message.name}</TableCell>
-                      <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{message.email}</TableCell>
+                       <TableCell className="hidden md:table-cell">
+                        <Badge variant={getTopicVariant(message.topic)} className="capitalize">{message.topic}</Badge>
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground truncate max-w-xs">{message.message}</TableCell>
                       <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
                         {message.sentDate ? format(message.sentDate.toDate(), 'PPp') : 'N/A'}

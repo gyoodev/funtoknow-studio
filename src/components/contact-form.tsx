@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useRef } from 'react';
@@ -11,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -50,15 +52,31 @@ export function ContactForm() {
             </AlertDescription>
         </Alert>
       )}
-      <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
-        <Input id="name" name="name" placeholder="Your Name" required />
-        {state.errors?.name && <p className="text-sm text-destructive">{state.errors.name[0]}</p>}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" name="name" placeholder="Your Name" required />
+            {state.errors?.name && <p className="text-sm text-destructive">{state.errors.name[0]}</p>}
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
+            {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
+        </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
-         {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
+        <Label htmlFor="topic">Topic</Label>
+        <Select name="topic" required>
+            <SelectTrigger id="topic">
+                <SelectValue placeholder="Select a topic" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="general">General Inquiry</SelectItem>
+                <SelectItem value="project">Project Proposal</SelectItem>
+                <SelectItem value="bug">Bug Report</SelectItem>
+            </SelectContent>
+        </Select>
+        {state.errors?.topic && <p className="text-sm text-destructive">{state.errors.topic[0]}</p>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="message">Message</Label>

@@ -35,6 +35,7 @@ export interface ContactMessage {
   name: string;
   email: string;
   message: string;
+  topic: 'general' | 'project' | 'bug';
   sentDate: any; // Firestore timestamp
 }
 
