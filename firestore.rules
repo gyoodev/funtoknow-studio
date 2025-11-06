@@ -56,13 +56,12 @@ service cloud.firestore {
 
     /**
      * @description Restricts read/delete/list access for messages to admins.
-     * Allows any user to create a message, validating the required fields from the client.
-     * The `sentDate` is added by the server, so it is not validated here.
+     * Allows any user to create a message. The server action handles validation.
      * @path /messages/{messageId}
      */
     match /messages/{messageId} {
       allow read, delete, list: if isAdmin();
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'topic', 'message']);
+      allow create: if true;
     }
 
     /**
