@@ -60,7 +60,7 @@ service cloud.firestore {
      * @path /contactMessages/{contactMessageId}
      */
     match /contactMessages/{contactMessageId} {
-      allow get, update, delete, list: if isAdmin();
+      allow list, get, update, delete: if isAdmin();
       allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message']);
     }
 
