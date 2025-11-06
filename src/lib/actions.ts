@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -53,17 +54,13 @@ export async function submitContactForm(
       success: true,
     };
   } catch (error: any) {
+    console.error("Error writing message to Firestore: ", error);
     if (error.code === 'permission-denied') {
-        // This is a server action, so we can't rely on the client-side emitter.
-        // For now, we return a generic error. A more advanced implementation
-        // might log this securely on the server.
-         return {
+        return {
           message: 'You do not have permission to submit this form.',
           success: false,
         };
     }
-
-    console.error("Error writing message to Firestore: ", error);
     return {
       message: 'An internal error occurred. Please try again later.',
       success: false,
