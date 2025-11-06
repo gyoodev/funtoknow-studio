@@ -61,7 +61,11 @@ service cloud.firestore {
      */
     match /messages/{messageId} {
       allow read, delete, list: if isAdmin();
-      allow create: if true;
+      allow create: if request.resource.data.name is string &&
+                       request.resource.data.email is string &&
+                       request.resource.data.topic is string &&
+                       request.resource.data.message is string &&
+                       request.resource.data.sentDate == request.time;
     }
 
     /**
@@ -150,3 +154,5 @@ service cloud.firestore {
     }
   }
 }
+
+    
