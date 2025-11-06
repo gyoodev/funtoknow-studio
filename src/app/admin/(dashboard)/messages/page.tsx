@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -11,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEnvelope, faEye, faReply } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -33,6 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from '@/components/ui/dialog';
 
 function ViewMessageDialog({ message }: { message: ContactMessage }) {
@@ -49,10 +51,18 @@ function ViewMessageDialog({ message }: { message: ContactMessage }) {
           <DialogDescription>
             <a href={`mailto:${message.email}`} className="text-primary hover:underline">{message.email}</a>
             <span className="mx-2 text-muted-foreground">•</span>
-            <span className="text-muted-foreground">{format(message.sentDate.toDate(), 'PPP p')}</span>
+            <span className="text-muted-foreground">{message.sentDate ? format(message.sentDate.toDate(), 'PPP p') : 'N/A'}</span>
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 whitespace-pre-wrap text-sm">{message.message}</div>
+        <DialogFooter>
+            <Button asChild>
+                <a href={`mailto:${message.email}`}>
+                    <FontAwesomeIcon icon={faReply} className="mr-2" />
+                    Reply
+                </a>
+            </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
