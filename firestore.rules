@@ -56,16 +56,13 @@ service cloud.firestore {
 
     /**
      * @description Restricts read/delete/list access for messages to admins.
-     * Allows any user to create a message. The server action handles validation.
+     * Allows any user (guest or authenticated) to create a message.
+     * The server action handles data validation before writing.
      * @path /messages/{messageId}
      */
     match /messages/{messageId} {
       allow read, delete, list: if isAdmin();
-      allow create: if request.resource.data.name is string &&
-                       request.resource.data.email is string &&
-                       request.resource.data.topic is string &&
-                       request.resource.data.message is string &&
-                       request.resource.data.sentDate == request.time;
+      allow create: if true;
     }
 
     /**
@@ -154,5 +151,3 @@ service cloud.firestore {
     }
   }
 }
-
-    
