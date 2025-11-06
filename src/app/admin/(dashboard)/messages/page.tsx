@@ -79,16 +79,17 @@ function DeleteMessageButton({ messageId, onDeleted }: { messageId: string; onDe
   const handleDelete = async () => {
     if (!firestore) return;
     const docRef = doc(firestore, 'messages', messageId);
-    try {
-      await deleteDoc(docRef);
-      onDeleted();
-    } catch (e) {
-      const permissionError = new FirestorePermissionError({
-        path: docRef.path,
-        operation: 'delete',
+    deleteDoc(docRef)
+      .then(() => {
+        onDeleted();
+      })
+      .catch((e) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'delete',
+        });
+        errorEmitter.emit('permission-error', permissionError);
       });
-      errorEmitter.emit('permission-error', permissionError);
-    }
   };
 
   return (

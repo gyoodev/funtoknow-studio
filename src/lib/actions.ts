@@ -49,8 +49,8 @@ export async function submitContactForm(
 
   try {
     const db = getDb();
-    const messagesCollection = db.collection('messages');
-    await messagesCollection.add(contactData);
+    const messagesCollection = collection(db, 'messages');
+    await addDoc(messagesCollection, contactData);
 
     return {
       message: 'Thank you for your message! We will get back to you soon.',
