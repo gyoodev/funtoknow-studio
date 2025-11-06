@@ -452,7 +452,7 @@
         }
       },
       {
-        "path": "/contactMessages/{contactMessageId}",
+        "path": "/messages/{messageId}",
         "definition": {
           "entityName": "ContactMessage",
           "schema": {
@@ -461,7 +461,7 @@
           "description": "Stores contact form submissions. Accessible only to admins for reading, creation, and deletion.",
           "params": [
             {
-              "name": "contactMessageId",
+              "name": "messageId",
               "description": "Unique identifier for the contact message."
             }
           ]

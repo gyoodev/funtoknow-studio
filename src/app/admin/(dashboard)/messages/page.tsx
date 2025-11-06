@@ -78,7 +78,7 @@ function DeleteMessageButton({ messageId, onDeleted }: { messageId: string; onDe
 
   const handleDelete = async () => {
     if (!firestore) return;
-    const docRef = doc(firestore, 'contactMessages', messageId);
+    const docRef = doc(firestore, 'messages', messageId);
     try {
       await deleteDoc(docRef);
       onDeleted();
@@ -121,7 +121,7 @@ export default function AdminMessagesPage() {
   const { toast } = useToast();
 
   const messagesQuery = useMemoFirebase(
-    () => (firestore ? query(collection(firestore, 'contactMessages'), orderBy('sentDate', 'desc')) : null),
+    () => (firestore ? query(collection(firestore, 'messages'), orderBy('sentDate', 'desc')) : null),
     [firestore]
   );
   const { data: messages, isLoading, error } = useCollection<ContactMessage>(messagesQuery);

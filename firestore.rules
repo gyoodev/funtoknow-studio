@@ -9,7 +9,7 @@
  * - /projects/{projectId}: Publicly readable projects.
  * - /blogPosts/{blogPostId}: Publicly readable blog posts.
  *   - /blogPosts/{blogPostId}/reactions/{userId}: User-specific reactions to a blog post.
- * - /contactMessages/{contactMessageId}: Admin-only contact messages.
+ * - /messages/{messageId}: Admin-only contact messages.
  * - /users/{userId}: User profile data, accessible only to the user and admins.
  * - /authors/{authorId}: Publicly readable author data.
  * - /sessions/{sessionId}: User session data, accessible only to the owner.
@@ -57,10 +57,10 @@ service cloud.firestore {
     /**
      * @description Restricts access to contact messages to admins only for read/update/delete.
      * Allows any user to create a message, as it is handled by a secure server action.
-     * @path /contactMessages/{contactMessageId}
+     * @path /messages/{messageId}
      */
-    match /contactMessages/{contactMessageId} {
-      allow list, get, update, delete: if isAdmin();
+    match /messages/{messageId} {
+      allow read, delete, list: if isAdmin();
       allow create: if request.resource.data.keys().hasAll(['name', 'email', 'topic', 'message', 'sentDate']);
     }
 

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -37,7 +38,7 @@ export default function AdminDashboardPage() {
   const projectsQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'projects')) : null, [firestore]);
   const blogPostsQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'blogPosts')) : null, [firestore]);
   const usersQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'users')) : null, [firestore]);
-  const messagesQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'contactMessages')) : null, [firestore]);
+  const messagesQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'messages')) : null, [firestore]);
 
 
   const { data: projects, isLoading: isLoadingProjects } = useCollection<Project>(projectsQuery);

@@ -49,7 +49,7 @@ export async function submitContactForm(
 
   try {
     const db = getDb();
-    const messagesCollection = db.collection('contactMessages');
+    const messagesCollection = db.collection('messages');
     await messagesCollection.add(contactData);
 
     return {
