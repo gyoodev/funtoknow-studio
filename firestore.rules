@@ -1,3 +1,4 @@
+
 /**
  * @file Firebase Security Rules for the FunToKnow Platform.
  *
@@ -60,7 +61,7 @@ service cloud.firestore {
      */
     match /contactMessages/{contactMessageId} {
       allow get, update, delete, list: if isAdmin();
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message', 'sentDate']);
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message']);
     }
 
     /**
