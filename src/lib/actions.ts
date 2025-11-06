@@ -41,16 +41,20 @@ export async function submitContactForm(
       success: false,
     };
   }
-  
-  const contactData = {
-    ...validatedFields.data,
-    sentDate: serverTimestamp(),
-  };
 
   try {
     const db = getDb();
-    const messagesCollection = collection(db, 'messages');
-    await addDoc(messagesCollection, contactData);
+    
+    // Create a clean data object for Firestore
+    const dataToStore = {
+      name: validatedFields.data.name,
+      email: validatedFields.data.email,
+      topic: validatedFields.data.topic,
+      message: validatedFields.data.message,
+      sentDate: serverTimestamp(),
+    };
+    
+    await addDoc(collection(db, 'messages'), dataToStore);
 
     return {
       message: 'Thank you for your message! We will get back to you soon.',
@@ -58,12 +62,6 @@ export async function submitContactForm(
     };
   } catch (error: any) {
     console.error("Error writing message to Firestore: ", error);
-    if (error.code === 'permission-denied') {
-        return {
-          message: 'You do not have permission to submit this form.',
-          success: false,
-        };
-    }
     return {
       message: 'An internal error occurred. Please try again later.',
       success: false,
