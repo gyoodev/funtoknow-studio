@@ -1,33 +1,26 @@
 
 import "server-only";
 
-import { initializeApp, getApps, getApp, cert } from 'firebase-admin/app';
+import { initializeApp, getApps, getApp, cert, App } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from './config';
 import type { SiteSettings } from '@/lib/types';
 
 // Important: This file should only be used in server-side code.
 
-function initializeFirebaseAdmin() {
-  if (!getApps().length) {
-    if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-      const serviceAccount = JSON.parse(
-        Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY, 'base64').toString('ascii')
-      );
-      initializeApp({
-        credential: cert(serviceAccount),
-        projectId: firebaseConfig.projectId,
-      });
-    } else {
-      // For local development without service account key
-      // This will cause errors if you try to access auth-protected resources, but allows the app to start
-      console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found. Initializing with default credentials. Firestore access may be limited.");
-      initializeApp({
-        projectId: firebaseConfig.projectId,
-      });
-    }
+function initializeFirebaseAdmin(): App {
+  if (getApps().length) {
+    return getApp();
   }
-  return getApp();
+
+  // When deployed to Firebase App Hosting, the service account credentials
+  // are automatically provided via environment variables.
+  // The `credential` property will be populated by the SDK.
+  // In a local environment, you would need to set the GOOGLE_APPLICATION_CREDENTIALS
+  // environment variable to point to your service account key file.
+  return initializeApp({
+    projectId: firebaseConfig.projectId,
+  });
 }
 
 /**
@@ -56,10 +49,10 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
 
     return settingsDoc.data() as SiteSettings;
   } catch (error: any) {
-    // During local development, if service account isn't set, this will fail.
+    // This can happen in local development if GOOGLE_APPLICATION_CREDENTIALS is not set.
     // We catch it gracefully to allow the app to build without crashing.
-    if (error.code === '2 UNKNOWN' || error.message.includes('Could not refresh access token')) {
-        console.warn('Could not fetch site settings. This is expected during local development if a service account key is not provided. Using default metadata.');
+    if (error.code === '2 UNKNOWN' || error.message.includes('Could not refresh access token') || error.message.includes('credential')) {
+        console.warn(`Could not fetch site settings due to auth error. This is expected during local development if service account credentials aren't configured. Using default metadata. Error: ${error.message}`);
         return null;
     }
     console.error('Error fetching site settings:', error);
