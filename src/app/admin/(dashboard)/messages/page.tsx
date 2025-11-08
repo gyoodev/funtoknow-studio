@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -12,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEnvelope, faEye, faReply } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEnvelope, faEye } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -37,10 +36,15 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { ReplyForm } from '@/components/admin/reply-form';
+
 
 function ViewMessageDialog({ message }: { message: ContactMessage }) {
+  const [showReply, setShowReply] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => setShowReply(false)}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon">
           <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
@@ -52,7 +56,7 @@ function ViewMessageDialog({ message }: { message: ContactMessage }) {
           <DialogDescription>
             <a href={`mailto:${message.email}`} className="text-primary hover:underline">{message.email}</a>
             <span className="mx-2 text-muted-foreground">•</span>
-            <span className="text-muted-foreground">{message.sentDate ? format(message.sentDate.toDate(), 'PPP p') : 'N/A'}</span>
+            <span className="text-muted-foreground">{message.sentDate ? format(new Date(message.sentDate.seconds * 1000), 'PPP p') : 'N/A'}</span>
           </DialogDescription>
         </DialogHeader>
          <div className="flex items-center gap-2">
@@ -60,14 +64,17 @@ function ViewMessageDialog({ message }: { message: ContactMessage }) {
             <Badge variant="secondary" className="capitalize">{message.topic}</Badge>
         </div>
         <div className="py-4 whitespace-pre-wrap text-sm">{message.message}</div>
-        <DialogFooter>
-            <Button asChild>
-                <a href={`mailto:${message.email}`}>
-                    <FontAwesomeIcon icon={faReply} className="mr-2" />
+        <Separator />
+        
+        {showReply ? (
+            <ReplyForm to={message.email} onSent={() => setShowReply(false)} />
+        ) : (
+             <DialogFooter>
+                <Button onClick={() => setShowReply(true)}>
                     Reply
-                </a>
-            </Button>
-        </DialogFooter>
+                </Button>
+            </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -200,7 +207,7 @@ export default function AdminMessagesPage() {
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground truncate max-w-xs">{message.message}</TableCell>
                       <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                        {message.sentDate ? format(message.sentDate.toDate(), 'PPp') : 'N/A'}
+                        {message.sentDate ? format(new Date(message.sentDate.seconds * 1000), 'PPp') : 'N/A'}
                       </TableCell>
                       <TableCell className="text-right">
                         <ViewMessageDialog message={message} />
