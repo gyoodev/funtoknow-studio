@@ -18,7 +18,7 @@ export default function AboutPage() {
 
         <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-lg border">
             <Image
-                src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmcmVlbGFuY2VyJTIwZGVza3xlbnwwfHx8fDE3NjIyMDk2NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="https://images.unsplash.com/photo-1575089976121-8ed7b2a54265?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxOXx8Q29kaW5nfGVufDB8fHx8MTc2MjYyNTczNHww&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="A freelancer's desk with a laptop and notes"
                 fill
                 className="object-cover"
