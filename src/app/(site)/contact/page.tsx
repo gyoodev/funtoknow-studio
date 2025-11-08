@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { ContactForm } from '@/components/contact-form';
 import { getSiteSettings } from '@/firebase/server-init';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Contact Us',
+    description: 'Get in touch with us. We would love to hear from you!',
+};
 
 export default async function ContactPage() {
   const settings = await getSiteSettings();

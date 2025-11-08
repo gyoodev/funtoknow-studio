@@ -61,7 +61,7 @@ service cloud.firestore {
      * @path /messages/{messageId}
      */
     match /messages/{messageId} {
-      allow read, delete, list: if isAdmin();
+      allow read, list, delete: if isAdmin();
       allow create: if true;
     }
 

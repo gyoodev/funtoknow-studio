@@ -36,7 +36,7 @@ export async function submitContactForm(
 
   if (!validatedFields.success) {
     return {
-      message: 'Failed to send message. Please check the errors.',
+      message: 'Failed to send message. Please check the errors below.',
       errors: validatedFields.error.flatten().fieldErrors,
       success: false,
     };
@@ -45,13 +45,10 @@ export async function submitContactForm(
   try {
     const db = getDb();
     
-    // Create a clean data object for Firestore
+    // This is the clean data object that will be stored in Firestore.
     const dataToStore = {
-      name: validatedFields.data.name,
-      email: validatedFields.data.email,
-      topic: validatedFields.data.topic,
-      message: validatedFields.data.message,
-      sentDate: serverTimestamp(),
+      ...validatedFields.data,
+      sentDate: serverTimestamp(), // Add the server-side timestamp
     };
     
     await addDoc(collection(db, 'messages'), dataToStore);
@@ -62,8 +59,9 @@ export async function submitContactForm(
     };
   } catch (error: any) {
     console.error("Error writing message to Firestore: ", error);
+    // This is the generic error message the user sees.
     return {
-      message: 'An internal error occurred. Please try again later.',
+      message: 'An unexpected internal error occurred. Please try again later.',
       success: false,
       errors: {},
     };

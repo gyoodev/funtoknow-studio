@@ -11,20 +11,20 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { faTerminal, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending} className="w-full">
-      {pending ? 'Sending...' : 'Send Message'}
+      {pending ? <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Sending...</> : 'Send Message'}
     </Button>
   );
 }
 
 export function ContactForm() {
-  const initialState: ContactFormState = { message: '', success: false };
+  const initialState: ContactFormState = { message: '', success: false, errors: {} };
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
@@ -36,17 +36,22 @@ export function ContactForm() {
         description: state.message,
       });
       formRef.current?.reset();
-    } else if (state.message && state.errors) {
-       // Error toast is better handled by showing errors inline
+    } else if (state.message && !state.success && Object.keys(state.errors || {}).length === 0) {
+       // This handles the generic server error case
+       toast({
+        variant: 'destructive',
+        title: 'Submission Error',
+        description: state.message,
+      });
     }
   }, [state, toast]);
 
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
-      {!state.success && state.message && state.errors && (
+      {!state.success && state.message && Object.keys(state.errors || {}).length > 0 && (
          <Alert variant="destructive">
             <FontAwesomeIcon icon={faTerminal} className="h-4 w-4" />
-            <AlertTitle>Heads up!</AlertTitle>
+            <AlertTitle>Please fix the errors below</AlertTitle>
             <AlertDescription>
                 {state.message}
             </AlertDescription>
@@ -55,18 +60,18 @@ export function ContactForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" placeholder="Your Name" required />
+            <Input id="name" name="name" placeholder="Your Name" required aria-invalid={!!state.errors?.name} />
             {state.errors?.name && <p className="text-sm text-destructive">{state.errors.name[0]}</p>}
         </div>
         <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
+            <Input id="email" name="email" type="email" placeholder="your.email@example.com" required aria-invalid={!!state.errors?.email}/>
             {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
         </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="topic">Topic</Label>
-        <Select name="topic" required>
+        <Select name="topic" required aria-invalid={!!state.errors?.topic}>
             <SelectTrigger id="topic">
                 <SelectValue placeholder="Select a topic" />
             </SelectTrigger>
@@ -80,7 +85,7 @@ export function ContactForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="message">Message</Label>
-        <Textarea id="message" name="message" placeholder="Your message..." rows={6} required />
+        <Textarea id="message" name="message" placeholder="Your message..." rows={6} required aria-invalid={!!state.errors?.message}/>
          {state.errors?.message && <p className="text-sm text-destructive">{state.errors.message[0]}</p>}
       </div>
       <SubmitButton />
