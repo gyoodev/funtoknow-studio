@@ -2,7 +2,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { ContactForm } from '@/components/contact-form';
-import { getSiteSettings } from '@/firebase/server-init';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,14 +9,7 @@ export const metadata: Metadata = {
     description: 'Get in touch with us. We would love to hear from you!',
 };
 
-export default async function ContactPage() {
-  const settings = await getSiteSettings();
-
-  const hasContactInfo = settings && (
-    (settings.showContactEmail && settings.contactEmail) ||
-    (settings.showContactPhone && settings.contactPhone) ||
-    (settings.showContactAddress && settings.contactAddress)
-  );
+export default function ContactPage() {
 
   return (
     <div className="container py-16 lg:py-24">
@@ -32,45 +24,31 @@ export default async function ContactPage() {
         <div className="space-y-8">
             <h2 className="text-2xl font-bold">Contact Information</h2>
             
-            {!hasContactInfo && (
-              <p className="text-muted-foreground">Contact details are not available at the moment. Please use the form to send us a message.</p>
-            )}
+            <p className="text-muted-foreground">
+                FunToKnow is a modern web application designed for showcasing game projects, publishing a developer blog, and managing a user community.
+            </p>
 
-            {settings?.showContactEmail && settings.contactEmail && (
-              <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0">
-                      <FontAwesomeIcon icon={faEnvelope} className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                      <h3 className="text-lg font-semibold">Email</h3>
-                      <p className="text-muted-foreground">General Inquiries</p>
-                      <a href={`mailto:${settings.contactEmail}`} className="text-primary hover:underline">{settings.contactEmail}</a>
-                  </div>
-              </div>
-            )}
-            {settings?.showContactPhone && settings.contactPhone && (
-              <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0">
-                      <FontAwesomeIcon icon={faPhone} className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                      <h3 className="text-lg font-semibold">Phone</h3>
-                      <p className="text-muted-foreground">Mon-Fri, 9am-5pm</p>
-                      <a href={`tel:${settings.contactPhone}`} className="text-primary hover:underline">{settings.contactPhone}</a>
-                  </div>
-              </div>
-            )}
-            {settings?.showContactAddress && settings.contactAddress && (
-              <div className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0">
-                      <FontAwesomeIcon icon={faMapMarkerAlt} className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                      <h3 className="text-lg font-semibold">Office</h3>
-                      <p className="text-muted-foreground">{settings.contactAddress}</p>
-                  </div>
-              </div>
-            )}
+            <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0">
+                    <FontAwesomeIcon icon={faEnvelope} className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold">Email</h3>
+                    <p className="text-muted-foreground">General Inquiries</p>
+                    <a href="mailto:nuraykamber92@gmail.com" className="text-primary hover:underline">nuraykamber92@gmail.com</a>
+                </div>
+            </div>
+            
+            <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0">
+                    <FontAwesomeIcon icon={faPhone} className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-semibold">Phone</h3>
+                    <p className="text-muted-foreground">Mon-Fri, 9am-5pm</p>
+                    <a href="tel:+359885014670" className="text-primary hover:underline">+359 885 014 670</a>
+                </div>
+            </div>
         </div>
         
         <div>
