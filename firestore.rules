@@ -21,6 +21,7 @@
  * - Users can only read/write their own profile data and session data.
  * - Authenticated users can write to the reactions subcollection for a blog post.
  * - Contact messages and site settings are only writable by admins.
+ * - The contact form uses a trusted server action, so the 'create' rule for messages is permissive.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
  * - Listing of user profiles is disallowed to prevent unauthorized access.
  */
@@ -50,7 +51,7 @@ service cloud.firestore {
        * @path /blogPosts/{blogPostId}/reactions/{userId}
        */
       match /reactions/{userId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isSignedIn() && isOwner(userId);
       }
     }
 
@@ -65,7 +66,8 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows users to read and write their own profile data, and allows admins to read user data. List is disallowed.
+     * @description Allows users to read and write their own profile data, and allows admins to read user data.
+     * Users can create their own profile. Admins can list all users. Deletion is not allowed.
      * @path /users/{userId}
      */
     match /users/{userId} {
@@ -90,7 +92,7 @@ service cloud.firestore {
      * @path /sessions/{sessionId}
      */
     match /sessions/{sessionId} {
-      allow get, delete: if request.auth.uid == sessionId;
+      allow get, delete: if isOwner(sessionId);
       allow create, update: if request.resource.data.userId == request.auth.uid;
       allow list: if false;
     }
