@@ -69,6 +69,7 @@ export default function AdminDashboardPage() {
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                     <li><strong>Projects:</strong> Add, edit, or remove the game projects displayed on your site.</li>
                     <li><strong>Blog:</strong> Create and manage all of your developer blog posts.</li>
+                    <li><strong>Messages:</strong> View and reply to messages from the contact form.</li>
                     <li><strong>Users:</strong> View registered users and manage their roles and permissions.</li>
                     <li><strong>Settings:</strong> Configure global site settings, social media links, and banners.</li>
                 </ul>
