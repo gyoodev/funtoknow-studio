@@ -96,8 +96,11 @@ export default function Footer() {
             </div>
         </div>
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-center sm:text-left">
               <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()} FunToKnow. All rights reserved.
+              <span className="mx-1 hidden sm:inline">|</span>
+              <br className="sm:hidden" />
+              Developed by <a href="https://gkdev.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">GKDEV</a>.
             </p>
             <SocialLinks />
         </div>
