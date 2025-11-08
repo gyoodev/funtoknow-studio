@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -27,6 +28,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -116,8 +118,8 @@ export default function Navbar() {
               </DropdownMenu>
             </>
           ) : (
-            <Button asChild className="rounded-full">
-              <Link href="/contact">Contact</Link>
+             <Button asChild>
+                <Link href="/login">Sign In</Link>
             </Button>
           )}
         </div>
@@ -145,16 +147,6 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                'w-full rounded-md p-2 text-left text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                pathname === '/contact' && 'bg-accent text-accent-foreground'
-              )}
-            >
-              Contact
-            </Link>
           </div>
         </div>
       )}
