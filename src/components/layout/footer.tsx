@@ -13,6 +13,7 @@ import type { SocialLink } from '@/lib/types';
 import { Skeleton } from '../ui/skeleton';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const socialIconMap: Record<SocialLink['platform'], IconDefinition> = {
   github: faGithub,
@@ -59,6 +60,12 @@ function SocialLinks() {
 }
 
 export default function Footer() {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="border-t bg-card text-card-foreground">
       <div className="container py-12">
@@ -97,7 +104,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">
             <p className="text-sm text-muted-foreground text-center sm:text-left">
-              <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()} FunToKnow. All rights reserved.
+              <FontAwesomeIcon icon={faCopyright} /> {year || '...'} FunToKnow. All rights reserved.
               <span className="mx-1 hidden sm:inline">|</span>
               <br className="sm:hidden" />
               Developed by <a href="https://gkdev.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">GKDEV</a>.
