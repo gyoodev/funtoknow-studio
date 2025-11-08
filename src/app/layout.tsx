@@ -7,6 +7,7 @@ import { FirebaseClientProvider } from '@/firebase';
 import { Analytics } from '@vercel/analytics/next';
 import { getSiteSettings } from '@/firebase/server-init';
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { CookieBanner } from '@/components/cookie-banner';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Fetch site settings from Firestore
@@ -53,6 +54,7 @@ export default function RootLayout({
         <FirebaseClientProvider>
           {children}
           <Toaster />
+          <CookieBanner />
         </FirebaseClientProvider>
         <Analytics />
         <SpeedInsights />

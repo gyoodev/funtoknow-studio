@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/hooks/use-user-profile';
 import { Skeleton } from '../ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { useSiteSettings } from '@/hooks/use-site-settings';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -38,7 +39,7 @@ export default function Navbar() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile(user?.uid);
-
+  const { settings, isLoading: isLoadingSettings } = useSiteSettings();
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -66,8 +67,8 @@ export default function Navbar() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-           {isUserLoading ? (
-            <Skeleton className="h-8 w-8 rounded-full" />
+           {isUserLoading || isLoadingSettings ? (
+            <Skeleton className="h-8 w-20 rounded-full" />
           ) : user ? (
             <>
               {userProfile?.role === 'admin' && (
@@ -118,9 +119,11 @@ export default function Navbar() {
               </DropdownMenu>
             </>
           ) : (
-             <Button asChild>
-                <Link href="/login">Sign In</Link>
-            </Button>
+             settings?.registerActive && (
+                <Button asChild>
+                    <Link href="/login">Sign In</Link>
+                </Button>
+             )
           )}
         </div>
         <button

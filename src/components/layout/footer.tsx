@@ -1,3 +1,4 @@
+
 'use client';
 
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
@@ -11,6 +12,7 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { SocialLink } from '@/lib/types';
 import { Skeleton } from '../ui/skeleton';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import Link from 'next/link';
 
 const socialIconMap: Record<SocialLink['platform'], IconDefinition> = {
   github: faGithub,
@@ -58,18 +60,46 @@ function SocialLinks() {
 
 export default function Footer() {
   return (
-    <footer className="border-t bg-card">
-      <div className="container py-6">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-sm text-muted-foreground order-3 md:order-1">
+    <footer className="border-t bg-card text-card-foreground">
+      <div className="container py-12">
+        <div className="grid gap-8 md:grid-cols-3">
+            <div className="space-y-4">
+                <Logo />
+                <p className="text-sm text-muted-foreground">
+                    FunToKnow is a modern web application designed for showcasing game projects, publishing a developer blog, and managing a user community.
+                </p>
+            </div>
+            <div className="md:col-span-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+                    <div>
+                        <h4 className="font-semibold mb-3">Company</h4>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                            <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
+                            <li><Link href="/blog" className="hover:text-primary">Blog</Link></li>
+                            <li><Link href="/contact" className="hover:text-primary">Contact</Link></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h4 className="font-semibold mb-3">Legal</h4>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                            <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
+                            <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h4 className="font-semibold mb-3">Support</h4>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                            <li><Link href="/faq" className="hover:text-primary">FAQ</Link></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">
+            <p className="text-sm text-muted-foreground">
               <FontAwesomeIcon icon={faCopyright} /> {new Date().getFullYear()} FunToKnow. All rights reserved.
             </p>
-            <div className="order-1 md:order-2">
-                <Logo />
-            </div>
-            <div className="order-2 md:order-3">
-                <SocialLinks />
-            </div>
+            <SocialLinks />
         </div>
       </div>
     </footer>
