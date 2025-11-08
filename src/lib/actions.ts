@@ -45,10 +45,9 @@ export async function submitContactForm(
   try {
     const db = getDb();
     
-    // This is the clean data object that will be stored in Firestore.
     const dataToStore = {
       ...validatedFields.data,
-      sentDate: serverTimestamp(), // Add the server-side timestamp
+      sentDate: serverTimestamp(),
     };
     
     await addDoc(collection(db, 'messages'), dataToStore);
@@ -59,7 +58,6 @@ export async function submitContactForm(
     };
   } catch (error: any) {
     console.error("Error writing message to Firestore: ", error);
-    // This is the generic error message the user sees.
     return {
       message: 'An unexpected internal error occurred. Please try again later.',
       success: false,

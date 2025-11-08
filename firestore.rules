@@ -56,8 +56,7 @@ service cloud.firestore {
 
     /**
      * @description Restricts read/delete/list access for messages to admins.
-     * Allows any user (guest or authenticated) to create a message.
-     * The server action handles data validation before writing.
+     * Allows any user (guest or authenticated) to create a message via the server action.
      * @path /messages/{messageId}
      */
     match /messages/{messageId} {
