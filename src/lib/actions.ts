@@ -45,8 +45,6 @@ export async function submitContactForm(
   try {
     const db = getDb();
     
-    // This is the data that will be stored in Firestore.
-    // It includes the validated form data and the server timestamp.
     const dataToStore = {
       ...validatedFields.data,
       sentDate: FieldValue.serverTimestamp(),
@@ -59,8 +57,6 @@ export async function submitContactForm(
       success: true,
     };
   } catch (error: any) {
-    // This block will now catch any server-side errors,
-    // including initialization or write failures.
     console.error("Critical Error writing message to Firestore: ", error);
     return {
       message: 'An unexpected internal error occurred. Please try again later.',

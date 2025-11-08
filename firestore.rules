@@ -21,7 +21,7 @@
  * - Users can only read/write their own profile data and session data.
  * - Authenticated users can write to the reactions subcollection for a blog post.
  * - Contact messages and site settings are only writable by admins.
- * - The contact form uses a trusted server action, so the 'create' rule for messages is permissive.
+ * - The contact form uses a trusted server action, so the 'create' rule for messages allows the write while validating the shape of the data.
  * - Admin status is determined by the `role` field in the user's document in the `/users` collection.
  * - Listing of user profiles is disallowed to prevent unauthorized access.
  */
@@ -57,12 +57,17 @@ service cloud.firestore {
 
     /**
      * @description Restricts read/delete/list access for messages to admins.
-     * Allows any user (guest or authenticated) to create a message via the server action.
+     * Allows the server action to create a message by validating the incoming data.
      * @path /messages/{messageId}
      */
     match /messages/{messageId} {
       allow read, list, delete: if isAdmin();
-      allow create: if true;
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && request.resource.data.topic is string
+                    && request.resource.data.message is string
+                    && request.resource.data.sentDate == request.time
+                    && request.resource.data.size() == 5;
     }
 
     /**
