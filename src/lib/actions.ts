@@ -2,8 +2,8 @@
 'use server';
 
 import { z } from 'zod';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getDb } from '@/firebase/server-init';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -47,10 +47,10 @@ export async function submitContactForm(
     
     const dataToStore = {
       ...validatedFields.data,
-      sentDate: serverTimestamp(),
+      sentDate: FieldValue.serverTimestamp(),
     };
     
-    await addDoc(collection(db, 'messages'), dataToStore);
+    await db.collection('messages').add(dataToStore);
 
     return {
       message: 'Thank you for your message! We will get back to you soon.',
