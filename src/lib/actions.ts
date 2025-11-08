@@ -23,6 +23,8 @@ export type ContactFormState = {
   success: boolean;
 };
 
+// This server action is no longer in use by the contact form,
+// but is kept for reference or other potential uses.
 export async function submitContactForm(
   prevState: ContactFormState,
   formData: FormData

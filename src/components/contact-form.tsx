@@ -1,94 +1,185 @@
 
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
-import { useFormStatus } from 'react-dom';
-import { submitContactForm, type ContactFormState } from '@/lib/actions';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useEffect, useState } from 'react';
+import { useAuth, useFirestore, useUser } from '@/firebase';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { signInAnonymously } from 'firebase/auth';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTerminal, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} className="w-full">
-      {pending ? <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Sending...</> : 'Send Message'}
-    </Button>
-  );
-}
+const contactSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  email: z.string().email('Please enter a valid email.'),
+  topic: z.enum(['general', 'project', 'bug'], {
+    required_error: 'Please select a topic.',
+  }),
+  message: z.string().min(10, 'Message must be at least 10 characters.'),
+});
 
 export function ContactForm() {
-  const initialState: ContactFormState = { message: '', success: false, errors: {} };
-  const [state, formAction] = useActionState(submitContactForm, initialState);
   const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useUser();
+  const auth = useAuth();
+  const firestore = useFirestore();
 
-  useEffect(() => {
-    if (state.success) {
+  const form = useForm<z.infer<typeof contactSchema>>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      topic: undefined,
+      message: '',
+    },
+  });
+
+  const ensureUser = async () => {
+    if (user) return user;
+    if (!auth) throw new Error('Auth service not available');
+    try {
+      const userCredential = await signInAnonymously(auth);
+      return userCredential.user;
+    } catch (error) {
+      console.error('Anonymous sign-in failed', error);
       toast({
-        title: 'Success!',
-        description: state.message,
-      });
-      formRef.current?.reset();
-    } else if (state.message && !state.success && Object.keys(state.errors || {}).length === 0) {
-       // This handles the generic server error case
-       toast({
+        title: 'Error',
+        description: 'Could not prepare the form for submission. Please try again.',
         variant: 'destructive',
-        title: 'Submission Error',
-        description: state.message,
       });
+      return null;
     }
-  }, [state, toast]);
+  };
+
+  async function onSubmit(values: z.infer<typeof contactSchema>) {
+    setIsSubmitting(true);
+    
+    const currentUser = await ensureUser();
+    if (!currentUser || !firestore) {
+      setIsSubmitting(false);
+      return;
+    }
+    
+    const messageData = {
+      ...values,
+      sentDate: serverTimestamp(),
+    };
+
+    const collectionRef = collection(firestore, 'messages');
+    addDoc(collectionRef, messageData)
+      .then(() => {
+        toast({
+          title: 'Message Sent!',
+          description: 'Thank you for your message. We will get back to you soon.',
+        });
+        form.reset();
+      })
+      .catch((e) => {
+        const permissionError = new FirestorePermissionError({
+          path: collectionRef.path,
+          operation: 'create',
+          requestResourceData: messageData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        toast({
+          title: 'Submission Error',
+          description: 'An error occurred while sending your message. Please try again.',
+          variant: 'destructive',
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  }
 
   return (
-    <form ref={formRef} action={formAction} className="space-y-6">
-      {!state.success && state.message && Object.keys(state.errors || {}).length > 0 && (
-         <Alert variant="destructive">
-            <FontAwesomeIcon icon={faTerminal} className="h-4 w-4" />
-            <AlertTitle>Please fix the errors below</AlertTitle>
-            <AlertDescription>
-                {state.message}
-            </AlertDescription>
-        </Alert>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" placeholder="Your Name" required aria-invalid={!!state.errors?.name} />
-            {state.errors?.name && <p className="text-sm text-destructive">{state.errors.name[0]}</p>}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="your.email@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" placeholder="your.email@example.com" required aria-invalid={!!state.errors?.email}/>
-            {state.errors?.email && <p className="text-sm text-destructive">{state.errors.email[0]}</p>}
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="topic">Topic</Label>
-        <Select name="topic" required aria-invalid={!!state.errors?.topic}>
-            <SelectTrigger id="topic">
-                <SelectValue placeholder="Select a topic" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="general">General Inquiry</SelectItem>
-                <SelectItem value="project">Project Proposal</SelectItem>
-                <SelectItem value="bug">Bug Report</SelectItem>
-            </SelectContent>
-        </Select>
-        {state.errors?.topic && <p className="text-sm text-destructive">{state.errors.topic[0]}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
-        <Textarea id="message" name="message" placeholder="Your message..." rows={6} required aria-invalid={!!state.errors?.message}/>
-         {state.errors?.message && <p className="text-sm text-destructive">{state.errors.message[0]}</p>}
-      </div>
-      <SubmitButton />
-    </form>
+        <FormField
+          control={form.control}
+          name="topic"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Topic</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a topic" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="general">General Inquiry</SelectItem>
+                  <SelectItem value="project">Project Proposal</SelectItem>
+                  <SelectItem value="bug">Bug Report</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Your message..." rows={6} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? (
+            <>
+              <FontAwesomeIcon icon={faSpinner} spin className="mr-2" /> Sending...
+            </>
+          ) : (
+            'Send Message'
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }
