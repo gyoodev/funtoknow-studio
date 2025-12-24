@@ -22,6 +22,7 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ImageUploader } from '@/components/admin/image-uploader';
 
 const projectSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
@@ -254,21 +255,23 @@ export default function NewProjectPage() {
                         <FormLabel>Image Gallery</FormLabel>
                         <div className="space-y-4 mt-2">
                         {galleryFields.map((field, index) => (
-                            <div key={field.id} className="flex items-end gap-4 p-4 border rounded-md">
-                                <FormField control={form.control} name={`gallery.${index}.url`} render={({ field }) => (
-                                    <FormItem className="flex-1">
-                                        <FormLabel>Image URL</FormLabel>
-                                        <FormControl><Input placeholder="https://example.com/image.png" {...field} /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
-                                <FormField control={form.control} name={`gallery.${index}.hint`} render={({ field }) => (
-                                     <FormItem className="flex-1">
-                                        <FormLabel>Image Hint</FormLabel>
-                                        <FormControl><Input placeholder="e.g., character art" {...field} /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} />
+                            <div key={field.id} className="flex flex-col sm:flex-row items-start gap-4 p-4 border rounded-md">
+                                <div className="w-full sm:w-1/3">
+                                  <ImageUploader 
+                                    onUpload={(url) => form.setValue(`gallery.${index}.url`, url, { shouldValidate: true })}
+                                    initialUrl={form.getValues(`gallery.${index}.url`)}
+                                  />
+                                  <FormField control={form.control} name={`gallery.${index}.url`} render={() => <FormItem><FormMessage className="mt-2" /></FormItem>} />
+                                </div>
+                                <div className="flex-1 w-full space-y-4">
+                                  <FormField control={form.control} name={`gallery.${index}.hint`} render={({ field }) => (
+                                      <FormItem>
+                                          <FormLabel>Image Hint</FormLabel>
+                                          <FormControl><Input placeholder="e.g., character art" {...field} /></FormControl>
+                                          <FormMessage />
+                                      </FormItem>
+                                  )} />
+                                </div>
                                 <Button type="button" variant="destructive" size="icon" onClick={() => removeGallery(index)}>
                                     <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
                                 </Button>
@@ -359,5 +362,3 @@ export default function NewProjectPage() {
     </div>
   );
 }
-
-    
