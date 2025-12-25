@@ -2,7 +2,6 @@
 import { notFound } from 'next/navigation';
 import { getDb } from '@/firebase/server-init';
 import type { Project } from '@/lib/types';
-import { getSiteSettings } from '@/firebase/server-init';
 import type { Metadata } from 'next';
 import { ProjectDetailsContent } from '@/components/project-details-content';
 
@@ -41,8 +40,7 @@ async function getProject(slug: string): Promise<Project | null> {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const project = await getProject(params.slug);
-  const siteSettings = await getSiteSettings();
-  const siteName = siteSettings?.siteName || 'FunToKnow Platform';
+  const siteName = 'FunToKnow Platform';
   
   if (!project) {
     return {
