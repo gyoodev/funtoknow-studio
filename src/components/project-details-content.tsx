@@ -60,12 +60,7 @@ export function ProjectDetailsContent({ project }: { project: Project }) {
 
 
   return (
-    <div>
-        <header className="mb-12">
-            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl">{project.title}</h1>
-            <p className="mt-4 text-lg text-muted-foreground">{project.description}</p>
-        </header>
-
+    <div className="pt-6">
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             <main className="md:col-span-2 space-y-12">
                 {youtubeVideoId ? (

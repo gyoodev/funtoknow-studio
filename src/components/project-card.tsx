@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ProjectDetailsContent } from './project-details-content';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -59,9 +59,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </Card>
       </DialogTrigger>
-      <DialogContent className="max-w-5xl w-full h-[90vh] p-0">
+      <DialogContent className="max-w-5xl w-full h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="p-6 pb-0">
+          <DialogTitle className="text-2xl font-bold">{project.title}</DialogTitle>
+          <DialogDescription>{project.description}</DialogDescription>
+        </DialogHeader>
         <ScrollArea className="h-full">
-            <div className="p-6 md:p-8 lg:p-10">
+            <div className="p-6 pt-0">
                 <ProjectDetailsContent project={project} />
             </div>
         </ScrollArea>
