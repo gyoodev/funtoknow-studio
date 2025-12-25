@@ -9,8 +9,7 @@
     "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "patch-package"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
@@ -53,12 +52,10 @@
     "genkit": "^1.20.0",
     "next": "^15.3.8",
     "nodemailer": "^6.9.14",
-    "patch-package": "^8.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-dropzone": "^14.2.3",
     "react-email": "^2.1.5",
-    "react-hook-form": "^7.54.2",
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
@@ -73,5 +70,13 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "react-email": {
+      "react": "^19.2.3"
+    },
+    "@react-email/components": {
+      "react": "^19.2.3"
+    }
   }
 }
