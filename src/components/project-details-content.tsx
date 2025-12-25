@@ -60,10 +60,9 @@ export function ProjectDetailsContent({ project }: { project: Project }) {
 
 
   return (
-    <div className="container py-16 lg:py-24">
-      <div className="max-w-5xl mx-auto">
+    <div>
         <header className="mb-12">
-            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-6xl">{project.title}</h1>
+            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl">{project.title}</h1>
             <p className="mt-4 text-lg text-muted-foreground">{project.description}</p>
         </header>
 
@@ -168,6 +167,5 @@ export function ProjectDetailsContent({ project }: { project: Project }) {
             </aside>
         </div>
       </div>
-    </div>
   );
 }
