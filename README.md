@@ -1,6 +1,6 @@
 # FunToKnow Platform
 
-Welcome to the FunToKnow Platform, a modern web application designed for showcasing game projects, publishing a developer blog, and managing a user community. This project is built with a powerful, modern tech stack and includes AI-powered features to enhance user engagement.
+Welcome to the FunToKnow Platform, a modern web application designed for a freelancer to showcase game projects, publish a developer blog, and manage a user community. This project is built with a powerful, modern tech stack and includes AI-powered features to enhance user engagement.
 
 ## Tech Stack
 
@@ -17,7 +17,7 @@ Welcome to the FunToKnow Platform, a modern web application designed for showcas
 -   **Project Showcase**: Display game projects with images, descriptions, and awards.
 -   **Developer Blog**: A fully-featured blog with markdown support for posts.
 -   **User Authentication**: Secure sign-up and login for users with email and password.
--   **Admin Dashboard**: A protected area for administrators to manage site content.
+-   **Admin Dashboard**: A protected area for the administrator to manage site content.
     -   Manage Projects, Blog Posts, and Users.
     -   Dynamically update site-wide settings like social media links.
 -   **AI-Powered Suggestions**: Personalized game project recommendations for users based on their declared gaming habits.
@@ -39,6 +39,7 @@ To get this project up and running on your local machine, follow these steps.
     ```bash
     npm install
     ```
+    *Note*: This project uses React 19. Some dependencies may have peer dependency conflicts. The `package.json` file includes an `overrides` section to resolve these issues.
 
 ### Running the Development Servers
 
@@ -57,6 +58,12 @@ This project requires two separate development servers to be running simultaneou
     npm run genkit:dev
     ```
     This will start the Genkit development UI, allowing you to inspect and test your AI flows.
+
+### Local Firebase Setup
+For server-side Firebase functionality (like fetching site settings during the build), you'll need to set up service account credentials.
+
+1.  Go to your Firebase project settings and generate a service account key file.
+2.  Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of this JSON file.
 
 ## Project Structure
 
