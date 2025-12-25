@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { doc, getDoc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { format } from 'date-fns';
+import { Preloader } from '@/components/preloader';
 
 export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
@@ -79,31 +80,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="container py-16 lg:py-24">
-        <div className="mx-auto max-w-4xl space-y-12">
-          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-            <Skeleton className="h-24 w-24 rounded-full" />
-            <div>
-              <Skeleton className="h-12 w-64 mb-2" />
-              <Skeleton className="h-6 w-80" />
-            </div>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2">
-            <Card>
-              <CardHeader><Skeleton className="h-8 w-40" /></CardHeader>
-              <CardContent className="space-y-4">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-2/3" />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><Skeleton className="h-8 w-40" /></CardHeader>
-              <CardContent>
-                <Skeleton className="h-10 w-48" />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        <Preloader />
       </div>
     );
   }

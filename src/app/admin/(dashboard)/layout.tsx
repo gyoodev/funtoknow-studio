@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/firebase';
 import { cn } from '@/lib/utils';
+import { Preloader } from '@/components/preloader';
 
 const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: faTachometerAlt },
@@ -59,8 +60,8 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   // While loading or if redirection is happening, show a loading state or nothing
   if (isLoading || !user || (userProfile && userProfile.role !== 'admin')) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <FontAwesomeIcon icon={faSpinner} className="h-10 w-10 animate-spin text-primary" />
+      <div className="h-screen w-full">
+        <Preloader />
       </div>
     );
   }
