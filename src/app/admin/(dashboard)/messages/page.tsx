@@ -34,17 +34,16 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ReplyForm } from '@/components/admin/reply-form';
 
 
 function ViewMessageDialog({ message }: { message: ContactMessage }) {
-  const [showReply, setShowReply] = useState(false);
 
   return (
-    <Dialog onOpenChange={() => setShowReply(false)}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon">
           <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
@@ -66,15 +65,16 @@ function ViewMessageDialog({ message }: { message: ContactMessage }) {
         <div className="py-4 whitespace-pre-wrap text-sm">{message.message}</div>
         <Separator />
         
-        {showReply ? (
-            <ReplyForm to={message.email} onSent={() => setShowReply(false)} />
-        ) : (
-             <DialogFooter>
-                <Button onClick={() => setShowReply(true)}>
-                    Reply
-                </Button>
-            </DialogFooter>
-        )}
+        <DialogFooter>
+          <a href={`mailto:${message.email}`}>
+            <Button>
+              Reply via Email Client
+            </Button>
+          </a>
+          <DialogClose asChild>
+            <Button variant="outline">Close</Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

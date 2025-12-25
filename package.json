@@ -40,7 +40,6 @@
     "@radix-ui/react-tabs": "^1.1.3",
     "@radix-ui/react-toast": "^1.2.6",
     "@radix-ui/react-tooltip": "^1.1.8",
-    "@react-email/components": "^0.0.21",
     "@vercel/analytics": "^1.3.1",
     "@vercel/speed-insights": "^1.0.12",
     "class-variance-authority": "^0.7.1",
@@ -51,11 +50,9 @@
     "firebase": "^11.9.1",
     "genkit": "^1.20.0",
     "next": "^15.3.8",
-    "nodemailer": "^6.9.14",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-dropzone": "^14.2.3",
-    "react-email": "^2.1.5",
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
@@ -63,20 +60,11 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "genkit-cli": "^1.20.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "overrides": {
-    "react-email": {
-      "react": "^19.2.3"
-    },
-    "@react-email/components": {
-      "react": "^19.2.3"
-    }
   }
 }
