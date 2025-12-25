@@ -1,0 +1,22 @@
+diff --git a/node_modules/@react-email/components/package.json b/node_modules/@react-email/components/package.json
+index 5797825..238b693 100644
+--- a/node_modules/@react-email/components/package.json
++++ b/node_modules/@react-email/components/package.json
+@@ -29,7 +29,7 @@
+   "peerDependencies": {
+     "@react-email/render": "0.0.15",
+     "react": "^18.2.0",
+-    "react-dom": "^18.2.0"
++    "react-dom": ">=18.2.0"
+   },
+   "dependencies": {
+     "@radix-ui/react-accordion": "1.1.1",
+@@ -48,6 +48,6 @@
+   },
+   "peerDependenciesMeta": {
+     "react-dom": {
+-      "optional": true
++      "optional": false
+     }
+   }
+ }
