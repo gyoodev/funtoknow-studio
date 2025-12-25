@@ -5,26 +5,16 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
 import { Analytics } from '@vercel/analytics/next';
-import { getSiteSettings } from '@/firebase/server-init';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CookieBanner } from '@/components/cookie-banner';
 
-export async function generateMetadata(): Promise<Metadata> {
-  // Fetch site settings from Firestore
-  const settings = await getSiteSettings();
-
-  const title = settings?.siteName || 'FunToKnow Platform';
-  const description = settings?.description || 'A platform for game projects, blogs, and creative collaboration.';
-  
-  return {
-    title: {
-      default: title,
-      template: `%s | ${title}`,
-    },
-    description: description,
-    keywords: settings?.metaTags?.split(',').map(tag => tag.trim()) || [],
-  };
-}
+export const metadata: Metadata = {
+  title: {
+    default: 'FunToKnow Platform',
+    template: `%s | FunToKnow Platform`,
+  },
+  description: 'A platform for game projects, blogs, and creative collaboration.',
+};
 
 export const viewport: Viewport = {
   themeColor: [
