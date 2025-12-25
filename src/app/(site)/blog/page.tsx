@@ -14,22 +14,37 @@ export default function BlogPage() {
   );
   const { data: blogPosts, isLoading } = useCollection<BlogPost>(blogPostsQuery);
 
+  const featuredPost = blogPosts?.[0];
+  const otherPosts = blogPosts?.slice(1);
+
   return (
     <div className="container py-16 lg:py-24">
       <div className="flex flex-col items-center text-center">
-        <h1 className="text-4xl font-bold tracking-tighter md:text-5xl">Developer Blog</h1>
+        <h1 className="text-4xl font-bold tracking-tighter md:text-5xl">Discover Our Articles</h1>
         <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-          News, insights, and stories from our game development journey.
+          All the articles and contents of the site have been updated today. Find what you need quickly and without any problems.
         </p>
       </div>
 
-      <div className="mt-12 mx-auto max-w-3xl space-y-8">
+      <div className="mt-12 space-y-16">
         {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48 w-full" />)
+          <>
+            <Skeleton className="h-[450px] w-full" />
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-96 w-full" />)}
+            </div>
+          </>
         ) : (
-          blogPosts?.map((post) => (
-            <BlogPostCard key={post.id} post={post} />
-          ))
+          <>
+            {featuredPost && (
+                <BlogPostCard post={featuredPost} isFeatured={true} />
+            )}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {otherPosts?.map((post) => (
+                    <BlogPostCard key={post.id} post={post} />
+                ))}
+            </div>
+          </>
         )}
       </div>
     </div>

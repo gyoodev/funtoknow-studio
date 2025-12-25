@@ -6,13 +6,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { Button } from './ui/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 interface BlogPostCardProps {
   post: BlogPost;
   className?: string;
+  isFeatured?: boolean;
 }
 
-export default function BlogPostCard({ post, className }: BlogPostCardProps) {
+export default function BlogPostCard({ post, className, isFeatured = false }: BlogPostCardProps) {
   const authorName = post.author?.split(',')[0] || 'Unknown Author';
   const authorInitial = authorName.charAt(0);
   
@@ -29,38 +33,78 @@ export default function BlogPostCard({ post, className }: BlogPostCardProps) {
     publicationDate = post.date || 'Invalid Date';
   }
 
+  if (isFeatured) {
+    return (
+        <Link href={`/blog/${post.slug}`} className="block group">
+            <Card className={cn("overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 relative flex flex-col md:flex-row items-center", className)}>
+                <div className="relative w-full md:w-1/2 aspect-video">
+                    <Image
+                        src={post.imageUrl || 'https://placehold.co/800x450'}
+                        alt={post.title}
+                        fill
+                        className="object-cover rounded-l-lg"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        data-ai-hint={post.imageHint}
+                    />
+                </div>
+                <CardContent className="p-8 md:p-12 flex flex-col justify-center md:w-1/2">
+                    <div className="flex items-center gap-3 mb-4">
+                        <Avatar className="h-10 w-10">
+                        <AvatarFallback>{authorInitial}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                        <p className="text-base font-medium leading-none">{authorName}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{publicationDate}</p>
+                        </div>
+                    </div>
+                    <h2 className="font-headline text-3xl font-bold leading-tight">
+                        <span className="group-hover:text-primary transition-colors">
+                            {post.title}
+                        </span>
+                    </h2>
+                    <p className="mt-4 text-base text-muted-foreground line-clamp-3">{post.excerpt}</p>
+                     <Button variant="link" className="p-0 mt-4 h-auto justify-start text-base">
+                        Read More
+                        <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                </CardContent>
+            </Card>
+        </Link>
+    );
+  }
 
   return (
     <Link href={`/blog/${post.slug}`} className="block group">
-      <Card className={cn("overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col md:flex-row", className)}>
-        <div className="relative w-full md:w-1/3 aspect-[4/3] md:aspect-auto">
+      <Card className={cn("overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 flex flex-col", className)}>
+        <div className="relative w-full aspect-video">
           <Image
               src={post.imageUrl || 'https://placehold.co/400x300'}
               alt={post.title}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               data-ai-hint={post.imageHint}
           />
+           <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-background/70 backdrop-blur-sm p-2 rounded-full">
+             <Avatar className="h-8 w-8">
+                <AvatarFallback>{authorInitial}</AvatarFallback>
+             </Avatar>
+             <p className="text-xs font-medium mr-2">{authorName}</p>
+           </div>
         </div>
-        <CardContent className="p-4 md:p-6 flex flex-col justify-between md:w-2/3">
+        <CardContent className="p-6 flex flex-col flex-grow">
           <div>
-            <h3 className="font-headline text-lg font-bold leading-snug">
+            <h3 className="font-headline text-lg font-bold leading-snug mb-2">
               <span className="line-clamp-2 group-hover:text-primary transition-colors">
                 {post.title}
               </span>
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{post.excerpt}</p>
+            <p className="text-sm text-muted-foreground line-clamp-3">{post.excerpt}</p>
           </div>
-
-          <div className="mt-4 flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback>{authorInitial}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium leading-none">{authorName}</p>
-              <p className="text-xs text-muted-foreground mt-1">{publicationDate}</p>
-            </div>
+          <div className="flex-grow" />
+          <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+             <span>{publicationDate}</span>
+             <span className="group-hover:text-primary transition-colors">Read More &rarr;</span>
           </div>
         </CardContent>
       </Card>
