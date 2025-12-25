@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlogPost } from '@/lib/types';
@@ -14,7 +15,16 @@ interface BlogPostCardProps {
 export default function BlogPostCard({ post, className }: BlogPostCardProps) {
   const authorName = post.author?.split(',')[0] || 'Unknown Author';
   const authorInitial = authorName.charAt(0);
-  const publicationDate = post.publicationDate ? format(post.publicationDate.toDate(), 'MMMM d, yyyy') : post.date;
+  
+  let publicationDate = post.date;
+  try {
+    if (post.publicationDate) {
+      const dateToFormat = (post.publicationDate as any).toDate ? (post.publicationDate as any).toDate() : new Date(post.publicationDate);
+      publicationDate = format(dateToFormat, 'MMMM d, yyyy');
+    }
+  } catch (error) {
+    console.warn("Could not format blog post date", post.publicationDate);
+  }
 
   return (
     <Link href={`/blog/${post.slug}`} className="block group">

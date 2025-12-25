@@ -19,11 +19,17 @@ async function getPost(slug: string): Promise<BlogPost | null> {
   const doc = querySnapshot.docs[0];
   const data = doc.data();
 
+  // Safely handle the publicationDate timestamp by converting it to a serializable ISO string
+  const publicationDate = data.publicationDate;
+  const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
+    ? publicationDate.toDate().toISOString() 
+    : null;
+
   return {
     id: doc.id,
     ...data,
     // Convert Firestore Timestamp to a serializable format (ISO string)
-    publicationDate: data.publicationDate?.toDate().toISOString(),
+    publicationDate: serializablePublicationDate,
   } as BlogPost;
 }
 
@@ -39,9 +45,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
+  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
+
   return {
     title: `${post.title} | ${siteName}`,
-    description: post.excerpt || post.content.substring(0, 155),
+    description: description,
   };
 }
 

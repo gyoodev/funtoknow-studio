@@ -16,8 +16,16 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
   const authorName = post.author?.split(',')[0] || 'Unknown';
   const authorInitial = authorName.charAt(0);
   
-  // The publicationDate from the server is an ISO string
-  const publicationDate = post.publicationDate ? format(new Date(post.publicationDate), 'MMMM d, yyyy') : (post.date || '');
+  let formattedDate = post.date || '';
+  if (post.publicationDate) {
+    try {
+      // The publicationDate from the server is now an ISO string
+      formattedDate = format(new Date(post.publicationDate), 'MMMM d, yyyy');
+    } catch (e) {
+      // Fallback if parsing fails
+      formattedDate = 'Invalid Date';
+    }
+  }
   
   const initialReactions = post.reactions || { love: 0, like: 0, applause: 0, funny: 0, sad: 0 };
 
@@ -35,7 +43,7 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
                 </div>
                 <div className="flex items-center gap-2">
                     <FontAwesomeIcon icon={faCalendar} className="h-4 w-4" />
-                    <span className="text-sm">{publicationDate}</span>
+                    <span className="text-sm">{formattedDate}</span>
                 </div>
             </div>
         </header>
