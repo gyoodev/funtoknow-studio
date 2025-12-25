@@ -1,13 +1,41 @@
 
-'use client';
-
-import { useParams, notFound } from 'next/navigation';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { notFound } from 'next/navigation';
 import { getDb } from '@/firebase/server-init';
-import { collection, query, where, limit } from 'firebase/firestore';
 import type { BlogPost } from '@/lib/types';
+import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
-import { Skeleton } from '@/components/ui/skeleton';
+
+async function getPost(slug: string): Promise<BlogPost | null> {
+  try {
+    const db = getDb();
+    const postsRef = db.collection('blogPosts');
+    const q = postsRef.where('slug', '==', slug).limit(1);
+    const querySnapshot = await q.get();
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    const doc = querySnapshot.docs[0];
+    const data = doc.data();
+
+    // Convert Firestore Timestamp to a serializable format (ISO string)
+    const publicationDate = data.publicationDate;
+    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
+      ? publicationDate.toDate().toISOString() 
+      : null;
+
+    return {
+      id: doc.id,
+      ...data,
+      publicationDate: serializablePublicationDate,
+    } as BlogPost;
+  } catch (error: any) {
+    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
+    // Return null to allow the page to handle it gracefully (e.g., show notFound)
+    return null;
+  }
+}
 
 export async function generateStaticParams() {
   try {
@@ -18,63 +46,35 @@ export async function generateStaticParams() {
     }));
     return paths;
   } catch (error) {
-    // In a production build, it's better to return an empty array
-    // than to crash the build. The pages will be generated on-demand.
     console.error("Failed to generate static params for blog posts:", (error as Error).message);
     return [];
   }
 }
 
-function PostSkeleton() {
-    return (
-        <div className="container py-16 lg:py-24">
-            <div className="mx-auto max-w-3xl">
-                 <header className="mb-12 space-y-4">
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-8 w-3/4" />
-                    <div className="flex items-center gap-6">
-                        <Skeleton className="h-8 w-32" />
-                        <Skeleton className="h-8 w-32" />
-                    </div>
-                </header>
-                <Skeleton className="aspect-video w-full mb-12" />
-                <div className="space-y-4">
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-5/6" />
-                </div>
-            </div>
-        </div>
-    )
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getPost(params.slug);
+  const siteName = 'FunToKnow Platform';
+
+  if (!post) {
+    return {
+      title: `Post Not Found | ${siteName}`,
+    };
+  }
+
+  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
+
+  return {
+    title: `${post.title} | ${siteName}`,
+    description: description,
+  };
 }
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
 
-  const firestore = useFirestore();
+export default async function BlogPostPage({ params }: { params: { slug: string }}) {
+  const post = await getPost(params.slug);
 
-  const postQuery = useMemoFirebase(
-    () => (firestore && slug ? query(collection(firestore, 'blogPosts'), where('slug', '==', slug), limit(1)) : null),
-    [firestore, slug]
-  );
-  
-  const { data: posts, isLoading } = useCollection<BlogPost>(postQuery);
-  const post = posts?.[0];
-
-  if (isLoading) {
-    return <PostSkeleton />;
-  }
-
-  // After loading, if posts array is empty, it means no post was found for this slug.
-  if (!isLoading && (!posts || posts.length === 0)) {
-    notFound();
-  }
-
-  // If we are still loading or the post is not yet available, render the skeleton.
-  // This helps prevent a flash of a not-found page before data loads.
   if (!post) {
-      return <PostSkeleton />;
+    notFound();
   }
 
   return <BlogPostContent post={post} />;
