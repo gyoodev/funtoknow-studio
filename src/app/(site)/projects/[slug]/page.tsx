@@ -8,30 +8,34 @@ import { ProjectDetailsContent } from '@/components/project-details-content';
 
 
 async function getProject(slug: string): Promise<Project | null> {
-    const db = getDb();
-    const projectsRef = db.collection('projects');
-    const q = projectsRef.where('slug', '==', slug).limit(1);
-    const querySnapshot = await q.get();
+    try {
+        const db = getDb();
+        const projectsRef = db.collection('projects');
+        const q = projectsRef.where('slug', '==', slug).limit(1);
+        const querySnapshot = await q.get();
 
-    if (querySnapshot.empty) {
+        if (querySnapshot.empty) {
+            return null;
+        }
+
+        const doc = querySnapshot.docs[0];
+        const data = doc.data();
+
+        const createdAt = data.createdAt;
+        const serializableCreatedAt = (createdAt && typeof createdAt.toDate === 'function') 
+          ? createdAt.toDate().toISOString() 
+          : null;
+
+        return {
+            id: doc.id,
+            ...data,
+            createdAt: serializableCreatedAt,
+        } as Project;
+    } catch (error) {
+        console.error(`Failed to fetch project with slug "${slug}":`, error);
+        // Return null to allow the page to handle it gracefully (e.g., show notFound)
         return null;
     }
-
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
-
-    // Safely handle the createdAt timestamp by converting it to a serializable ISO string
-    // This checks if createdAt exists and is a Firestore Timestamp before converting.
-    const createdAt = data.createdAt;
-    const serializableCreatedAt = (createdAt && typeof createdAt.toDate === 'function') 
-      ? createdAt.toDate().toISOString() 
-      : null;
-
-    return {
-        id: doc.id,
-        ...data,
-        createdAt: serializableCreatedAt,
-    } as Project;
 }
 
 

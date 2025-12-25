@@ -7,30 +7,34 @@ import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
 
 async function getPost(slug: string): Promise<BlogPost | null> {
-  const db = getDb();
-  const postsRef = db.collection('blogPosts');
-  const q = postsRef.where('slug', '==', slug).limit(1);
-  const querySnapshot = await q.get();
+  try {
+    const db = getDb();
+    const postsRef = db.collection('blogPosts');
+    const q = postsRef.where('slug', '==', slug).limit(1);
+    const querySnapshot = await q.get();
 
-  if (querySnapshot.empty) {
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    const doc = querySnapshot.docs[0];
+    const data = doc.data();
+
+    const publicationDate = data.publicationDate;
+    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
+      ? publicationDate.toDate().toISOString() 
+      : null;
+
+    return {
+      id: doc.id,
+      ...data,
+      publicationDate: serializablePublicationDate,
+    } as BlogPost;
+  } catch (error) {
+    console.error(`Failed to fetch blog post with slug "${slug}":`, error);
+    // Return null to allow the page to handle it gracefully (e.g., show notFound)
     return null;
   }
-
-  const doc = querySnapshot.docs[0];
-  const data = doc.data();
-
-  // Safely handle the publicationDate timestamp by converting it to a serializable ISO string
-  const publicationDate = data.publicationDate;
-  const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
-    ? publicationDate.toDate().toISOString() 
-    : null;
-
-  return {
-    id: doc.id,
-    ...data,
-    // Convert Firestore Timestamp to a serializable format (ISO string)
-    publicationDate: serializablePublicationDate,
-  } as BlogPost;
 }
 
 
