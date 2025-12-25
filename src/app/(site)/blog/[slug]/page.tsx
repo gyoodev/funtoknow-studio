@@ -2,7 +2,6 @@
 import { notFound } from 'next/navigation';
 import { getDb } from '@/firebase/server-init';
 import type { BlogPost } from '@/lib/types';
-import { getSiteSettings } from '@/firebase/server-init';
 import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
 
@@ -40,8 +39,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost(params.slug);
-  const siteSettings = await getSiteSettings();
-  const siteName = siteSettings?.siteName || 'FunToKnow Platform';
+  const siteName = 'FunToKnow Platform';
 
   if (!post) {
     return {
