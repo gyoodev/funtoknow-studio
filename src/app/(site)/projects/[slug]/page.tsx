@@ -21,8 +21,9 @@ async function getProject(slug: string): Promise<Project | null> {
     const data = doc.data();
 
     // Safely handle the createdAt timestamp by converting it to a serializable ISO string
+    // This checks if createdAt exists and is a Firestore Timestamp before converting.
     const createdAt = data.createdAt;
-    const serializableCreatedAt = createdAt && typeof createdAt.toDate === 'function' 
+    const serializableCreatedAt = (createdAt && typeof createdAt.toDate === 'function') 
       ? createdAt.toDate().toISOString() 
       : null;
 
