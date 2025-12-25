@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -20,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import { ImageUploader } from '@/components/admin/image-uploader';
 
 const blogPostSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
@@ -107,7 +109,7 @@ export default function EditBlogPostPage() {
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                         <div className="grid md:grid-cols-2 gap-6">
-                            <Skeleton className="h-10 w-full" />
+                            <Skeleton className="h-32 w-full" />
                             <Skeleton className="h-10 w-full" />
                         </div>
                     </CardContent>
@@ -155,13 +157,14 @@ export default function EditBlogPostPage() {
                         </FormItem>
                     )} />
                      <div className="grid md:grid-cols-2 gap-6">
-                        <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Featured Image URL</FormLabel>
-                                <FormControl><Input type="url" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                         <div className="space-y-2">
+                            <FormLabel>Featured Image</FormLabel>
+                            <ImageUploader
+                                onUpload={(url) => form.setValue('imageUrl', url, { shouldValidate: true })}
+                                initialUrl={form.getValues('imageUrl')}
+                            />
+                            <FormField control={form.control} name="imageUrl" render={() => <FormItem><FormMessage className="mt-2" /></FormItem>} />
+                        </div>
                         <FormField control={form.control} name="imageHint" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Image Hint</FormLabel>
@@ -198,3 +201,4 @@ export default function EditBlogPostPage() {
     </div>
   );
 }
+

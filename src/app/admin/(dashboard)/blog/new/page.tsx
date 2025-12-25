@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 import { useFirestore, useUser } from '@/firebase';
@@ -20,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { format } from 'date-fns';
+import { ImageUploader } from '@/components/admin/image-uploader';
 
 const blogPostSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
@@ -45,13 +47,12 @@ export default function NewBlogPostPage() {
   
   const title = form.watch('title');
   
-  // Auto-generate slug from title
-  useState(() => {
+  useEffect(() => {
     if (title) {
       const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       form.setValue('slug', slug, { shouldValidate: true });
     }
-  });
+  }, [title, form]);
 
 
   async function onSubmit(values: z.infer<typeof blogPostSchema>) {
@@ -124,13 +125,13 @@ export default function NewBlogPostPage() {
                         </FormItem>
                     )} />
                      <div className="grid md:grid-cols-2 gap-6">
-                        <FormField control={form.control} name="imageUrl" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Featured Image URL</FormLabel>
-                                <FormControl><Input type="url" placeholder="https://example.com/image.jpg" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                        <div className="space-y-2">
+                          <FormLabel>Featured Image</FormLabel>
+                          <ImageUploader 
+                            onUpload={(url) => form.setValue('imageUrl', url, { shouldValidate: true })}
+                          />
+                           <FormField control={form.control} name="imageUrl" render={() => <FormItem><FormMessage className="mt-2" /></FormItem>} />
+                        </div>
                         <FormField control={form.control} name="imageHint" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Image Hint</FormLabel>
@@ -167,3 +168,4 @@ export default function NewBlogPostPage() {
     </div>
   );
 }
+
