@@ -31,8 +31,8 @@ async function getProject(slug: string): Promise<Project | null> {
             ...data,
             createdAt: serializableCreatedAt,
         } as Project;
-    } catch (error) {
-        console.error(`Failed to fetch project with slug "${slug}":`, error);
+    } catch (error: any) {
+        console.error(`Failed to fetch project with slug "${slug}":`, error.message);
         // Return null to allow the page to handle it gracefully (e.g., show notFound)
         return null;
     }
