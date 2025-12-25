@@ -50,13 +50,10 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     return settingsDoc.data() as SiteSettings;
   } catch (error: any) {
     // This can happen in local development if GOOGLE_APPLICATION_CREDENTIALS is not set.
-    // We catch it gracefully to allow the app to build without crashing.
-    if (error.code === '2 UNKNOWN' || error.message.includes('Could not refresh access token') || error.message.includes('credential')) {
-        console.warn(`Could not fetch site settings due to auth error. This is expected during local development if service account credentials aren't configured. Using default metadata. Error: ${error.message}`);
-        return null;
-    }
-    console.error('Error fetching site settings:', error);
-    // In case of other errors (e.g., permissions), return null to allow fallback values
+    // It can also happen in production due to transient errors.
+    // We catch it gracefully to allow the app to build/render without crashing.
+    console.error(`Could not fetch site settings. This might be expected during local dev if credentials aren't set. Error: ${error.message}`);
+    // In case of any error, return null to allow fallback values.
     return null;
   }
 }
