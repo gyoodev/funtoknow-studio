@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -136,36 +137,6 @@ export default function HomePage() {
           <div className="mt-12 text-center">
             <Button asChild variant="outline">
               <Link href="/projects">View All Projects</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Latest Blog Posts */}
-      <section className="bg-card py-16 lg:py-24">
-        <div className="container">
-          <div className="flex flex-col items-center text-center">
-            <FontAwesomeIcon icon={faRss} className="h-12 w-12 text-primary" />
-            <h2 className="mt-4 text-3xl font-bold tracking-tighter md:text-4xl">
-              From the Blog
-            </h2>
-            <p className="mt-2 max-w-2xl text-muted-foreground">
-              Insights, tutorials, and stories from the development front
-              lines.
-            </p>
-          </div>
-          <div className="mt-12 mx-auto max-w-3xl space-y-8">
-             {isLoadingBlogPosts ? (
-                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48 w-full" />)
-             ) : (
-                blogPosts?.map((post) => (
-                  <BlogPostCard key={post.id} post={post} />
-                ))
-             )}
-          </div>
-          <div className="mt-12 text-center">
-            <Button asChild>
-              <Link href="/blog">Read More Posts</Link>
             </Button>
           </div>
         </div>
