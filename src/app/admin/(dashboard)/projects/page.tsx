@@ -81,6 +81,19 @@ export default function AdminProjectsPage() {
     });
   };
 
+  const getFormattedDate = (date: any) => {
+    if (!date) return 'N/A';
+    try {
+        // Firestore Timestamps can be either objects with toDate() on the server/client, 
+        // or a string if it has been serialized from a server component.
+        const dateObject = date.toDate ? date.toDate() : new Date(date);
+        return format(dateObject, 'PP');
+    } catch (e) {
+        console.error("Error formatting date:", e);
+        return 'Invalid Date';
+    }
+  };
+
   return (
     <div className="p-4 md:p-8">
       <div className="flex items-center justify-between">
@@ -139,7 +152,7 @@ export default function AdminProjectsPage() {
                         <Badge variant="secondary">{project.version}</Badge>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                        {project.createdAt && project.createdAt.toDate ? format(project.createdAt.toDate(), 'PP') : 'N/A'}
+                        {getFormattedDate(project.createdAt)}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" asChild>

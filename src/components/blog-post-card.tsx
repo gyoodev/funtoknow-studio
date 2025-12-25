@@ -16,15 +16,19 @@ export default function BlogPostCard({ post, className }: BlogPostCardProps) {
   const authorName = post.author?.split(',')[0] || 'Unknown Author';
   const authorInitial = authorName.charAt(0);
   
-  let publicationDate = post.date;
+  let publicationDate = 'Date not available';
   try {
     if (post.publicationDate) {
-      const dateToFormat = (post.publicationDate as any).toDate ? (post.publicationDate as any).toDate() : new Date(post.publicationDate);
+      const dateToFormat = (post.publicationDate as any)?.toDate ? (post.publicationDate as any).toDate() : new Date(post.publicationDate);
       publicationDate = format(dateToFormat, 'MMMM d, yyyy');
+    } else if (post.date) {
+      publicationDate = post.date;
     }
   } catch (error) {
     console.warn("Could not format blog post date", post.publicationDate);
+    publicationDate = post.date || 'Invalid Date';
   }
+
 
   return (
     <Link href={`/blog/${post.slug}`} className="block group">

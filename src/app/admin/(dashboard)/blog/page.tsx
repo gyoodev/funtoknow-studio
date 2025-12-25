@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -79,6 +80,17 @@ export default function AdminBlogPage() {
     });
   };
 
+  const getFormattedDate = (date: any) => {
+    if (!date) return 'N/A';
+    try {
+        const dateObject = date.toDate ? date.toDate() : new Date(date);
+        return format(dateObject, 'PP');
+    } catch (e) {
+        console.error("Error formatting date:", e);
+        return 'Invalid Date';
+    }
+  };
+
   return (
     <div className="p-4 md:p-8">
        <div className="flex items-center justify-between">
@@ -134,7 +146,7 @@ export default function AdminBlogPage() {
                                         <TableCell className="font-medium">{post.title}</TableCell>
                                         <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{post.author}</TableCell>
                                         <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                                          {post.date}
+                                          {getFormattedDate(post.publicationDate)}
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon" asChild>
