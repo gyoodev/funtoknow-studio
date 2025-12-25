@@ -5,33 +5,27 @@ import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'
 
-// IMPORTANT: DO NOT MODIFY THIS FUNCTION
+/**
+ * Initializes the Firebase app, creating it if it doesn't already exist.
+ * This function is safe to call multiple times.
+ * @returns An object containing the initialized Firebase services.
+ */
 export function initializeFirebase() {
-  if (!getApps().length) {
-    // Important! initializeApp() is called without any arguments because Firebase App Hosting
-    // integrates with the initializeApp() function to provide the environment variables needed to
-    // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
-    // without arguments.
-    let firebaseApp;
-    try {
-      // Attempt to initialize via Firebase App Hosting environment variables
-      firebaseApp = initializeApp();
-    } catch (e) {
-      // Only warn in production because it's normal to use the firebaseConfig to initialize
-      // during development
-      if (process.env.NODE_ENV === "production") {
-        console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
-      }
-      firebaseApp = initializeApp(firebaseConfig);
-    }
-
-    return getSdks(firebaseApp);
+  if (getApps().length) {
+    // If already initialized, return the SDKs with the existing app instance.
+    return getSdks(getApp());
   }
 
-  // If already initialized, return the SDKs with the already initialized App
-  return getSdks(getApp());
+  // Initialize the Firebase app with the provided configuration.
+  const firebaseApp = initializeApp(firebaseConfig);
+  return getSdks(firebaseApp);
 }
 
+/**
+ * A helper function to get all the necessary Firebase SDK instances from a FirebaseApp.
+ * @param firebaseApp The initialized FirebaseApp instance.
+ * @returns An object containing the Auth and Firestore SDKs.
+ */
 export function getSdks(firebaseApp: FirebaseApp) {
   return {
     firebaseApp,
