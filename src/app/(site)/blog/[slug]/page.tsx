@@ -30,8 +30,8 @@ async function getPost(slug: string): Promise<BlogPost | null> {
       ...data,
       publicationDate: serializablePublicationDate,
     } as BlogPost;
-  } catch (error) {
-    console.error(`Failed to fetch blog post with slug "${slug}":`, error);
+  } catch (error: any) {
+    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
     // Return null to allow the page to handle it gracefully (e.g., show notFound)
     return null;
   }
