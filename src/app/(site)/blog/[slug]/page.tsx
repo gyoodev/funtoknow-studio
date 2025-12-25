@@ -1,77 +1,40 @@
 
-import { notFound } from 'next/navigation';
-import { getDb } from '@/firebase/server-init';
+'use client';
+
+import { useMemo } from 'react';
+import { notFound, useParams } from 'next/navigation';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { BlogPost } from '@/lib/types';
-import type { Metadata } from 'next';
+import { collection, query, where, limit } from 'firebase/firestore';
 import { BlogPostContent } from '@/components/blog-post-content';
+import { Preloader } from '@/components/preloader';
 
-async function getPost(slug: string): Promise<BlogPost | null> {
-  try {
-    const db = getDb();
-    const postsRef = db.collection('blogPosts');
-    const q = postsRef.where('slug', '==', slug).limit(1);
-    const querySnapshot = await q.get();
 
-    if (querySnapshot.empty) {
-      return null;
-    }
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const firestore = useFirestore();
 
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
+  const postQuery = useMemoFirebase(
+    () => (firestore && slug ? query(collection(firestore, 'blogPosts'), where('slug', '==', slug), limit(1)) : null),
+    [firestore, slug]
+  );
+  
+  const { data: posts, isLoading, error } = useCollection<BlogPost>(postQuery);
+  const post = posts?.[0];
 
-    // Convert Firestore Timestamp to a serializable format (ISO string)
-    const publicationDate = data.publicationDate;
-    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
-      ? publicationDate.toDate().toISOString() 
-      : null;
-
-    return {
-      id: doc.id,
-      ...data,
-      publicationDate: serializablePublicationDate,
-    } as BlogPost;
-  } catch (error: any) {
-    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
-    // Return null to allow the page to handle it gracefully (e.g., show notFound)
-    return null;
-  }
-}
-
-export async function generateStaticParams() {
-  try {
-    const db = getDb();
-    const snapshot = await db.collection('blogPosts').get();
-    const paths = snapshot.docs.map((doc) => ({
-      slug: doc.data().slug,
-    }));
-    return paths;
-  } catch (error) {
-    console.error("Failed to generate static params for blog posts:", (error as Error).message);
-    return [];
-  }
-}
-
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPost(params.slug);
-  const siteName = 'FunToKnow Platform';
-
-  if (!post) {
-    return {
-      title: `Post Not Found | ${siteName}`,
-    };
+  if (isLoading) {
+    return <Preloader />;
   }
 
-  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
-
-  return {
-    title: `${post.title} | ${siteName}`,
-    description: description,
-  };
-}
-
-
-export default async function BlogPostPage({ params }: { params: { slug: string }}) {
-  const post = await getPost(params.slug);
+  if (error) {
+     return (
+      <div className="container py-16 text-center">
+        <h2 className="text-2xl font-bold text-destructive">Error Loading Post</h2>
+        <p className="text-muted-foreground mt-2">{error.message}</p>
+      </div>
+    );
+  }
 
   if (!post) {
     notFound();
