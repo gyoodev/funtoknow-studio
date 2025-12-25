@@ -22,7 +22,6 @@ export interface BlogPost {
   authorId: string;
   author: string;
   publicationDate: any; // Firestore timestamp
-  date: string;
   excerpt: string;
   imageUrl: string;
   imageHint: string;

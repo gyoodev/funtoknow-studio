@@ -16,13 +16,18 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
   const authorName = post.author?.split(',')[0] || 'Unknown';
   const authorInitial = authorName.charAt(0);
   
-  let formattedDate = post.date || '';
+  let formattedDate = '';
   if (post.publicationDate) {
     try {
       // The publicationDate from the server is now an ISO string
-      formattedDate = format(new Date(post.publicationDate), 'MMMM d, yyyy');
+      const date = new Date(post.publicationDate);
+      // Check if the date is valid before formatting
+      if (!isNaN(date.getTime())) {
+        formattedDate = format(date, 'MMMM d, yyyy');
+      } else {
+        formattedDate = 'Invalid Date';
+      }
     } catch (e) {
-      // Fallback if parsing fails
       formattedDate = 'Invalid Date';
     }
   }
