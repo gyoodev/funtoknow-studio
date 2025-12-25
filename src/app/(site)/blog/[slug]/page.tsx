@@ -1,63 +1,52 @@
+'use client';
 
-import { notFound } from 'next/navigation';
-import { getDb } from '@/firebase/server-init';
+import { useParams, notFound } from 'next/navigation';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, limit } from 'firebase/firestore';
 import type { BlogPost } from '@/lib/types';
-import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
+import { Skeleton } from '@/components/ui/skeleton';
 
-async function getPost(slug: string): Promise<BlogPost | null> {
-  try {
-    const db = getDb();
-    const postsRef = db.collection('blogPosts');
-    const q = postsRef.where('slug', '==', slug).limit(1);
-    const querySnapshot = await q.get();
-
-    if (querySnapshot.empty) {
-      return null;
-    }
-
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
-
-    const publicationDate = data.publicationDate;
-    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
-      ? publicationDate.toDate().toISOString() 
-      : null;
-
-    return {
-      id: doc.id,
-      ...data,
-      publicationDate: serializablePublicationDate,
-    } as BlogPost;
-  } catch (error: any) {
-    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
-    // Return null to allow the page to handle it gracefully (e.g., show notFound)
-    return null;
-  }
+function PostSkeleton() {
+    return (
+        <div className="container py-16 lg:py-24">
+            <div className="mx-auto max-w-3xl">
+                 <header className="mb-12 space-y-4">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-8 w-3/4" />
+                    <div className="flex items-center gap-6">
+                        <Skeleton className="h-8 w-32" />
+                        <Skeleton className="h-8 w-32" />
+                    </div>
+                </header>
+                <Skeleton className="aspect-video w-full mb-12" />
+                <div className="space-y-4">
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-5/6" />
+                </div>
+            </div>
+        </div>
+    )
 }
 
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params.slug as string;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPost(params.slug);
-  const siteName = 'FunToKnow Platform';
+  const firestore = useFirestore();
 
-  if (!post) {
-    return {
-      title: `Post Not Found | ${siteName}`,
-    };
+  const postQuery = useMemoFirebase(
+    () => (firestore && slug ? query(collection(firestore, 'blogPosts'), where('slug', '==', slug), limit(1)) : null),
+    [firestore, slug]
+  );
+  
+  const { data: posts, isLoading } = useCollection<BlogPost>(postQuery);
+  const post = posts?.[0];
+
+  if (isLoading) {
+    return <PostSkeleton />;
   }
-
-  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
-
-  return {
-    title: `${post.title} | ${siteName}`,
-    description: description,
-  };
-}
-
-
-export default async function BlogPostPage({ params }: { params: { slug: string }}) {
-  const post = await getPost(params.slug);
 
   if (!post) {
     notFound();
