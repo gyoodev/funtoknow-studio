@@ -20,10 +20,16 @@ async function getProject(slug: string): Promise<Project | null> {
     const doc = querySnapshot.docs[0];
     const data = doc.data();
 
+    // Safely handle the createdAt timestamp by converting it to a serializable ISO string
+    const createdAt = data.createdAt;
+    const serializableCreatedAt = createdAt && typeof createdAt.toDate === 'function' 
+      ? createdAt.toDate().toISOString() 
+      : null;
+
     return {
         id: doc.id,
         ...data,
-        createdAt: data.createdAt?.toDate().toISOString(),
+        createdAt: serializableCreatedAt,
     } as Project;
 }
 

@@ -139,7 +139,7 @@ export default function AdminProjectsPage() {
                         <Badge variant="secondary">{project.version}</Badge>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                        {project.createdAt ? format(project.createdAt.toDate(), 'PP') : 'N/A'}
+                        {project.createdAt && project.createdAt.toDate ? format(project.createdAt.toDate(), 'PP') : 'N/A'}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" asChild>
