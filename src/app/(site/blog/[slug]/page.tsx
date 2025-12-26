@@ -1,65 +1,40 @@
 
-import { notFound } from 'next/navigation';
-import { getDb } from '@/firebase/server-init';
+'use client';
+
+import { useMemo } from 'react';
+import { notFound, useParams } from 'next/navigation';
+import { collection, query, where } from 'firebase/firestore';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { BlogPost } from '@/lib/types';
-import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
+import { Preloader } from '@/components/preloader';
 
-async function getPost(slug: string): Promise<BlogPost | null> {
-  try {
-    const db = getDb();
-    const postsRef = db.collection('blogPosts');
-    const q = postsRef.where('slug', '==', slug).limit(1);
-    const querySnapshot = await q.get();
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const firestore = useFirestore();
 
-    if (querySnapshot.empty) {
-      return null;
-    }
+  const blogPostQuery = useMemoFirebase(
+    () => (firestore ? query(collection(firestore, 'blogPosts'), where('slug', '==', slug), limit(1)) : null),
+    [firestore, slug]
+  );
 
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
+  const { data: posts, isLoading, error } = useCollection<BlogPost>(blogPostQuery);
 
-    const publicationDate = data.publicationDate;
-    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
-      ? publicationDate.toDate().toISOString() 
-      : null;
-
-    return {
-      id: doc.id,
-      ...data,
-      publicationDate: serializablePublicationDate,
-    } as BlogPost;
-  } catch (error: any) {
-    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
-    // Return null to allow the page to handle it gracefully (e.g., show notFound)
-    return null;
-  }
-}
-
-
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPost(params.slug);
-  const siteName = 'FunToKnow Platform';
-
-  if (!post) {
-    return {
-      title: `Post Not Found | ${siteName}`,
-    };
+  if (isLoading) {
+    return <Preloader />;
   }
 
-  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
-
-  return {
-    title: `${post.title} | ${siteName}`,
-    description: description,
-  };
-}
-
-
-export default async function BlogPostPage({ params }: { params: { slug: string }}) {
-  const post = await getPost(params.slug);
+  if (error) {
+    // This could render a specific error component
+    console.error(error);
+    return <div className="container py-24 text-center">There was an error loading this post.</div>;
+  }
+  
+  const post = posts?.[0];
 
   if (!post) {
+    // This will show a 404 if no post is found after loading.
     notFound();
   }
 

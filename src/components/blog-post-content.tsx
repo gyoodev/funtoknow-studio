@@ -19,8 +19,8 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
   let formattedDate = '';
   if (post.publicationDate) {
     try {
-      // The publicationDate from the server is now an ISO string
-      const date = new Date(post.publicationDate);
+      // The publicationDate can be a Firestore Timestamp object or an ISO string
+      const date = (post.publicationDate as any).toDate ? (post.publicationDate as any).toDate() : new Date(post.publicationDate);
       // Check if the date is valid before formatting
       if (!isNaN(date.getTime())) {
         formattedDate = format(date, 'MMMM d, yyyy');
