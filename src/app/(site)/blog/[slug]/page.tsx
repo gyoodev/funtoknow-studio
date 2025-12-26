@@ -1,40 +1,86 @@
 
-'use client';
-
-import { useMemo } from 'react';
-import { notFound, useParams } from 'next/navigation';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { notFound } from 'next/navigation';
+import { getDb } from '@/firebase/server-init';
 import type { BlogPost } from '@/lib/types';
-import { collection, query, where, limit } from 'firebase/firestore';
+import type { Metadata } from 'next';
 import { BlogPostContent } from '@/components/blog-post-content';
-import { Preloader } from '@/components/preloader';
+
+async function getPost(slug: string): Promise<BlogPost | null> {
+  try {
+    const db = getDb();
+    const postsRef = db.collection('blogPosts');
+    const q = postsRef.where('slug', '==', slug).limit(1);
+    const querySnapshot = await q.get();
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    const doc = querySnapshot.docs[0];
+    const data = doc.data();
+
+    // Convert Firestore Timestamp to a serializable format (ISO string)
+    const publicationDate = data.publicationDate;
+    const serializablePublicationDate = (publicationDate && typeof publicationDate.toDate === 'function') 
+      ? publicationDate.toDate().toISOString() 
+      : null;
+
+    return {
+      id: doc.id,
+      title: data.title,
+      slug: data.slug,
+      content: data.content,
+      authorId: data.authorId,
+      author: data.author,
+      publicationDate: serializablePublicationDate,
+      excerpt: data.excerpt || data.content.substring(0, 150),
+      imageUrl: data.imageUrl,
+      imageHint: data.imageHint,
+      reactions: data.reactions || {},
+    } as BlogPost;
+  } catch (error: any) {
+    console.error(`Failed to fetch blog post with slug "${slug}":`, error.message);
+    // Return null to allow the page to handle it gracefully (e.g., show notFound)
+    return null;
+  }
+}
+
+export async function generateStaticParams() {
+  try {
+    const db = getDb();
+    const postsSnapshot = await db.collection('blogPosts').select('slug').get();
+    const slugs = postsSnapshot.docs.map(doc => ({
+      slug: doc.data().slug,
+    }));
+    return slugs;
+  } catch (error) {
+    console.error("Could not generate static params for blog posts:", error);
+    return [];
+  }
+}
 
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const firestore = useFirestore();
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getPost(params.slug);
+  const siteName = 'FunToKnow Platform';
 
-  const postQuery = useMemoFirebase(
-    () => (firestore && slug ? query(collection(firestore, 'blogPosts'), where('slug', '==', slug), limit(1)) : null),
-    [firestore, slug]
-  );
-  
-  const { data: posts, isLoading, error } = useCollection<BlogPost>(postQuery);
-  const post = posts?.[0];
-
-  if (isLoading) {
-    return <Preloader />;
+  if (!post) {
+    return {
+      title: `Post Not Found | ${siteName}`,
+    };
   }
 
-  if (error) {
-     return (
-      <div className="container py-16 text-center">
-        <h2 className="text-2xl font-bold text-destructive">Error Loading Post</h2>
-        <p className="text-muted-foreground mt-2">{error.message}</p>
-      </div>
-    );
-  }
+  const description = post.excerpt || (post.content ? post.content.substring(0, 155) : 'A blog post from FunToKnow.');
+
+  return {
+    title: `${post.title} | ${siteName}`,
+    description: description,
+  };
+}
+
+
+export default async function BlogPostPage({ params }: { params: { slug: string }}) {
+  const post = await getPost(params.slug);
 
   if (!post) {
     notFound();
