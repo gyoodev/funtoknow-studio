@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faRss, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faRss, faTrophy, faGamepad, faUsers, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { Project, BlogPost } from '@/lib/types';
@@ -14,6 +14,7 @@ import ProjectCard from '@/components/project-card';
 import BlogPostCard from '@/components/blog-post-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function HomePage() {
   const tags = [
@@ -27,6 +28,8 @@ export default function HomePage() {
   const floatingImage2 = PlaceHolderImages.find(p => p.id === 'hero-float-2');
   const floatingImage3 = PlaceHolderImages.find(p => p.id === 'hero-float-3');
   const floatingImage4 = PlaceHolderImages.find(p => p.id === 'hero-float-4');
+  const aboutImage = PlaceHolderImages.find(p => p.id === 'about-section');
+
 
   const firestore = useFirestore();
   const projectsQuery = useMemoFirebase(
@@ -138,6 +141,68 @@ export default function HomePage() {
             <Button asChild variant="outline">
               <Link href="/projects">View All Projects</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+      
+      {/* About Section */}
+      <section className="py-16 lg:py-24 bg-secondary">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">About Our Company</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Creative Solutions to Boost Your Games</h2>
+               <div className="grid grid-cols-3 gap-4 text-center my-8">
+                  <div>
+                    <p className="text-3xl font-bold text-primary">50+</p>
+                    <p className="text-sm text-muted-foreground">Happy Clients</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-primary">15+</p>
+                    <p className="text-sm text-muted-foreground">Games Released</p>
+                  </div>
+                   <div>
+                    <p className="text-3xl font-bold text-primary">1M+</p>
+                    <p className="text-sm text-muted-foreground">Players Reached</p>
+                  </div>
+              </div>
+              {aboutImage && <Image src={aboutImage.imageUrl} alt={aboutImage.description} width={600} height={400} className="rounded-xl shadow-lg" data-ai-hint={aboutImage.imageHint} />}
+            </div>
+            <div className="space-y-6">
+              <Card className="bg-background hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><FontAwesomeIcon icon={faGamepad} /> Game Design</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Our game design philosophy focuses on creating engaging, intuitive, and memorable experiences that captivate players and drive retention.</p>
+                   <Button variant="link" className="p-0 mt-2">
+                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
+               <Card className="bg-background hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><FontAwesomeIcon icon={faUsers} /> Community Building</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">We help you build and nurture a thriving community around your game, fostering a loyal player base that supports long-term success.</p>
+                  <Button variant="link" className="p-0 mt-2">
+                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
+               <Card className="bg-background hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><FontAwesomeIcon icon={faDollarSign} /> Monetization Strategy</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Our expert strategies help you implement effective and ethical monetization models that enhance player experience while maximizing revenue.</p>
+                   <Button variant="link" className="p-0 mt-2">
+                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
