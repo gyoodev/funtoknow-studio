@@ -29,12 +29,10 @@ export default function BlogPostCard({ post, className, isFeatured = false }: Bl
     if (post.publicationDate) {
       const dateToFormat = (post.publicationDate as any)?.toDate ? (post.publicationDate as any).toDate() : new Date(post.publicationDate);
       publicationDate = format(dateToFormat, 'MMMM d, yyyy');
-    } else if (post.date) {
-      publicationDate = post.date;
     }
   } catch (error) {
     console.warn("Could not format blog post date", post.publicationDate);
-    publicationDate = post.date || 'Invalid Date';
+    publicationDate = 'Invalid Date';
   }
 
   const cardContent = isFeatured ? (
@@ -113,8 +111,14 @@ export default function BlogPostCard({ post, className, isFeatured = false }: Bl
         <div className="block group cursor-pointer">{cardContent}</div>
       </DialogTrigger>
       <DialogContent className="max-w-5xl w-full h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="p-6 pb-0">
+          <DialogTitle className="text-2xl font-bold">{post.title}</DialogTitle>
+          <DialogDescription>{post.excerpt}</DialogDescription>
+        </DialogHeader>
         <ScrollArea className="h-full">
-            <BlogPostContent post={post} />
+            <div className="p-6 pt-0">
+                 <BlogPostContent post={post} />
+            </div>
         </ScrollArea>
       </DialogContent>
     </Dialog>

@@ -38,7 +38,8 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
     <div className="container py-16 lg:py-24">
       <div className="mx-auto max-w-3xl">
         <header className="mb-12 space-y-4">
-            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-6xl">{post.title}</h1>
+            {/* The title is now in the DialogHeader, so we can hide it here to avoid duplication */}
+            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-6xl sr-only">{post.title}</h1>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
                 <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
