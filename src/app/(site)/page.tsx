@@ -19,7 +19,6 @@ import { TrendingUp, Play } from 'lucide-react';
 import { ScheduleCard, type Schedule } from '@/components/schedule-card';
 
 const schedules: Schedule[] = [
-  { day: 'TUE', date: '19 MAY', calls: [{ name: 'David', time: '9:30 AM - 10:30 AM', duration: '1hr', avatarId: 'avatar-1' }] },
   { day: 'TUE', date: '19 MAY', calls: [{ name: 'Sarah', time: '9:30 AM - 10:30 AM', duration: '1hr', avatarId: 'avatar-2' }, { name: 'Leah', time: '12:45 PM - 1:15 PM', duration: '30m', avatarId: 'avatar-3' }] },
   { day: 'THU', date: '21 MAY', calls: [{ name: 'Joshua', time: '2:00 PM - 3:00 PM', duration: '1hr', avatarId: 'avatar-4' }] },
   { day: 'MON', date: '25 MAY', calls: [{ name: 'Edward', time: '10:30 AM - 11:00 AM', duration: '30m', avatarId: 'avatar-5' }] },
