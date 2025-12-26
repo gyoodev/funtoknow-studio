@@ -159,7 +159,7 @@ export default function HomePage() {
                 Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
               </h2>
               <p className="text-lg text-muted-foreground">
-                From landing pages to automation, we craft lead funnels that grow your business on autopilot.
+                From idea 💡 to real working application with different functions and possibilities ⚡
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button asChild size="lg" className="rounded-xl shadow-lg">
