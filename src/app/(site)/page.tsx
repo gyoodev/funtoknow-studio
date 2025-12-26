@@ -150,25 +150,25 @@ export default function HomePage() {
       {/* About Section */}
       <section className="py-16 lg:py-24 bg-secondary">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">About Our Company</p>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Creative Solutions to Boost Your Games</h2>
-               <div className="grid grid-cols-3 gap-4 text-center my-8">
-                  <div>
-                    <p className="text-3xl font-bold text-primary">50+</p>
-                    <p className="text-sm text-muted-foreground">Happy Clients</p>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-primary">15+</p>
-                    <p className="text-sm text-muted-foreground">Games Released</p>
-                  </div>
-                   <div>
-                    <p className="text-3xl font-bold text-primary">1M+</p>
-                    <p className="text-sm text-muted-foreground">Players Reached</p>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <p className="text-sm font-semibold uppercase tracking-wider text-primary">About Our Company</p>
+              <h2 className="text-3xl md:text-4xl font-bold">Creative Solutions to Boost Your Games</h2>
+              <div className="grid grid-cols-3 gap-4 text-center my-8">
+                <div>
+                  <p className="text-3xl font-bold text-primary">50+</p>
+                  <p className="text-sm text-muted-foreground">Happy Clients</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary">15+</p>
+                  <p className="text-sm text-muted-foreground">Games Released</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary">1M+</p>
+                  <p className="text-sm text-muted-foreground">Players Reached</p>
+                </div>
               </div>
-              {aboutImage && <Image src={aboutImage.imageUrl} alt={aboutImage.description} width={600} height={400} className="rounded-xl shadow-lg" data-ai-hint={aboutImage.imageHint} />}
+              {aboutImage && <Image src={aboutImage.imageUrl} alt={aboutImage.description} width={600} height={400} className="rounded-xl shadow-lg w-full h-auto" data-ai-hint={aboutImage.imageHint} />}
             </div>
             <div className="space-y-6">
               <Card className="bg-background hover:shadow-lg transition-shadow">
@@ -177,12 +177,12 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Our game design philosophy focuses on creating engaging, intuitive, and memorable experiences that captivate players and drive retention.</p>
-                   <Button variant="link" className="p-0 mt-2">
+                  <Button variant="link" className="p-0 mt-2">
                     <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
                   </Button>
                 </CardContent>
               </Card>
-               <Card className="bg-background hover:shadow-lg transition-shadow">
+              <Card className="bg-background hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><FontAwesomeIcon icon={faUsers} /> Community Building</CardTitle>
                 </CardHeader>
@@ -193,13 +193,13 @@ export default function HomePage() {
                   </Button>
                 </CardContent>
               </Card>
-               <Card className="bg-background hover:shadow-lg transition-shadow">
+              <Card className="bg-background hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><FontAwesomeIcon icon={faDollarSign} /> Monetization Strategy</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Our expert strategies help you implement effective and ethical monetization models that enhance player experience while maximizing revenue.</p>
-                   <Button variant="link" className="p-0 mt-2">
+                  <Button variant="link" className="p-0 mt-2">
                     <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
                   </Button>
                 </CardContent>
@@ -211,5 +211,3 @@ export default function HomePage() {
     </>
   );
 }
-
-    
