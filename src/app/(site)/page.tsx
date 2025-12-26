@@ -160,7 +160,7 @@ export default function HomePage() {
               </h2>
               <p className="text-lg font-medium tracking-tighter inline-flex items-center gap-2">
                 From idea
-                <Lightbulb className="inline h-5 w-5 text-yellow-400 animate-subtle-pulse hover:scale-125 transition-transform" />
+                <Lightbulb className="inline h-12 w-12 text-yellow-400 animate-subtle-pulse hover:scale-125 transition-transform" />
                 to polished applications with powerful features
                 <Zap className="inline h-12 w-12 text-blue-500 animate-spin hover:scale-125 transition-transform" />
               </p>
@@ -274,5 +274,3 @@ export default function HomePage() {
     </>
   );
 }
-
-    
