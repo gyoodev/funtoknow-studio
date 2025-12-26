@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faRss, faTrophy, faGamepad, faUsers, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faRss, faTrophy, faGamepad, faUsers, faDollarSign, faStar } from '@fortawesome/free-solid-svg-icons';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { Project, BlogPost } from '@/lib/types';
@@ -15,6 +15,17 @@ import BlogPostCard from '@/components/blog-post-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingUp, Play } from 'lucide-react';
+import { ScheduleCard, type Schedule } from '@/components/schedule-card';
+
+const schedules: Schedule[] = [
+  { day: 'TUE', date: '19 MAY', calls: [{ name: 'David', time: '9:30 AM - 10:30 AM', duration: '1hr', avatarId: 'avatar-1' }] },
+  { day: 'TUE', date: '19 MAY', calls: [{ name: 'Sarah', time: '9:30 AM - 10:30 AM', duration: '1hr', avatarId: 'avatar-2' }, { name: 'Leah', time: '12:45 PM - 1:15 PM', duration: '30m', avatarId: 'avatar-3' }] },
+  { day: 'THU', date: '21 MAY', calls: [{ name: 'Joshua', time: '2:00 PM - 3:00 PM', duration: '1hr', avatarId: 'avatar-4' }] },
+  { day: 'MON', date: '25 MAY', calls: [{ name: 'Edward', time: '10:30 AM - 11:00 AM', duration: '30m', avatarId: 'avatar-5' }] },
+  { day: 'THU', date: '28 MAY', calls: [{ name: 'Client', time: 'Time', duration: '1hr', avatarId: 'avatar-6', isFaded: true }] },
+];
+
 
 export default function HomePage() {
   const tags = [
@@ -29,6 +40,8 @@ export default function HomePage() {
   const floatingImage3 = PlaceHolderImages.find(p => p.id === 'hero-float-3');
   const floatingImage4 = PlaceHolderImages.find(p => p.id === 'hero-float-4');
   const aboutImage = PlaceHolderImages.find(p => p.id === 'about-section');
+  
+  const ratingAvatars = ['avatar-1', 'avatar-2', 'avatar-3', 'avatar-4'].map(id => PlaceHolderImages.find(p => p.id === id));
 
 
   const firestore = useFirestore();
@@ -88,7 +101,7 @@ export default function HomePage() {
             alt={floatingImage1.description}
             width={500}
             height={300}
-            className="absolute -left-24 top-1/4 w-48 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-15deg] opacity-50 md:opacity-70"
+            className="absolute -left-24 top-1/4 w-48 opacity-50 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-15deg] md:opacity-70"
             data-ai-hint={floatingImage1.imageHint}
           />}
           {floatingImage2 && <Image
@@ -96,7 +109,7 @@ export default function HomePage() {
             alt={floatingImage2.description}
             width={500}
             height={300}
-            className="absolute -right-24 top-1/3 w-48 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[15deg] opacity-50 md:opacity-70"
+            className="absolute -right-24 top-1/3 w-48 opacity-50 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[15deg] md:opacity-70"
             data-ai-hint={floatingImage2.imageHint}
           />}
           {floatingImage3 && <Image
@@ -115,6 +128,51 @@ export default function HomePage() {
             className="hidden lg:block absolute bottom-[-15%] right-1/4 translate-x-1/2 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-5deg] opacity-70"
             data-ai-hint={floatingImage4.imageHint}
           />}
+        </div>
+      </section>
+
+      {/* Growth Section */}
+      <section className="py-16 lg:py-24 bg-card">
+        <div className="container grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <p className="text-sm font-medium text-muted-foreground">AVAILABLE FOR MAY 2025</p>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
+                Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                From landing pages to automation, we craft lead funnels that grow your business on autopilot.
+              </p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <Button size="lg" className="rounded-xl shadow-lg">Drive results now</Button>
+                  <Button size="lg" variant="ghost" className="rounded-xl">
+                      <Play className="mr-2 h-4 w-4 fill-current" />
+                      Learn more
+                  </Button>
+              </div>
+              <div className="flex items-center gap-4 pt-4">
+                <div className="flex items-center">
+                    {Array(5).fill(0).map((_, i) => (
+                      <FontAwesomeIcon icon={faStar} key={i} className="h-5 w-5 text-yellow-400" />
+                    ))}
+                </div>
+                <div className="flex -space-x-2 overflow-hidden">
+                    {ratingAvatars.map((avatar, index) => (
+                      avatar && <Image key={index} className="inline-block h-8 w-8 rounded-full ring-2 ring-background" src={avatar.imageUrl} alt={avatar.description} width={32} height={32} data-ai-hint={avatar.imageHint} />
+                    ))}
+                </div>
+              </div>
+            </div>
+            <div className="space-y-6">
+                {schedules.map((schedule, index) => (
+                  <ScheduleCard key={index} schedule={schedule} />
+                ))}
+            </div>
         </div>
       </section>
 
@@ -152,7 +210,7 @@ export default function HomePage() {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <p className="text-sm font-semibold uppercase tracking-wider text-primary">About Our Company</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">About Our Company</p>
               <h2 className="text-3xl md:text-4xl font-bold">Creative Solutions to Boost Your Games</h2>
               <div className="grid grid-cols-3 gap-4 text-center my-8">
                 <div>
