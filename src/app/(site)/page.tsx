@@ -15,7 +15,7 @@ import BlogPostCard from '@/components/blog-post-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Play } from 'lucide-react';
+import { TrendingUp, Play, Lightbulb, Zap } from 'lucide-react';
 import { ReviewCard, type Review } from '@/components/review-card';
 
 const reviews: Review[] = [
@@ -158,8 +158,8 @@ export default function HomePage() {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
                 Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
               </h2>
-              <p className="text-lg text-muted-foreground">
-                From idea 💡 to real working application with different functions and possibilities ⚡
+              <p className="text-lg text-muted-foreground inline-flex items-center gap-2 flex-wrap">
+                From idea <Lightbulb className="inline h-6 w-6 text-yellow-400" /> to real working application with different functions and possibilities <Zap className="inline h-6 w-6 text-blue-500" />
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button asChild size="lg" className="rounded-xl shadow-lg">
@@ -271,3 +271,5 @@ export default function HomePage() {
     </>
   );
 }
+
+    
