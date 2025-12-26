@@ -177,9 +177,6 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Our game design philosophy focuses on creating engaging, intuitive, and memorable experiences that captivate players and drive retention.</p>
-                  <Button variant="link" className="p-0 mt-2">
-                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
-                  </Button>
                 </CardContent>
               </Card>
               <Card className="bg-background hover:shadow-lg transition-shadow">
@@ -188,9 +185,6 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">We help you build and nurture a thriving community around your game, fostering a loyal player base that supports long-term success.</p>
-                  <Button variant="link" className="p-0 mt-2">
-                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
-                  </Button>
                 </CardContent>
               </Card>
               <Card className="bg-background hover:shadow-lg transition-shadow">
@@ -199,9 +193,6 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Our expert strategies help you implement effective and ethical monetization models that enhance player experience while maximizing revenue.</p>
-                  <Button variant="link" className="p-0 mt-2">
-                    <Link href="/about">Read More <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-3 w-3" /></Link>
-                  </Button>
                 </CardContent>
               </Card>
             </div>
