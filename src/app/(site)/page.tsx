@@ -158,8 +158,11 @@ export default function HomePage() {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
                 Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
               </h2>
-              <p className="text-lg text-muted-foreground inline-flex items-center gap-2 flex-wrap">
-                From idea <Lightbulb className="inline h-6 w-6 text-yellow-400" /> to real working application with different functions and possibilities <Zap className="inline h-6 w-6 text-blue-500" />
+              <p className="text-lg text-muted-foreground inline-flex items-center gap-2">
+                <span>From idea</span>
+                <Lightbulb className="inline h-6 w-6 text-yellow-400" />
+                <span>to real working application with different functions and possibilities</span>
+                <Zap className="inline h-6 w-6 text-blue-500" />
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button asChild size="lg" className="rounded-xl shadow-lg">
