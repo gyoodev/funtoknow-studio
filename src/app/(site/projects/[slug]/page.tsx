@@ -38,8 +38,14 @@ async function getProject(slug: string): Promise<Project | null> {
     }
 }
 
+interface ProjectPageProps {
+  params: {
+    slug: string;
+  };
+}
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const project = await getProject(params.slug);
   const siteSettings = await getSiteSettings();
   const siteName = siteSettings?.siteName || 'FunToKnow Platform';
@@ -56,7 +62,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const project = await getProject(params.slug);
 
   if (!project) {
