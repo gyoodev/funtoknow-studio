@@ -16,13 +16,27 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, Play } from 'lucide-react';
-import { ScheduleCard, type Schedule } from '@/components/schedule-card';
+import { ReviewCard, type Review } from '@/components/review-card';
 
-const schedules: Schedule[] = [
-  { day: 'TUE', date: '19 MAY', calls: [{ name: 'Sarah', time: '9:30 AM - 10:30 AM', duration: '1hr', avatarId: 'avatar-2' }, { name: 'Leah', time: '12:45 PM - 1:15 PM', duration: '30m', avatarId: 'avatar-3' }] },
-  { day: 'THU', date: '21 MAY', calls: [{ name: 'Joshua', time: '2:00 PM - 3:00 PM', duration: '1hr', avatarId: 'avatar-4' }] },
-  { day: 'MON', date: '25 MAY', calls: [{ name: 'Edward', time: '10:30 AM - 11:00 AM', duration: '30m', avatarId: 'avatar-5' }] },
-  { day: 'THU', date: '28 MAY', calls: [{ name: 'Client', time: 'Time', duration: '1hr', avatarId: 'avatar-6', isFaded: true }] },
+const reviews: Review[] = [
+    {
+        name: 'Alex Johnson',
+        review: 'Absolutely love the new update! The gameplay is smoother and the new features are a blast. Keep up the great work, devs!',
+        rating: 5,
+        avatarId: 'avatar-2',
+    },
+    {
+        name: 'Samantha Lee',
+        review: 'This app has been a game-changer for my productivity. The interface is clean and intuitive. Highly recommended!',
+        rating: 5,
+        avatarId: 'avatar-3',
+    },
+    {
+        name: 'Markus Chen',
+        review: 'A solid game with a lot of potential. I encountered a few minor bugs, but nothing game-breaking. Looking forward to future updates.',
+        rating: 4,
+        avatarId: 'avatar-4',
+    }
 ];
 
 
@@ -165,9 +179,9 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="space-y-6">
-                {schedules.map((schedule, index) => (
-                  <ScheduleCard key={index} schedule={schedule} />
+            <div className="space-y-4">
+                {reviews.map((review, index) => (
+                  <ReviewCard key={index} review={review} />
                 ))}
             </div>
         </div>
