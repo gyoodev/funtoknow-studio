@@ -158,7 +158,7 @@ export default function HomePage() {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
                 Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
               </h2>
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter inline-flex items-center gap-2">
+              <h3 className="text-3xl md:text-4xl font-bold tracking-tighter inline-flex items-center gap-2">
                 From idea
                 <Lightbulb className="inline h-6 w-6 text-yellow-400" />
                 to polished applications with powerful features
