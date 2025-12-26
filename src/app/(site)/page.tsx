@@ -153,7 +153,7 @@ export default function HomePage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </span>
-                <p className="text-sm font-medium text-muted-foreground">AVAILABLE FOR MAY 2025</p>
+                <p className="text-sm font-medium text-muted-foreground">All apps operating normal</p>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
                 Fuelling <span className="inline-flex items-center">growth <TrendingUp className="ml-2 h-12 w-12 text-red-500" /></span> with every click
