@@ -150,10 +150,6 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button size="lg" className="rounded-xl shadow-lg">Drive results now</Button>
-                  <Button size="lg" variant="ghost" className="rounded-xl">
-                      <Play className="mr-2 h-4 w-4 fill-current" />
-                      Learn more
-                  </Button>
               </div>
               <div className="flex items-center gap-4 pt-4">
                 <div className="flex items-center">
