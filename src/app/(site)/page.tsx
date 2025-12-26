@@ -149,7 +149,9 @@ export default function HomePage() {
                 From landing pages to automation, we craft lead funnels that grow your business on autopilot.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <Button size="lg" className="rounded-xl shadow-lg">Drive results now</Button>
+                  <Button asChild size="lg" className="rounded-xl shadow-lg">
+                    <Link href="/contact">Contact now</Link>
+                  </Button>
               </div>
               <div className="flex items-center gap-4 pt-4">
                 <div className="flex items-center">
