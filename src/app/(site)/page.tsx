@@ -162,7 +162,7 @@ export default function HomePage() {
                 From idea
                 <Lightbulb className="inline h-5 w-5 text-yellow-400 animate-subtle-pulse hover:scale-125 transition-transform" />
                 to polished applications with powerful features
-                <Zap className="inline h-5 w-5 text-blue-500 animate-subtle-pulse hover:scale-125 transition-transform" />
+                <Zap className="inline h-5 w-5 text-blue-500 animate-spin hover:scale-125 transition-transform" />
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button asChild size="lg" className="rounded-xl shadow-lg">
@@ -274,5 +274,3 @@ export default function HomePage() {
     </>
   );
 }
-
-    
