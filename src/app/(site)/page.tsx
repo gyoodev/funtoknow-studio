@@ -48,24 +48,26 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-24 lg:py-32">
+      <section className="relative overflow-hidden py-20 md:py-24 lg:py-32">
         <div className="container relative z-10">
-          <div className="mx-auto max-w-3xl rounded-lg bg-background/50 p-4 text-center backdrop-blur-sm md:bg-transparent md:p-0 md:backdrop-blur-none">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Design Impactful
-              <br />
-              Experiences for Brands.
-            </h1>
-            <p className="mt-6 max-w-xl mx-auto text-lg text-muted-foreground">
-              From concept to execution, we bring together innovation,
-              strategy, and design to create impactful brand experiences.
-            </p>
-            <Button asChild size="lg" className="mt-8 group">
-              <Link href="/projects">
-                Projects
-                <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
-              </Link>
-            </Button>
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="rounded-lg bg-background/50 p-4 backdrop-blur-sm md:bg-transparent md:p-0 md:backdrop-blur-none">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+                Design Impactful
+                <br />
+                Experiences for Brands.
+              </h1>
+              <p className="mt-6 max-w-xl mx-auto text-lg text-muted-foreground">
+                From concept to execution, we bring together innovation,
+                strategy, and design to create impactful brand experiences.
+              </p>
+              <Button asChild size="lg" className="mt-8 group">
+                <Link href="/projects">
+                  Projects
+                  <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1 group-active:translate-x-2" />
+                </Link>
+              </Button>
+            </div>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
             {tags.map((tag) => (
@@ -86,7 +88,7 @@ export default function HomePage() {
             alt={floatingImage1.description}
             width={500}
             height={300}
-            className="absolute -left-24 top-1/4 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-15deg] opacity-70"
+            className="absolute -left-24 top-1/4 w-48 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-15deg] opacity-50 md:opacity-70"
             data-ai-hint={floatingImage1.imageHint}
           />}
           {floatingImage2 && <Image
@@ -94,7 +96,7 @@ export default function HomePage() {
             alt={floatingImage2.description}
             width={500}
             height={300}
-            className="absolute -right-24 top-1/3 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[15deg] opacity-70"
+            className="absolute -right-24 top-1/3 w-48 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[15deg] opacity-50 md:opacity-70"
             data-ai-hint={floatingImage2.imageHint}
           />}
           {floatingImage3 && <Image
@@ -102,7 +104,7 @@ export default function HomePage() {
             alt={floatingImage3.description}
             width={300}
             height={500}
-            className="absolute bottom-[-10%] left-1/4 -translate-x-1/2 w-32 md:w-40 lg:w-[200px] rounded-2xl shadow-2xl rotate-[10deg] opacity-70"
+            className="hidden md:block absolute bottom-[-10%] left-1/4 -translate-x-1/2 w-32 md:w-40 lg:w-[200px] rounded-2xl shadow-2xl rotate-[10deg] opacity-70"
             data-ai-hint={floatingImage3.imageHint}
           />}
           {floatingImage4 && <Image
@@ -110,7 +112,7 @@ export default function HomePage() {
             alt={floatingImage4.description}
             width={500}
             height={300}
-            className="absolute bottom-[-15%] right-1/4 translate-x-1/2 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-5deg] opacity-70"
+            className="hidden lg:block absolute bottom-[-15%] right-1/4 translate-x-1/2 w-64 md:w-80 lg:w-[400px] rounded-2xl shadow-2xl rotate-[-5deg] opacity-70"
             data-ai-hint={floatingImage4.imageHint}
           />}
         </div>
@@ -209,3 +211,5 @@ export default function HomePage() {
     </>
   );
 }
+
+    
