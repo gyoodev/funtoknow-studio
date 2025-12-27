@@ -99,20 +99,28 @@ export default {
           },
         },
         'lightbulb-glow': {
-          '0%, 100%': {
+          '0%': {
+            transform: 'scale(0.5)',
+            opacity: '0',
+            filter: 'drop-shadow(0 0 2px currentColor)',
+          },
+          '20%': {
+            transform: 'scale(1)',
             opacity: '1',
-            filter: 'drop-shadow(0 0 4px currentColor) drop-shadow(0 0 10px currentColor)',
+            filter: 'drop-shadow(0 0 4px currentColor)',
           },
           '50%': {
-            opacity: '0.8',
             filter: 'drop-shadow(0 0 6px currentColor) drop-shadow(0 0 15px currentColor)',
+          },
+          '100%': {
+            filter: 'drop-shadow(0 0 4px currentColor) drop-shadow(0 0 10px currentColor)',
           },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'lightbulb-glow': 'lightbulb-glow 2.5s infinite ease-in-out',
+        'lightbulb-glow': 'lightbulb-glow 3s infinite alternate ease-in-out',
       },
     },
   },
